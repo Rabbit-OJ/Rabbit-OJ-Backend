@@ -9,9 +9,12 @@ type LoginForm struct {
 
 func Login(context *gin.Context) {
 	var loginForm LoginForm
+
 	if err := context.BindJSON(&loginForm); err != nil {
-		context.JSON(200, gin.H{
-			"message": "pong",
+		context.JSON(500, gin.H{
+			"message": "Invalid JSON format",
 		})
 	}
+
+
 }

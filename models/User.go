@@ -12,6 +12,6 @@ type User struct {
 	Email string
 	Attempt int32
 	Accepted int32
-	RegisterDate time.Time
-	LastLoginDate time.Time
+	loginAt time.Time
+	CreatedAt time.Time
 }
