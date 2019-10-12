@@ -4,17 +4,19 @@ import (
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/middlewares"
+	"Rabbit-OJ-Backend/utils"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	db.Connect()
+	db.Init()
+	utils.InitConstant()
 	server := gin.Default()
 
 	server.Use(middlewares.Cors())
-	server.GET("/login", user.Login)
+	server.GET("/user/login", user.Login)
 
 	err := server.Run(":8888")
 	if err != nil {

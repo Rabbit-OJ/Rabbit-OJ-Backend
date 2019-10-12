@@ -10,7 +10,7 @@ var (
 	DB *gorm.DB
 )
 
-func Connect() {
+func Init() {
 	username := "root"
 	password := "P@ssw0rd"
 	database := "rabbit"

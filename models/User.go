@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"github.com/jinzhu/gorm"
@@ -8,6 +8,7 @@ import (
 type User struct {
 	gorm.Model
 	Uid string `gorm:"AUTO_INCREMENT"`
+	Username string
 	Password string
 	Email string
 	Attempt int32
