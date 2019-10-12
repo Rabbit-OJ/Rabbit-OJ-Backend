@@ -1,15 +1,11 @@
 package models
 
-import (
-	"time"
-)
+import "time"
 
-type User struct {
+type OtherUser struct {
 	Uid       string `gorm:"AUTO_INCREMENT"`
 	Username  string
 	IsAdmin   bool
-	Password  string
-	Email     string
 	Attempt   uint32
 	Accept    uint32
 	LoginAt   time.Time

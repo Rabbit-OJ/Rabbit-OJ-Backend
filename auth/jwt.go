@@ -21,9 +21,9 @@ func SignJWT(user *models.User) (string, error) {
 	nextTime = nextTime.AddDate(0, 0, 1)
 
 	jwtObject := &Claims{
-		Uid:       user.Uid,
-		Username:  user.Username,
-		StandardClaims: StandardClaims {
+		Uid:      user.Uid,
+		Username: user.Username,
+		StandardClaims: StandardClaims{
 			ExpiresAt: nextTime.Unix(),
 		},
 	}
@@ -34,7 +34,7 @@ func SignJWT(user *models.User) (string, error) {
 
 func VerifyJWT(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return utils.Secret, nil
+		return []byte(utils.Secret), nil
 	})
 
 	if tokenClaims != nil {

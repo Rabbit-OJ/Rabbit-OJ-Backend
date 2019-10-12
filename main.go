@@ -16,7 +16,10 @@ func main() {
 	server := gin.Default()
 
 	server.Use(middlewares.Cors())
+
 	server.GET("/user/login", user.Login)
+	server.GET("/user/info/:username", user.Info)
+	server.POST("/user/register", user.Register)
 
 	err := server.Run(":8888")
 	if err != nil {
