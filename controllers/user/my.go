@@ -5,10 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Info(c *gin.Context) {
-	username := c.Param("username")
+func My(c *gin.Context) {
+	uid := "1"
 
-	user, err := UserService.OtherInfoByUsername(username)
+	user, err := UserService.MyInfoByUid(uid)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,

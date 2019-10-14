@@ -6,16 +6,17 @@ import (
 )
 
 func Cors() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		writer := context.Writer
-		writer.Header().Set("Access-Control-Allow-Origin", "*")
-		writer.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST")
-		writer.Header().Add("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,X-Auth-Token")
-		writer.Header().Add("Access-Control-Allow-Headers", "Access-Token")
-		method := context.Request.Method
+	return func(c *gin.Context) {
+		w := c.Writer
+
+		w.Header().Set("X-Powered-By", "6Rabbit/3.0")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE")
+		w.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+		method := c.Request.Method
 		if method == "OPTIONS" {
-			context.JSON(http.StatusOK, "Options Request!")
+			c.JSON(http.StatusOK, "Options Request!")
 		}
-		context.Next()
+		c.Next()
 	}
 }

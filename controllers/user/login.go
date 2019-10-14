@@ -2,29 +2,33 @@ package user
 
 import (
 	"Rabbit-OJ-Backend/auth"
-	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/models/forms"
 	UserService "Rabbit-OJ-Backend/services/user"
 	"Rabbit-OJ-Backend/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Login(context *gin.Context) {
-	loginForm := models.LoginForm{}
+func Login(c *gin.Context) {
+	loginForm := forms.LoginForm{}
 
-	if err := context.BindJSON(&loginForm); err != nil {
-		context.JSON(400, gin.H{
+	if err := c.BindJSON(&loginForm); err != nil {
+		c.JSON(400, gin.H{
 			"code":    400,
-			"message": err,
+			"message": err.Error(),
 		})
+
+		return
 	}
 
 	user, err := UserService.InfoByUsername(loginForm.Username)
 	if err != nil {
-		context.JSON(500, gin.H{
+		c.JSON(500, gin.H{
 			"code":    500,
-			"message": err,
+			"message": err.Error(),
 		})
+
+		return
 	}
 
 	saltPassword := utils.SaltPasswordWithSecret(loginForm.Password)
@@ -32,18 +36,18 @@ func Login(context *gin.Context) {
 		token, err := auth.SignJWT(user)
 
 		if err != nil {
-			context.JSON(500, gin.H{
+			c.JSON(500, gin.H{
 				"code":    500,
-				"message": err,
+				"message": err.Error(),
 			})
 		} else {
-			context.JSON(200, gin.H{
+			c.JSON(200, gin.H{
 				"code":    200,
 				"message": token,
 			})
 		}
 	} else {
-		context.JSON(404, gin.H{
+		c.JSON(404, gin.H{
 			"code":    404,
 			"message": "Username or Password wrong.",
 		})
