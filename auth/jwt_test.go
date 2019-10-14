@@ -9,7 +9,7 @@ import (
 func TestSignJWT(t *testing.T) {
 	testUser := &models.User{
 		Username: "hzytql",
-		Uid:      1,
+		Uid:      "1",
 	}
 	result, err := SignJWT(testUser)
 
