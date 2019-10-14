@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-func Register(form *forms.RegisterForm) (uint32, error) {
+func Register(form *forms.RegisterForm) (string, error) {
 	if UsernameExist(form.Username) {
-		return 0, errors.New("username already exists")
+		return InvalidUid, errors.New("username already exists")
 	}
 
 	if EmailExist(form.Email) {
-		return 0, errors.New("email already exists")
+		return InvalidUid, errors.New("email already exists")
 	}
 
 	user := models.User{
@@ -25,7 +25,7 @@ func Register(form *forms.RegisterForm) (uint32, error) {
 		LoginAt:  time.Now(),
 	}
 	if err := db.DB.Create(&user).Error; err != nil {
-		return 0, err
+		return InvalidUid, err
 	}
 
 	return user.Uid, nil

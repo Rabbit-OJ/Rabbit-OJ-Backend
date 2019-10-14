@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Oct 14, 2019 at 06:45 AM
+-- Generation Time: Oct 14, 2019 at 12:56 PM
 -- Server version: 8.0.17
 -- PHP Version: 7.2.22
 
@@ -43,10 +43,10 @@ CREATE TABLE `question` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `questionContent`
+-- Table structure for table `question_content`
 --
 
-CREATE TABLE `questionContent` (
+CREATE TABLE `question_content` (
   `tid` int(11) UNSIGNED NOT NULL,
   `content` mediumtext COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -54,10 +54,10 @@ CREATE TABLE `questionContent` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `questionJudge`
+-- Table structure for table `question_judge`
 --
 
-CREATE TABLE `questionJudge` (
+CREATE TABLE `question_judge` (
   `tid` int(10) UNSIGNED NOT NULL,
   `mode` char(12) COLLATE utf8mb4_general_ci NOT NULL,
   `dataset_count` int(10) UNSIGNED NOT NULL
@@ -110,15 +110,15 @@ ALTER TABLE `question`
   ADD PRIMARY KEY (`tid`);
 
 --
--- Indexes for table `questionContent`
+-- Indexes for table `question_content`
 --
-ALTER TABLE `questionContent`
+ALTER TABLE `question_content`
   ADD PRIMARY KEY (`tid`);
 
 --
--- Indexes for table `questionJudge`
+-- Indexes for table `question_judge`
 --
-ALTER TABLE `questionJudge`
+ALTER TABLE `question_judge`
   ADD PRIMARY KEY (`tid`);
 
 --

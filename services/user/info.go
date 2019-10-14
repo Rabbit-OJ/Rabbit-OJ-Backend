@@ -7,7 +7,7 @@ import (
 
 func MyInfoByUid(uid string) (*models.MyUser, error) {
 	user := models.MyUser{}
-	if err := db.DB.Where("uid = ?", uid).First(&user).Error; err != nil {
+	if err := db.DB.Table("user").Where("uid = ?", uid).First(&user).Error; err != nil {
 		return nil, err
 	}
 

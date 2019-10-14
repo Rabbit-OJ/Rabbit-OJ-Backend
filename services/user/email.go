@@ -5,11 +5,13 @@ import (
 	"Rabbit-OJ-Backend/models"
 )
 
-func EmailToUid(email string) (uint32, error) {
+const InvalidUid = ""
+
+func EmailToUid(email string) (string, error) {
 	user := models.User{}
 
 	if err := db.DB.Where("email = ?", email).First(&user).Error; err != nil {
-		return 0, err
+		return InvalidUid, err
 	}
 
 	return user.Uid, nil
@@ -18,5 +20,5 @@ func EmailToUid(email string) (uint32, error) {
 func EmailExist(email string) bool {
 	uid, _ := EmailToUid(email)
 
-	return uid != 0
+	return uid != InvalidUid
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Rabbit-OJ-Backend/controllers/question"
 	"Rabbit-OJ-Backend/controllers/submission"
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/db"
@@ -25,14 +26,19 @@ func main() {
 
 	server.Use(middlewares.Cors())
 
-	server.GET("/user/login", user.Login)
 	server.GET("/user/info/:username", user.Info)
-	server.GET("/user/my", user.My)
+	server.GET("/user/my", middlewares.AuthJWT(), user.My)
+	server.POST("/user/login", user.Login)
 	server.POST("/user/register", user.Register)
-	server.GET("/submission/:uid/:page", submission.List)
+
+	server.GET("/submission/list/:uid/:page", submission.List)
+	server.GET("/submission/detail/:sid", submission.Detail)
+
+	server.GET("/question/list/:page", question.List)
+	server.GET("/question/content/:tid", question.Detail)
 
 	err := server.Run(":8888")
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err)
 	}
 }

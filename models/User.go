@@ -5,34 +5,34 @@ import (
 )
 
 type User struct {
-	Uid       uint32 `gorm:"auto_increment"`
-	Username  string
-	IsAdmin   bool
+	Uid       string `gorm:"auto_increment",json:"uid"`
+	Username  string `json:"username"`
+	IsAdmin   bool   `json:"isAdmin"`
 	Password  string
-	Email     string
-	Attempt   uint32 `gorm:"default:0'"`
-	Accept    uint32 `gorm:"default:0'"`
-	LoginAt   time.Time
-	CreatedAt time.Time
+	Email     string    `json:"email"`
+	Attempt   uint32    `gorm:"default:0'",json:"attempt"`
+	Accept    uint32    `gorm:"default:0'",json:"accept"`
+	LoginAt   time.Time `json:"loginAt"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type OtherUser struct {
-	Uid       uint32
-	Username  string
-	IsAdmin   bool
-	Attempt   uint32
-	Accept    uint32
-	LoginAt   time.Time
-	CreatedAt time.Time
+	Uid       uint32    `json:"uid"`
+	Username  string    `json:"username"`
+	IsAdmin   bool      `json:"isAdmin"`
+	Attempt   uint32    `json:"attempt"`
+	Accept    uint32    `json:"accept"`
+	LoginAt   time.Time `json:"loginAt"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type MyUser struct {
-	Uid       uint32
-	Username  string
-	IsAdmin   bool
-	Email     string
-	Attempt   uint32
-	Accept    uint32
-	LoginAt   time.Time
-	CreatedAt time.Time
+	Uid       uint32    `json:"uid"`
+	Username  string    `json:"username"`
+	IsAdmin   bool      `json:"isAdmin"`
+	Email     string    `json:"email"`
+	Attempt   uint32    `json:"attempt"`
+	Accept    uint32    `json:"accept"`
+	LoginAt   time.Time `json:"loginAt"`
+	CreatedAt time.Time `json:"createdAt"`
 }

@@ -1,14 +1,14 @@
-package submission
+package question
 
 import (
-	SubmissionService "Rabbit-OJ-Backend/services/submission"
+	QuestionService "Rabbit-OJ-Backend/services/question"
 	"github.com/gin-gonic/gin"
 )
 
 func Detail(c *gin.Context) {
-	sid := c.Param("sid")
+	tid := c.Param("tid")
 
-	submission, err := SubmissionService.Detail(sid)
+	content, err := QuestionService.Content(tid)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -17,7 +17,7 @@ func Detail(c *gin.Context) {
 	} else {
 		c.JSON(200, gin.H{
 			"code":    200,
-			"message": submission,
+			"message": content,
 		})
 	}
 }
