@@ -7,6 +7,7 @@ import (
 
 func Router(baseRouter *gin.Engine) {
 	userRouter := baseRouter.Group("/user")
+
 	userRouter.GET("/info/:username", Info)
 	userRouter.GET("/my", middlewares.AuthJWT(), My)
 	userRouter.POST("/login", Login)

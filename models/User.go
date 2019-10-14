@@ -17,7 +17,7 @@ type User struct {
 }
 
 type OtherUser struct {
-	Uid       uint32    `json:"uid"`
+	Uid       string    `json:"uid"`
 	Username  string    `json:"username"`
 	IsAdmin   bool      `json:"isAdmin"`
 	Attempt   uint32    `json:"attempt"`
@@ -27,7 +27,7 @@ type OtherUser struct {
 }
 
 type MyUser struct {
-	Uid       uint32    `json:"uid"`
+	Uid       string    `json:"uid"`
 	Username  string    `json:"username"`
 	IsAdmin   bool      `json:"isAdmin"`
 	Email     string    `json:"email"`

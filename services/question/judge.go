@@ -5,7 +5,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 )
 
-func Judge(tid string) (*models.QuestionJudge, error) {
+func JudgeInfo(tid string) (*models.QuestionJudge, error) {
 	judge := &models.QuestionJudge{}
 
 	if err := db.DB.Where("tid = ?", tid).First(&judge).Error; err != nil {

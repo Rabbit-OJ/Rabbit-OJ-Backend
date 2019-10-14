@@ -12,6 +12,7 @@ type StandardClaims = jwt.StandardClaims
 type Claims struct {
 	Uid      string `json:"uid"`
 	Username string `json:"username"`
+	IsAdmin  bool   `json:"isAdmin"`
 
 	StandardClaims
 }
@@ -23,6 +24,7 @@ func SignJWT(user *models.User) (string, error) {
 	jwtObject := &Claims{
 		Uid:      user.Uid,
 		Username: user.Username,
+		IsAdmin:  user.IsAdmin,
 		StandardClaims: StandardClaims{
 			ExpiresAt: nextTime.Unix(),
 		},

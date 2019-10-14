@@ -1,6 +1,6 @@
 package models
 
 type QuestionContent struct {
-	Tid     uint32 `json:"tid"`
+	Tid     string `json:"tid"`
 	Content string `json:"content"`
 }

@@ -3,8 +3,8 @@ package models
 import "time"
 
 type Submission struct {
-	Sid       uint32        `json:"sid"`
-	Uid       uint32        `json:"uid"`
+	Sid       string        `json:"sid"`
+	Uid       string        `json:"uid"`
 	Status    uint8         `json:"status"`
 	Judge     []JudgeResult `json:"judge"` // TODO: CHECK JSON support
 	Language  string        `json:"language"`
@@ -15,8 +15,8 @@ type Submission struct {
 }
 
 type SubmissionLite struct {
-	Sid       uint32    `json:"sid"`
-	Uid       uint32    `json:"uid"`
+	Sid       string    `json:"sid"`
+	Uid       string    `json:"uid"`
 	Status    uint8     `json:"status"`
 	Language  string    `json:"language"`
 	TimeUsed  uint32    `json:"time_used"`
