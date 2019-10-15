@@ -1,19 +1,19 @@
 package user
 
 import (
-	"Rabbit-OJ-Backend/auth"
 	UserService "Rabbit-OJ-Backend/services/user"
+	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func My(c *gin.Context) {
-	authObjectRaw, _ := c.Get("AuthObject")
-	authObject, ok := authObjectRaw.(*auth.Claims)
-	if !ok {
+	authObject, err := utils.GetAuthObj(c)
+	if err != nil {
 		c.JSON(403, gin.H{
 			"code":    403,
-			"message": "Invalid token",
+			"message": err.Error(),
 		})
+
 		return
 	}
 
