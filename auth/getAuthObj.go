@@ -1,19 +1,18 @@
-package utils
+package auth
 
 import (
-	"Rabbit-OJ-Backend/auth"
 	"errors"
 	"github.com/gin-gonic/gin"
 )
 
-func GetAuthObj(c *gin.Context) (*auth.Claims, error) {
+func GetAuthObj(c *gin.Context) (*Claims, error) {
 	authObjectRaw, exists := c.Get("AuthObject")
 
 	if !exists {
 		return nil, errors.New("access denied")
 	}
 
-	authObject, ok := authObjectRaw.(*auth.Claims)
+	authObject, ok := authObjectRaw.(*Claims)
 	if !ok {
 		return nil, errors.New("token format invalid")
 	}
@@ -21,7 +20,7 @@ func GetAuthObj(c *gin.Context) (*auth.Claims, error) {
 	return authObject, nil
 }
 
-func GetAuthObjRequireAdmin(c *gin.Context) (*auth.Claims, error) {
+func GetAuthObjRequireAdmin(c *gin.Context) (*Claims, error) {
 	authObj, err := GetAuthObj(c)
 
 	if err != nil {

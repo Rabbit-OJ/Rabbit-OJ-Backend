@@ -1,15 +1,15 @@
 package question
 
 import (
+	"Rabbit-OJ-Backend/auth"
 	"Rabbit-OJ-Backend/models/forms"
 	QuestionService "Rabbit-OJ-Backend/services/question"
-	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func Edit(c *gin.Context) {
 	questionForm := &forms.QuestionForm{}
-	if _, err := utils.GetAuthObjRequireAdmin(c); err != nil {
+	if _, err := auth.GetAuthObjRequireAdmin(c); err != nil {
 		c.JSON(403, gin.H{
 			"code":    403,
 			"message": err.Error(),
