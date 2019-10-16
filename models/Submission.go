@@ -4,6 +4,7 @@ import "time"
 
 type Submission struct {
 	Sid       string        `json:"sid"`
+	Tid       string        `json:"tid"`
 	Uid       string        `json:"uid"`
 	Status    uint8         `json:"status"`
 	Judge     []JudgeResult `json:"judge"` // TODO: CHECK JSON support

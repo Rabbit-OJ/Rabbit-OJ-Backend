@@ -9,4 +9,5 @@ func Router(baseRouter *gin.Engine) {
 
 	submissionRouter.GET("/list/:uid/:page", List)
 	submissionRouter.GET("/detail/:sid", Detail)
+	submissionRouter.GET("/code/:sid", Code)
 }

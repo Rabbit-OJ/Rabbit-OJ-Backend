@@ -9,7 +9,6 @@ func Router(baseRouter *gin.Engine) {
 	questionRouter := baseRouter.Group("/question")
 
 	questionRouter.GET("/list/:page", List)
-
 	questionRouter.GET("/item/:tid", Detail)
 	questionRouter.POST("/item", middlewares.AuthJWT(), Create)
 	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(), Edit)

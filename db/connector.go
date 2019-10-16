@@ -14,7 +14,7 @@ var (
 func Init() {
 	username := "root"
 	password := "P@ssw0rd"
-	database := "rabbit"
+	database := "oj"
 
 	server := "tcp(localhost:3306)"
 	if os.Getenv("ENV") == "production" {

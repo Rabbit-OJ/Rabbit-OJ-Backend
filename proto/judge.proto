@@ -2,3 +2,17 @@ syntax = "proto3";
 
 package proto;
 
+message JudgeRequest {
+    uint32 sid = 1;
+    string language = 2;
+    string code = 3;
+}
+
+message JudgeResponse {
+    uint32 sid = 1;
+    string result = 2;
+}
+
+service Judge {
+    rpc GetJudgeResult(JudgeRequest) returns (JudgeResponse);
+}

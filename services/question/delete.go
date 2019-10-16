@@ -5,10 +5,10 @@ import (
 	"Rabbit-OJ-Backend/models"
 )
 
+// NOTE: DELETE a problem WILL NOT CASCADE DELETE its submission records and codes, do it manually!
+
 func Delete(tid string) error {
 	tx := db.DB.Begin()
-
-	// TODO: Add delete file logic...
 
 	if err := tx.Where("tid = ?", tid).Delete(models.Question{}).Error; err != nil {
 		tx.Rollback()

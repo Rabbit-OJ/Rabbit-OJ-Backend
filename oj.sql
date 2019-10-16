@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Oct 14, 2019 at 12:56 PM
--- Server version: 8.0.17
+-- Generation Time: Oct 16, 2019 at 10:02 AM
+-- Server version: 8.0.18
 -- PHP Version: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rabbit`
+-- Database: `oj`
 --
 
 -- --------------------------------------------------------
@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `question` (
   `tid` int(10) UNSIGNED NOT NULL,
   `uid` int(10) UNSIGNED NOT NULL,
-  `subject` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `attempt` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `accept` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `difficulty` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
@@ -48,7 +48,7 @@ CREATE TABLE `question` (
 
 CREATE TABLE `question_content` (
   `tid` int(11) UNSIGNED NOT NULL,
-  `content` mediumtext COLLATE utf8mb4_general_ci NOT NULL
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -59,7 +59,7 @@ CREATE TABLE `question_content` (
 
 CREATE TABLE `question_judge` (
   `tid` int(10) UNSIGNED NOT NULL,
-  `mode` char(12) COLLATE utf8mb4_general_ci NOT NULL,
+  `mode` char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `dataset_count` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -71,6 +71,7 @@ CREATE TABLE `question_judge` (
 
 CREATE TABLE `submission` (
   `sid` int(10) UNSIGNED NOT NULL,
+  `tid` int(10) UNSIGNED NOT NULL,
   `uid` int(10) UNSIGNED NOT NULL,
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `judge` json NOT NULL,
@@ -126,7 +127,8 @@ ALTER TABLE `question_judge`
 --
 ALTER TABLE `submission`
   ADD PRIMARY KEY (`sid`),
-  ADD KEY `uid` (`uid`);
+  ADD KEY `uid` (`uid`),
+  ADD KEY `tid` (`tid`);
 
 --
 -- Indexes for table `user`

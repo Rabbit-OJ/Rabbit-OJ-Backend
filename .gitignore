@@ -1,3 +1,6 @@
 /.idea
 /target
-/files
+/files/avatar/*.avatar
+/files/judge/*/*.in
+/files/judge/*/*.out
+/files/submission/*/*.code
