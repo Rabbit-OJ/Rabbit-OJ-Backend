@@ -3,9 +3,9 @@ package user
 import (
 	"Rabbit-OJ-Backend/auth"
 	"Rabbit-OJ-Backend/models/forms"
+	"Rabbit-OJ-Backend/models/responses"
 	UserService "Rabbit-OJ-Backend/services/user"
 	"Rabbit-OJ-Backend/utils"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +16,15 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{
 			"code":    400,
 			"message": err.Error(),
+		})
+
+		return
+	}
+
+	if _, err := UserService.UsernameToUid(loginForm.Username); err != nil {
+		c.JSON(500, gin.H{
+			"code":    500,
+			"message": "Username or Password wrong.",
 		})
 
 		return
@@ -43,11 +52,11 @@ func Login(c *gin.Context) {
 		} else {
 			c.JSON(200, gin.H{
 				"code": 200,
-				"message": gin.H{
-					"token":    token,
-					"uid":      user.Uid,
-					"username": user.Username,
-					"isAdmin":  user.IsAdmin,
+				"message": &responses.LoginResponse{
+					Token:    token,
+					Uid:      user.Uid,
+					Username: user.Username,
+					IsAdmin:  user.IsAdmin,
 				},
 			})
 		}

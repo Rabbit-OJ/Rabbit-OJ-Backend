@@ -9,11 +9,13 @@ import (
 func Register(c *gin.Context) {
 	registerForm := forms.RegisterForm{}
 
-	if err := c.BindJSON(&registerForm); err != nil {
+	if err := c.ShouldBindJSON(&registerForm); err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
 			"message": err.Error(),
 		})
+
+		return
 	}
 
 	uid, err := user.Register(&registerForm)

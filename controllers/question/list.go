@@ -30,6 +30,6 @@ func List(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"code": 200,
-		"list": list,
+		"message": list,
 	})
 }
