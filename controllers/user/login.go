@@ -42,8 +42,13 @@ func Login(c *gin.Context) {
 			})
 		} else {
 			c.JSON(200, gin.H{
-				"code":    200,
-				"message": token,
+				"code": 200,
+				"message": gin.H{
+					"token":    token,
+					"uid":      user.Uid,
+					"username": user.Username,
+					"isAdmin":  user.IsAdmin,
+				},
 			})
 		}
 	} else {
