@@ -6,6 +6,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/middlewares"
+	"Rabbit-OJ-Backend/mq"
 	"Rabbit-OJ-Backend/utils"
 	"fmt"
 
@@ -14,14 +15,19 @@ import (
 
 func main() {
 	db.Init()
+	mq.Init()
+	utils.InitConstant()
+
 	defer func() {
-		err := db.DB.Close()
-		if err != nil {
+		if err := db.DB.Close(); err != nil {
+			fmt.Println(err)
+		}
+
+		if err := mq.Connection.Close(); err != nil {
 			fmt.Println(err)
 		}
 	}()
 
-	utils.InitConstant()
 	server := gin.Default()
 
 	server.Use(middlewares.Cors())

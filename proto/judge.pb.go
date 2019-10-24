@@ -4,12 +4,8 @@
 package proto
 
 import (
-	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -26,8 +22,10 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type JudgeRequest struct {
 	Sid                  uint32   `protobuf:"varint,1,opt,name=sid,proto3" json:"sid,omitempty"`
-	Language             string   `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`
-	Code                 string   `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Tid                  uint32   `protobuf:"varint,2,opt,name=tid,proto3" json:"tid,omitempty"`
+	TidVersion           uint32   `protobuf:"varint,3,opt,name=tid_version,json=tidVersion,proto3" json:"tid_version,omitempty"`
+	Language             string   `protobuf:"bytes,4,opt,name=language,proto3" json:"language,omitempty"`
+	Code                 string   `protobuf:"bytes,5,opt,name=code,proto3" json:"code,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -65,6 +63,20 @@ func (m *JudgeRequest) GetSid() uint32 {
 	return 0
 }
 
+func (m *JudgeRequest) GetTid() uint32 {
+	if m != nil {
+		return m.Tid
+	}
+	return 0
+}
+
+func (m *JudgeRequest) GetTidVersion() uint32 {
+	if m != nil {
+		return m.TidVersion
+	}
+	return 0
+}
+
 func (m *JudgeRequest) GetLanguage() string {
 	if m != nil {
 		return m.Language
@@ -81,7 +93,7 @@ func (m *JudgeRequest) GetCode() string {
 
 type JudgeResponse struct {
 	Sid                  uint32   `protobuf:"varint,1,opt,name=sid,proto3" json:"sid,omitempty"`
-	Result               string   `protobuf:"bytes,2,opt,name=result,proto3" json:"result,omitempty"`
+	Stdout               string   `protobuf:"bytes,2,opt,name=stdout,proto3" json:"stdout,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -119,111 +131,175 @@ func (m *JudgeResponse) GetSid() uint32 {
 	return 0
 }
 
-func (m *JudgeResponse) GetResult() string {
+func (m *JudgeResponse) GetStdout() string {
 	if m != nil {
-		return m.Result
+		return m.Stdout
 	}
 	return ""
+}
+
+type Case struct {
+	Stdin                string   `protobuf:"bytes,1,opt,name=stdin,proto3" json:"stdin,omitempty"`
+	Stdout               string   `protobuf:"bytes,2,opt,name=stdout,proto3" json:"stdout,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Case) Reset()         { *m = Case{} }
+func (m *Case) String() string { return proto.CompactTextString(m) }
+func (*Case) ProtoMessage()    {}
+func (*Case) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a2b4fa635fb2baaa, []int{2}
+}
+
+func (m *Case) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Case.Unmarshal(m, b)
+}
+func (m *Case) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Case.Marshal(b, m, deterministic)
+}
+func (m *Case) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Case.Merge(m, src)
+}
+func (m *Case) XXX_Size() int {
+	return xxx_messageInfo_Case.Size(m)
+}
+func (m *Case) XXX_DiscardUnknown() {
+	xxx_messageInfo_Case.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Case proto.InternalMessageInfo
+
+func (m *Case) GetStdin() string {
+	if m != nil {
+		return m.Stdin
+	}
+	return ""
+}
+
+func (m *Case) GetStdout() string {
+	if m != nil {
+		return m.Stdout
+	}
+	return ""
+}
+
+type TestCaseRequest struct {
+	Tid                  uint32   `protobuf:"varint,1,opt,name=tid,proto3" json:"tid,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TestCaseRequest) Reset()         { *m = TestCaseRequest{} }
+func (m *TestCaseRequest) String() string { return proto.CompactTextString(m) }
+func (*TestCaseRequest) ProtoMessage()    {}
+func (*TestCaseRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a2b4fa635fb2baaa, []int{3}
+}
+
+func (m *TestCaseRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TestCaseRequest.Unmarshal(m, b)
+}
+func (m *TestCaseRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TestCaseRequest.Marshal(b, m, deterministic)
+}
+func (m *TestCaseRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TestCaseRequest.Merge(m, src)
+}
+func (m *TestCaseRequest) XXX_Size() int {
+	return xxx_messageInfo_TestCaseRequest.Size(m)
+}
+func (m *TestCaseRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_TestCaseRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TestCaseRequest proto.InternalMessageInfo
+
+func (m *TestCaseRequest) GetTid() uint32 {
+	if m != nil {
+		return m.Tid
+	}
+	return 0
+}
+
+type TestCaseResponse struct {
+	Tid                  uint32   `protobuf:"varint,1,opt,name=tid,proto3" json:"tid,omitempty"`
+	Case                 []*Case  `protobuf:"bytes,2,rep,name=case,proto3" json:"case,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TestCaseResponse) Reset()         { *m = TestCaseResponse{} }
+func (m *TestCaseResponse) String() string { return proto.CompactTextString(m) }
+func (*TestCaseResponse) ProtoMessage()    {}
+func (*TestCaseResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a2b4fa635fb2baaa, []int{4}
+}
+
+func (m *TestCaseResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TestCaseResponse.Unmarshal(m, b)
+}
+func (m *TestCaseResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TestCaseResponse.Marshal(b, m, deterministic)
+}
+func (m *TestCaseResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TestCaseResponse.Merge(m, src)
+}
+func (m *TestCaseResponse) XXX_Size() int {
+	return xxx_messageInfo_TestCaseResponse.Size(m)
+}
+func (m *TestCaseResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_TestCaseResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TestCaseResponse proto.InternalMessageInfo
+
+func (m *TestCaseResponse) GetTid() uint32 {
+	if m != nil {
+		return m.Tid
+	}
+	return 0
+}
+
+func (m *TestCaseResponse) GetCase() []*Case {
+	if m != nil {
+		return m.Case
+	}
+	return nil
 }
 
 func init() {
 	proto.RegisterType((*JudgeRequest)(nil), "proto.JudgeRequest")
 	proto.RegisterType((*JudgeResponse)(nil), "proto.JudgeResponse")
+	proto.RegisterType((*Case)(nil), "proto.Case")
+	proto.RegisterType((*TestCaseRequest)(nil), "proto.TestCaseRequest")
+	proto.RegisterType((*TestCaseResponse)(nil), "proto.TestCaseResponse")
 }
 
 func init() { proto.RegisterFile("judge.proto", fileDescriptor_a2b4fa635fb2baaa) }
 
 var fileDescriptor_a2b4fa635fb2baaa = []byte{
-	// 169 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0x2a, 0x4d, 0x49,
-	0x4f, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x4a, 0x01, 0x5c, 0x3c, 0x5e,
-	0x20, 0xd1, 0xa0, 0xd4, 0xc2, 0xd2, 0xd4, 0xe2, 0x12, 0x21, 0x01, 0x2e, 0xe6, 0xe2, 0xcc, 0x14,
-	0x09, 0x46, 0x05, 0x46, 0x0d, 0xde, 0x20, 0x10, 0x53, 0x48, 0x8a, 0x8b, 0x23, 0x27, 0x31, 0x2f,
-	0xbd, 0x34, 0x31, 0x3d, 0x55, 0x82, 0x49, 0x81, 0x51, 0x83, 0x33, 0x08, 0xce, 0x17, 0x12, 0xe2,
-	0x62, 0x49, 0xce, 0x4f, 0x49, 0x95, 0x60, 0x06, 0x8b, 0x83, 0xd9, 0x4a, 0x96, 0x5c, 0xbc, 0x50,
-	0x13, 0x8b, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0xb1, 0x18, 0x29, 0xc6, 0xc5, 0x56, 0x94, 0x5a, 0x5c,
-	0x9a, 0x53, 0x02, 0x35, 0x10, 0xca, 0x33, 0x72, 0xe1, 0x62, 0x05, 0x6b, 0x15, 0xb2, 0xe6, 0xe2,
-	0x73, 0x4f, 0x2d, 0x81, 0x19, 0x53, 0x9a, 0x53, 0x22, 0x24, 0x0c, 0x71, 0xb6, 0x1e, 0xb2, 0x63,
-	0xa5, 0x44, 0x50, 0x05, 0x21, 0xf6, 0x25, 0xb1, 0x81, 0x05, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff,
-	0xff, 0x25, 0xd7, 0xe0, 0x53, 0xef, 0x00, 0x00, 0x00,
-}
-
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
-
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
-
-// JudgeClient is the client API for Judge service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type JudgeClient interface {
-	GetJudgeResult(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error)
-}
-
-type judgeClient struct {
-	cc *grpc.ClientConn
-}
-
-func NewJudgeClient(cc *grpc.ClientConn) JudgeClient {
-	return &judgeClient{cc}
-}
-
-func (c *judgeClient) GetJudgeResult(ctx context.Context, in *JudgeRequest, opts ...grpc.CallOption) (*JudgeResponse, error) {
-	out := new(JudgeResponse)
-	err := c.cc.Invoke(ctx, "/proto.Judge/GetJudgeResult", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// JudgeServer is the server API for Judge service.
-type JudgeServer interface {
-	GetJudgeResult(context.Context, *JudgeRequest) (*JudgeResponse, error)
-}
-
-// UnimplementedJudgeServer can be embedded to have forward compatible implementations.
-type UnimplementedJudgeServer struct {
-}
-
-func (*UnimplementedJudgeServer) GetJudgeResult(ctx context.Context, req *JudgeRequest) (*JudgeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetJudgeResult not implemented")
-}
-
-func RegisterJudgeServer(s *grpc.Server, srv JudgeServer) {
-	s.RegisterService(&_Judge_serviceDesc, srv)
-}
-
-func _Judge_GetJudgeResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JudgeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(JudgeServer).GetJudgeResult(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.Judge/GetJudgeResult",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JudgeServer).GetJudgeResult(ctx, req.(*JudgeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _Judge_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.Judge",
-	HandlerType: (*JudgeServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetJudgeResult",
-			Handler:    _Judge_GetJudgeResult_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "judge.proto",
+	// 297 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0xcf, 0x4f, 0xfa, 0x40,
+	0x10, 0xc5, 0x53, 0x68, 0x09, 0x4c, 0xbf, 0x7c, 0x25, 0x23, 0xc1, 0x4d, 0x2f, 0x34, 0xf5, 0xd2,
+	0x13, 0x87, 0xea, 0xc5, 0x98, 0x78, 0x51, 0x43, 0xc2, 0xb1, 0x31, 0x5e, 0x4d, 0x65, 0x27, 0xcd,
+	0x1a, 0xd2, 0x45, 0x76, 0xea, 0x3f, 0xe0, 0x3f, 0x6e, 0xba, 0x5b, 0x28, 0xf8, 0xe3, 0xd4, 0x7d,
+	0x9f, 0x9d, 0xd7, 0x79, 0xaf, 0x85, 0xf0, 0xad, 0x96, 0x25, 0x2d, 0xb6, 0x3b, 0xcd, 0x1a, 0x03,
+	0xfb, 0x48, 0x3e, 0x3d, 0xf8, 0xb7, 0x6a, 0x70, 0x4e, 0xef, 0x35, 0x19, 0xc6, 0x09, 0xf4, 0x8d,
+	0x92, 0xc2, 0x8b, 0xbd, 0x74, 0x9c, 0x37, 0xc7, 0x86, 0xb0, 0x92, 0xa2, 0xe7, 0x08, 0x2b, 0x89,
+	0x73, 0x08, 0x59, 0xc9, 0x97, 0x0f, 0xda, 0x19, 0xa5, 0x2b, 0xd1, 0xb7, 0x37, 0xc0, 0x4a, 0x3e,
+	0x3b, 0x82, 0x11, 0x0c, 0x37, 0x45, 0x55, 0xd6, 0x45, 0x49, 0xc2, 0x8f, 0xbd, 0x74, 0x94, 0x1f,
+	0x34, 0x22, 0xf8, 0x6b, 0x2d, 0x49, 0x04, 0x96, 0xdb, 0x73, 0x72, 0x03, 0xe3, 0x36, 0x84, 0xd9,
+	0xea, 0xca, 0xd0, 0x2f, 0x29, 0x66, 0x30, 0x30, 0x2c, 0x75, 0xcd, 0x36, 0xc8, 0x28, 0x6f, 0x55,
+	0x72, 0x0d, 0xfe, 0x7d, 0x61, 0x08, 0xa7, 0x10, 0x18, 0x96, 0xaa, 0xb2, 0x9e, 0x51, 0xee, 0xc4,
+	0x9f, 0xae, 0x4b, 0x38, 0x7b, 0x22, 0xc3, 0x8d, 0xf3, 0xa8, 0x38, 0x77, 0x2b, 0x59, 0xc9, 0xe4,
+	0x11, 0x26, 0xdd, 0x50, 0x17, 0xec, 0x74, 0x0a, 0xe7, 0xe0, 0xaf, 0x0b, 0x43, 0xa2, 0x17, 0xf7,
+	0xd3, 0x30, 0x0b, 0xdd, 0xe7, 0x5d, 0x58, 0x93, 0xbd, 0xc8, 0x1e, 0x20, 0xb0, 0xe5, 0xf0, 0x16,
+	0xfe, 0x2f, 0x89, 0xf7, 0x45, 0xeb, 0x0d, 0xe3, 0x79, 0x3b, 0x7d, 0xfc, 0x07, 0xa2, 0xe9, 0x29,
+	0x74, 0x8b, 0xb3, 0x15, 0x0c, 0xf7, 0x61, 0xf0, 0x0e, 0xc2, 0x25, 0xf1, 0x41, 0xce, 0x5a, 0xc3,
+	0xb7, 0x46, 0xd1, 0xc5, 0x0f, 0xee, 0xde, 0xf5, 0x3a, 0xb0, 0xfc, 0xea, 0x2b, 0x00, 0x00, 0xff,
+	0xff, 0xdd, 0xd3, 0x84, 0x26, 0x11, 0x02, 0x00, 0x00,
 }

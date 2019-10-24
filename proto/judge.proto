@@ -4,15 +4,35 @@ package proto;
 
 message JudgeRequest {
     uint32 sid = 1;
-    string language = 2;
-    string code = 3;
+    uint32 tid = 2;
+    uint32 tid_version = 3;
+    string language = 4;
+    string code = 5;
 }
 
 message JudgeResponse {
     uint32 sid = 1;
-    string result = 2;
+    string stdout = 2;
 }
 
 service Judge {
-    rpc GetJudgeResult(JudgeRequest) returns (JudgeResponse);
+    rpc GetJudgeResult (JudgeRequest) returns (JudgeResponse);
+}
+
+message Case {
+    string stdin = 1;
+    string stdout = 2;
+}
+
+message TestCaseRequest {
+    uint32 tid = 1;
+}
+
+message TestCaseResponse {
+    uint32 tid = 1;
+    repeated Case case = 2;
+}
+
+service TestCase {
+    rpc GetTestCase (TestCaseRequest) returns (TestCaseResponse);
 }
