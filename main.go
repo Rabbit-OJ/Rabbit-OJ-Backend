@@ -6,7 +6,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/middlewares"
-	"Rabbit-OJ-Backend/mq"
+	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/utils"
 	"fmt"
 
@@ -14,12 +14,16 @@ import (
 )
 
 func main() {
-	db.Init()
 	mq.Init()
+	db.Init()
 	utils.InitConstant()
 
 	defer func() {
 		if err := db.DB.Close(); err != nil {
+			fmt.Println(err)
+		}
+
+		if err := mq.Channel.Close(); err != nil {
 			fmt.Println(err)
 		}
 

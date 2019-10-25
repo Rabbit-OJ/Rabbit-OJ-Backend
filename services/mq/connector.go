@@ -14,7 +14,7 @@ var (
 
 func Init() {
 	username := "user"
-	password := "P@ssw0rd"
+	password := os.Getenv("Password")
 
 	server := "localhost:5672"
 	if os.Getenv("ENV") == "production" {
@@ -54,6 +54,42 @@ func Init() {
 	if err := BindQueue(utils.CaseQueueName, utils.CaseRoutingKey, utils.DefaultExchangeName); err != nil {
 		panic(err)
 	}
+
+	if os.Getenv("Role") == "Server" {
+		deliveries, err := DeclareConsumer(utils.CaseQueueName, utils.CaseRoutingKey)
+		if err != nil {
+			panic(err)
+		}
+
+		go TestCaseHandler(deliveries)
+
+	} else if os.Getenv("Role") == "Judge" {
+		deliveries, err := DeclareConsumer(utils.JudgeQueueName, utils.JudgeRoutingKey)
+		if err != nil {
+			panic(err)
+		}
+
+		go JudgeHandler(deliveries)
+
+	}
+}
+
+func DeclareConsumer(queueName, consumerTag string) (<-chan amqp.Delivery, error) {
+	deliveries, err := Channel.Consume(
+		queueName,
+		consumerTag,
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return deliveries, err
 }
 
 func DeclareExchange(exchangeName, exchangeType string) error {

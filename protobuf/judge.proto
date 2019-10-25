@@ -1,17 +1,17 @@
 syntax = "proto3";
 
-package proto;
+package protobuf;
 
 message JudgeRequest {
-    uint32 sid = 1;
-    uint32 tid = 2;
-    uint32 tid_version = 3;
+    string sid = 1;
+    string tid = 2;
+    string tid_version = 3;
     string language = 4;
-    string code = 5;
+    bytes code = 5;
 }
 
 message JudgeResponse {
-    uint32 sid = 1;
+    string sid = 1;
     string stdout = 2;
 }
 
@@ -20,16 +20,16 @@ service Judge {
 }
 
 message Case {
-    string stdin = 1;
-    string stdout = 2;
+    bytes stdin = 1;
+    bytes stdout = 2;
 }
 
 message TestCaseRequest {
-    uint32 tid = 1;
+    string tid = 1;
 }
 
 message TestCaseResponse {
-    uint32 tid = 1;
+    string tid = 1;
     repeated Case case = 2;
 }
 

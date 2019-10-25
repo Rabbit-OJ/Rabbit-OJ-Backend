@@ -13,7 +13,7 @@ var (
 
 func Init() {
 	username := "root"
-	password := "P@ssw0rd"
+	password := os.Getenv("Password")
 	database := "oj"
 
 	server := "tcp(localhost:3306)"

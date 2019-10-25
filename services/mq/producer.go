@@ -8,6 +8,8 @@ import (
 func Publish(exchangeName, routingKey string, body []byte) error {
 	if err := Channel.Confirm(false); err != nil {
 		fmt.Println(err)
+
+		return err
 	} else {
 		confirms := Channel.NotifyPublish(make(chan amqp.Confirmation, 1))
 
