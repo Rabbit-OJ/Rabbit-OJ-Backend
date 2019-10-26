@@ -43,10 +43,16 @@ func TestCaseConsumer(delivery *amqp.Delivery) {
 }
 
 func TestCasePublish(tid string) error {
-	testCaseRequest := &protobuf.TestCaseResponse{
-		Tid: tid,
+	testCaseInfo, err := question.Case(tid)
+
+	if err != nil {
+		return err
 	}
 
+	testCaseRequest := &protobuf.TestCaseResponse{
+		Tid:     tid,
+		Version: testCaseInfo.Version,
+	}
 	data, err := proto.Marshal(testCaseRequest)
 	if err != nil {
 		return err

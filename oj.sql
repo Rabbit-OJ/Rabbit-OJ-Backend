@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Oct 16, 2019 at 10:02 AM
+-- Generation Time: Oct 26, 2019 at 05:17 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.22
 
@@ -60,7 +60,8 @@ CREATE TABLE `question_content` (
 CREATE TABLE `question_judge` (
   `tid` int(10) UNSIGNED NOT NULL,
   `mode` char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `dataset_count` int(10) UNSIGNED NOT NULL
+  `dataset_count` int(10) UNSIGNED NOT NULL,
+  `version` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

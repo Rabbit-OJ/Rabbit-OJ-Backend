@@ -5,7 +5,7 @@ package protobuf;
 message JudgeRequest {
     string sid = 1;
     string tid = 2;
-    string tid_version = 3;
+    string version = 3;
     string language = 4;
     bytes code = 5;
 }
@@ -30,6 +30,7 @@ message TestCaseRequest {
 
 message TestCaseResponse {
     string tid = 1;
+    string version = 3;
     repeated Case case = 2;
 }
 
