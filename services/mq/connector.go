@@ -55,22 +55,13 @@ func Init() {
 		panic(err)
 	}
 
-	if os.Getenv("Role") == "Server" {
-		deliveries, err := DeclareConsumer(utils.CaseQueueName, utils.CaseRoutingKey)
-		if err != nil {
-			panic(err)
-		}
-
-		go TestCaseHandler(deliveries)
-
-	} else if os.Getenv("Role") == "Judge" {
+	if os.Getenv("Role") == "Judge" {
 		deliveries, err := DeclareConsumer(utils.JudgeQueueName, utils.JudgeRoutingKey)
 		if err != nil {
 			panic(err)
 		}
 
 		go JudgeHandler(deliveries)
-
 	}
 }
 

@@ -10,6 +10,7 @@ func Router(baseRouter *gin.Engine) {
 
 	questionRouter.GET("/list/:page", List)
 	questionRouter.GET("/item/:tid", Detail)
+	questionRouter.GET("/case/:tid", middlewares.SecretCheck(), Case)
 	questionRouter.POST("/item/:tid", middlewares.AuthJWT(), Submit)
 	questionRouter.POST("/item", middlewares.AuthJWT(), Create)
 	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(), Edit)
