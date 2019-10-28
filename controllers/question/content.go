@@ -8,7 +8,7 @@ import (
 func Detail(c *gin.Context) {
 	tid := c.Param("tid")
 
-	content, err := QuestionService.Content(tid)
+	detail, err := QuestionService.Detail(tid)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -17,7 +17,7 @@ func Detail(c *gin.Context) {
 	} else {
 		c.JSON(200, gin.H{
 			"code":    200,
-			"message": content,
+			"message": detail,
 		})
 	}
 }
