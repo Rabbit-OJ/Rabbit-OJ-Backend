@@ -9,14 +9,14 @@ import (
 	"os"
 )
 
-func Case(tid string) (*protobuf.TestCaseResponse, error) {
+func Case(tid string, response *protobuf.TestCaseResponse) error {
 	judgeObj, err := JudgeInfo(tid)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	count := judgeObj.DatasetCount
-	response := &protobuf.TestCaseResponse{
+	*response = protobuf.TestCaseResponse{
 		Tid:  tid,
 		Case: make([]*protobuf.Case, 0, count),
 	}
@@ -41,10 +41,10 @@ func Case(tid string) (*protobuf.TestCaseResponse, error) {
 	}
 
 	if len(response.Case) == 0 {
-		return nil, errors.New("no valid cases found")
+		return errors.New("no valid cases found")
 	}
 
-	return response, nil
+	return nil
 }
 
 func readCaseFile(tid string, caseId uint32, mode string) ([]byte, error) {

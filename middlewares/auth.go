@@ -21,7 +21,6 @@ func AuthJWT() gin.HandlerFunc {
 		}
 
 		claims, err := auth.VerifyJWT(token)
-
 		if err != nil {
 			c.JSON(403, gin.H{
 				"code":    403,

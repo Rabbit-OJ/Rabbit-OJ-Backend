@@ -7,8 +7,10 @@ import (
 	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/middlewares"
 	"Rabbit-OJ-Backend/services/mq"
+	"Rabbit-OJ-Backend/services/rpc"
 	"Rabbit-OJ-Backend/utils"
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,6 +33,10 @@ func main() {
 			fmt.Println(err)
 		}
 	}()
+
+	if os.Getenv("Role") == "Server" {
+		go rpc.Register()
+	}
 
 	server := gin.Default()
 
