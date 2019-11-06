@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Oct 26, 2019 at 05:17 AM
+-- Generation Time: Nov 06, 2019 at 11:14 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.22
 
@@ -74,7 +74,7 @@ CREATE TABLE `submission` (
   `sid` int(10) UNSIGNED NOT NULL,
   `tid` int(10) UNSIGNED NOT NULL,
   `uid` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `status` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'ING',
   `judge` json NOT NULL,
   `language` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `file_name` varchar(144) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
