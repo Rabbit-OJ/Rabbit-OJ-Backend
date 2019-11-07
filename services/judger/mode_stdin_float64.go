@@ -1,32 +1,38 @@
 package judger
 
 import (
-	"fmt"
 	"math"
+	"strconv"
+	"strings"
 )
 
 func ModeStdinFloat64(src, dest string) (bool, uint32) {
-	accepted := true
-	acceptedCount := uint32(0)
+	accepted, acceptedCount := true, uint32(0)
 
-	for {
-		var rightAnswer, judgeAnswer float64
+	srcArr, destArr := strings.Fields(src), strings.Fields(dest)
+	if len(srcArr) != len(destArr) {
+		accepted = false
+	}
 
-		if _, err := fmt.Sscanf(src, "%f", &rightAnswer); err != nil {
-			break
-		}
-
-		if _, err := fmt.Sscanf(dest, "%f", &judgeAnswer); err != nil {
+	for i := 0; i < len(srcArr); i++ {
+		if i >= len(destArr) {
 			accepted = false
 			break
 		}
 
-		if math.Abs(rightAnswer-judgeAnswer) > 1e-6 {
+		srcFloat, srcErr := strconv.ParseFloat(srcArr[i], 64)
+		destFloat, destErr := strconv.ParseFloat(destArr[i], 64)
+
+		if srcErr != nil || destErr != nil {
 			accepted = false
-			break
+			continue
 		}
 
-		acceptedCount++
+		if math.Abs(srcFloat - destFloat) <= 1e-6 {
+			acceptedCount++
+		} else {
+			accepted = false
+		}
 	}
 
 	return accepted, acceptedCount

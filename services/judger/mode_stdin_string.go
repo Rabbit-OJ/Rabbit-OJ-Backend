@@ -1,28 +1,28 @@
 package judger
 
-import "fmt"
+import (
+	"strings"
+)
 
 func ModeStdinString(src, dest string) (bool, uint32) {
-	accepted := true
-	acceptedCount := uint32(0)
+	accepted, acceptedCount := true, uint32(0)
 
-	for {
-		rightAnswer, judgeAnswer := "", ""
-		if _, err := fmt.Sscanf(src, "%s", &rightAnswer); err != nil {
-			break
-		}
+	srcArr, destArr := strings.Fields(src), strings.Fields(dest)
+	if len(srcArr) != len(destArr) {
+		accepted = false
+	}
 
-		if _, err := fmt.Sscanf(dest, "%s", &judgeAnswer); err != nil {
+	for i := 0; i < len(srcArr); i++ {
+		if i >= len(destArr) {
 			accepted = false
 			break
 		}
 
-		if rightAnswer != judgeAnswer {
+		if srcArr[i] == destArr[i] {
+			acceptedCount++
+		} else {
 			accepted = false
-			break
 		}
-
-		acceptedCount++
 	}
 
 	return accepted, acceptedCount
