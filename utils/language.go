@@ -18,7 +18,7 @@ func SupportLanguage() []models.SupportLanguage {
 		},
 		{
 			Name:  "C++/2a",
-			Value: "cpp2a",
+			Value: "cpp20",
 		},
 	}
 }

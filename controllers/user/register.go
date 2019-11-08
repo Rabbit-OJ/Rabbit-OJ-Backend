@@ -24,10 +24,12 @@ func Register(c *gin.Context) {
 			"code":    500,
 			"message": err.Error(),
 		})
+
 	} else {
 		c.JSON(200, gin.H{
 			"code":    200,
 			"message": uid,
 		})
+
 	}
 }

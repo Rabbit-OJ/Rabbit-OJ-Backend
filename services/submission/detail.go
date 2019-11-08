@@ -5,8 +5,8 @@ import (
 	"Rabbit-OJ-Backend/models"
 )
 
-func Detail (sid string) (*models.Submission, error) {
-	submission := &models.Submission{}
+func Detail (sid string) (*models.SubmissionExtended, error) {
+	submission := &models.SubmissionExtended{}
 
 	if err := db.DB.
 		Select("`submission`.*, `question`.`subject` AS question_title").

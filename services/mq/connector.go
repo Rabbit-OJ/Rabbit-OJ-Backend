@@ -39,11 +39,11 @@ func Init() {
 		panic(err)
 	}
 
-	if err := DeclareQueue(utils.CaseQueueName); err != nil {
+	if err := DeclareQueue(utils.JudgeQueueName); err != nil {
 		panic(err)
 	}
 
-	if err := DeclareQueue(utils.JudgeQueueName); err != nil {
+	if err := DeclareQueue(utils.JudgeResultQueueName); err != nil {
 		panic(err)
 	}
 
@@ -51,17 +51,28 @@ func Init() {
 		panic(err)
 	}
 
-	if err := BindQueue(utils.CaseQueueName, utils.CaseRoutingKey, utils.DefaultExchangeName); err != nil {
+	if err := BindQueue(utils.JudgeResultQueueName, utils.JudgeResultRoutingKey, utils.DefaultExchangeName); err != nil {
 		panic(err)
 	}
 
 	if os.Getenv("Role") == "Judge" {
+		// judge mode
 		deliveries, err := DeclareConsumer(utils.JudgeQueueName, utils.JudgeRoutingKey)
 		if err != nil {
 			panic(err)
 		}
 
 		go JudgeHandler(deliveries)
+	}
+
+	if os.Getenv("Role") == "Server" {
+		// server mode
+		deliveries, err := DeclareConsumer(utils.JudgeResultQueueName, utils.JudgeResultRoutingKey)
+		if err != nil {
+			panic(err)
+		}
+
+		go JudgeResultHandler(deliveries)
 	}
 }
 

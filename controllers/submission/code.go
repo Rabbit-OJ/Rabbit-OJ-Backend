@@ -2,6 +2,7 @@ package submission
 
 import (
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
+	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"os"
 	"path/filepath"
@@ -20,12 +21,12 @@ func Code(c *gin.Context) {
 		return
 	}
 
-	avatarPath, _ := filepath.Abs("./files/submission/" + submission.FileName)
+	codePath, _ := filepath.Abs(utils.CodePath(submission.FileName))
 	c.Writer.WriteHeader(200)
 	c.Header("Content-Disposition", "attachment; filename=code.txt")
 	c.Header("Content-Type", "text/plain")
 
-	if _, err := os.Stat(avatarPath); err != nil {
+	if _, err := os.Stat(codePath); err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
 			"message": err.Error(),
@@ -33,6 +34,6 @@ func Code(c *gin.Context) {
 
 		return
 	} else {
-		c.File(avatarPath)
+		c.File(codePath)
 	}
 }

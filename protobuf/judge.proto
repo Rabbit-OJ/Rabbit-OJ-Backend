@@ -10,9 +10,15 @@ message JudgeRequest {
     bytes code = 5;
 }
 
+message JudgeCaseResult {
+    string status = 1;
+    uint32 space_used = 2;
+    uint32 time_used = 3;
+}
+
 message JudgeResponse {
     string sid = 1;
-    string stdout = 2;
+    repeated JudgeCaseResult result = 2;
 }
 
 service Judge {

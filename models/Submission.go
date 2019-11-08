@@ -7,6 +7,19 @@ import (
 )
 
 type Submission struct {
+	Sid           string        `gorm:"auto_increment" json:"sid"`
+	Tid           string        `json:"tid"`
+	Uid           string        `json:"uid"`
+	Status        string        `json:"status"`
+	Judge         []byte        `json:"-"`
+	Language      string        `json:"language"`
+	FileName      string        `json:"-"`
+	TimeUsed      uint32        `json:"time_used"`
+	SpaceUsed     uint32        `json:"space_used"`
+	CreatedAt     time.Time     `json:"created_at"`
+}
+
+type SubmissionExtended struct {
 	Sid           string        `json:"sid"`
 	Tid           string        `json:"tid"`
 	QuestionTitle string        `json:"question_title"`
@@ -39,7 +52,7 @@ type JudgeResult struct {
 	SpaceUsed uint32 `json:"space_used"`
 }
 
-func (s *Submission) AfterFind(scope *gorm.Scope) (err error) {
+func (s *SubmissionExtended) AfterFind(scope *gorm.Scope) (err error) {
 	s.JudgeObj = make([]JudgeResult, 0)
 	if err := json.Unmarshal(s.Judge, &s.JudgeObj); err != nil {
 		return err
@@ -47,7 +60,7 @@ func (s *Submission) AfterFind(scope *gorm.Scope) (err error) {
 	return nil
 }
 
-func (s *Submission) BeforeSave(scope *gorm.Scope) (err error) {
+func (s *SubmissionExtended) BeforeSave(scope *gorm.Scope) (err error) {
 	judgeJSON, err := json.Marshal(s.JudgeObj)
 	if err != nil {
 		return err
