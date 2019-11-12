@@ -19,7 +19,7 @@ func DialInit() error {
 	return nil
 }
 
-func DialCall(serviceName, functionName string, request AnyType, response *AnyType) error {
+func DialCall(serviceName, functionName string, request AnyType, response AnyType) error {
 	if Client == nil {
 		if err := DialInit(); err != nil {
 			return err

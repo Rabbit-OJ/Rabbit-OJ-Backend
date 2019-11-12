@@ -5,7 +5,6 @@ import (
 	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"os"
-	"path/filepath"
 )
 
 func Code(c *gin.Context) {
@@ -21,7 +20,7 @@ func Code(c *gin.Context) {
 		return
 	}
 
-	codePath, _ := filepath.Abs(utils.CodePath(submission.FileName))
+	codePath, _ := utils.CodePath(submission.FileName)
 	c.Writer.WriteHeader(200)
 	c.Header("Content-Disposition", "attachment; filename=code.txt")
 	c.Header("Content-Type", "text/plain")

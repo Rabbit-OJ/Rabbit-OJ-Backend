@@ -5,20 +5,19 @@ import (
 	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"os"
-	"path/filepath"
 )
 
 func Avatar(c *gin.Context) {
 	uid := c.Param("uid")
 
-	avatarPath, _ := filepath.Abs(utils.AvatarPath(uid))
+	avatarPath, _ := utils.AvatarPath(uid)
 
 	c.Writer.WriteHeader(200)
 	c.Header("Content-Disposition", "attachment; filename=avatar.png")
 	c.Header("Content-Type", "application/octet-stream")
 
 	if _, err := os.Stat(avatarPath); err != nil {
-		defaultPath, _ := filepath.Abs(utils.DefaultAvatarPath())
+		defaultPath, _ := utils.DefaultAvatarPath()
 		c.File(defaultPath)
 	} else {
 		c.File(avatarPath)
@@ -38,7 +37,6 @@ func UploadAvatar(c *gin.Context) {
 
 	uid := authObject.Uid
 	_, header, err := c.Request.FormFile("avatar")
-
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -47,7 +45,15 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	avatarPath, _ := filepath.Abs(utils.AvatarPath(uid))
+	avatarPath, err := utils.AvatarPath(uid)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+		return
+	}
+
 	if err := c.SaveUploadedFile(header, avatarPath); err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

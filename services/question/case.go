@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 )
 
 func Case(tid string, response *protobuf.TestCaseResponse) error {
@@ -21,16 +22,22 @@ func Case(tid string, response *protobuf.TestCaseResponse) error {
 		Case: make([]*protobuf.Case, 0, count),
 	}
 
-	for i := uint32(0); i < count; i++ {
+	for i := uint32(1); i <= count; i++ {
 		currentCase := &protobuf.Case{}
 
-		inFile, errIn := readCaseFile(tid, i, "in")
+		inFile, errIn := readCaseFile(
+			tid,
+			strconv.FormatUint(uint64(judgeObj.Version), 10),
+			strconv.FormatUint(uint64(i), 10), "in")
 		if errIn != nil {
 			fmt.Println(errIn)
 			continue
 		}
 
-		outFile, errOut := readCaseFile(tid, i, "out")
+		outFile, errOut := readCaseFile(
+			tid,
+			strconv.FormatUint(uint64(judgeObj.Version), 10),
+			strconv.FormatUint(uint64(i), 10), "out")
 		if errOut != nil {
 			fmt.Println(errOut)
 			continue
@@ -47,8 +54,13 @@ func Case(tid string, response *protobuf.TestCaseResponse) error {
 	return nil
 }
 
-func readCaseFile(tid string, caseId uint32, mode string) ([]byte, error) {
-	file, err := os.Open(utils.CaseFilePath(tid, caseId, mode))
+func readCaseFile(tid, version, caseId, caseType string) ([]byte, error) {
+	filePath, err := utils.JudgeFilePath(tid, version, caseId, caseType)
+	if err != nil {
+		return nil, err
+	}
+
+	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}

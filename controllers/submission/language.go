@@ -8,6 +8,6 @@ import (
 func Language(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code":    200,
-		"message": utils.SupportLanguage(),
+		"message": utils.SupportLanguage,
 	})
 }

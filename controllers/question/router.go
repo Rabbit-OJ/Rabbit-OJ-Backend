@@ -18,8 +18,7 @@ func languageValidator(
 	if language, ok := field.Interface().(string); ok {
 		supportLanguage := false
 
-		allLanguage := utils.SupportLanguage()
-		for _, lang := range allLanguage {
+		for _, lang := range utils.SupportLanguage {
 			if language == lang.Value {
 				supportLanguage = true
 				break

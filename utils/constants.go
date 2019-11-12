@@ -15,4 +15,5 @@ var (
 
 func InitConstant() {
 	Secret = os.Getenv("Secret")
+	InitLanguage()
 }

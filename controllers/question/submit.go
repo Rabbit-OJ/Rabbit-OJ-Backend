@@ -8,7 +8,6 @@ import (
 	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
-	"path/filepath"
 )
 
 func Submit(c *gin.Context) {
@@ -42,7 +41,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	fileName, err := utils.CodeGenerateFileName(authObject.Uid)
+	fileName, err := utils.CodeGenerateFileNameWithMkdir(authObject.Uid)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
@@ -52,7 +51,16 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	filePath, _ := filepath.Abs(utils.CodePath(fileName))
+	filePath, err := utils.CodePath(fileName)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"code":    404,
+			"message": err.Error(),
+		})
+
+		return
+	}
+
 	if err := ioutil.WriteFile(filePath, []byte(submitForm.Code), 0644); err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
