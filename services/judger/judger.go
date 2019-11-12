@@ -8,7 +8,7 @@ import (
 func JudgeOneCase(testResult TestResult, stdout, rightStdout, compMode string) *models.JudgeResult {
 	result := &models.JudgeResult{}
 
-	if testResult.Status != STATUS_OK {
+	if testResult.Status != StatusOK {
 		result.Status = testResult.Status
 	} else {
 		isAC := false

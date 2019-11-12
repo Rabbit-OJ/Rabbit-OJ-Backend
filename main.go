@@ -56,4 +56,8 @@ func main() {
 		judger.InitDocker()
 		judger.CheckTestCase()
 	}
+
+	if os.Getenv("Role") == "Tester" {
+		judger.Tester()
+	}
 }

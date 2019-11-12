@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	STATUS_OK  = "OK"
-	STATUS_TLE = "TLE"
-	STATUS_MLE = "MLE"
-	STATUS_RE  = "RE"
+	StatusOK  = "OK"
+	StatusTLE = "TLE"
+	StatusMLE = "MLE"
+	StatusRE  = "RE"
 )
 
 type TestResult struct {
