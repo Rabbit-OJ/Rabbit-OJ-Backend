@@ -41,7 +41,7 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 		testResult[i-1].Status = StatusRE
 	}
 
-	in, err := os.OpenFile("E:/test.in", os.O_RDONLY, 0644)
+	in, err := os.OpenFile(utils.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
 		testResult[i-1].Status = StatusRE
 		return
@@ -50,7 +50,7 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 		_ = in.Close()
 	}()
 
-	out, err := os.OpenFile("E:/test.out", os.O_CREATE|os.O_WRONLY, 0644)
+	out, err := os.OpenFile(utils.DockerOutputPath(i), os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -69,6 +69,13 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 	startTime := time.Now()
 
 	errChan, successChan, memoryMonitorChan, memoryMonitorCloseChan := make(chan error), make(chan bool), make(chan bool), make(chan bool)
+	defer func() {
+		close(errChan)
+		close(successChan)
+		close(memoryMonitorChan)
+		close(memoryMonitorCloseChan)
+	}()
+
 	go func() {
 		err := cmd.Wait()
 		if err != nil {

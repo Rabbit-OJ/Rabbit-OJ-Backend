@@ -40,6 +40,10 @@ func DockerCasePath(caseId int64) string {
 	return fmt.Sprintf("/case/%d.in", caseId)
 }
 
+func DockerOutputPath(caseId int64) string {
+	return fmt.Sprintf("/output/%d.in", caseId)
+}
+
 func StorageFilePath() (string, error) {
 	return filepath.Abs("./files/storage.json")
 }
