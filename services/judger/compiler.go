@@ -21,6 +21,7 @@ func Compiler(codePath, language string) error {
 		NetworkDisabled: true,
 		StopTimeout:     &compileOptions.CompileTime,
 	}
+
 	containerHostConfig := &container.HostConfig{
 		AutoRemove: true,
 		Mounts: []mount.Mount{

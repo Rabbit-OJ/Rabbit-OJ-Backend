@@ -16,8 +16,9 @@ WORKDIR /app
 COPY --from=build /app/server .
 COPY --from=build /app/files .
 COPY --from=build /app/statics .
+COPY ./Dockerfile .
 
 RUN chmod +x ./server
-RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /result && mkdir -p /case
+RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /output && mkdir -p /case
 
 ENTRYPOINT["/app/server"]
