@@ -37,10 +37,6 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 	cmd := exec.Command("/compile/code.o")
 	peakMemory := int64(0)
 
-	if err := cmd.Start(); err != nil {
-		testResult[i-1].Status = StatusRE
-	}
-
 	in, err := os.OpenFile(utils.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
 		testResult[i-1].Status = StatusRE
@@ -59,8 +55,7 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 		_ = out.Close()
 	}()
 
-	cmd.Stdin = in
-	cmd.Stdout = out
+	cmd.Stdin, cmd.Stdout = in, out
 
 	if err := cmd.Start(); err != nil {
 		testResult[i-1].Status = StatusRE

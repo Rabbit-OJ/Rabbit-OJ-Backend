@@ -10,15 +10,14 @@ COPY . .
 RUN go build -o ./server . && chmod +x ./server
 
 # prod stage
-FROM alpine:latest AS prod
+FROM docker:dind AS prod
+ENV Role=Judge
 WORKDIR /app
 
 COPY --from=build /app/server .
-COPY --from=build /app/files .
-COPY --from=build /app/statics .
-COPY ./Dockerfile .
+COPY . .
 
 RUN chmod +x ./server
 RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /output && mkdir -p /case
 
-ENTRYPOINT["/app/server"]
+ENTRYPOINT ["/app/server"]
