@@ -19,5 +19,6 @@ COPY . .
 
 RUN chmod +x ./server
 RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /output && mkdir -p /case
+RUN cp ./server ./tester
 
 ENTRYPOINT ["/app/server"]
