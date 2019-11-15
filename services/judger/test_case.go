@@ -59,48 +59,49 @@ func SaveStorageFile(storage []Storage) error {
 	return nil
 }
 
-func FetchTestCase(tid string) error {
+func FetchTestCase(tid string) (*Storage, error) {
 	request, response := &protobuf.TestCaseRequest{Tid: tid}, &protobuf.TestCaseResponse{}
 
 	if err := rpc.DialCall("CaseService", "Case", request, response); err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err := utils.JudgeDirPathWithMkdir(tid, response.Version)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	for index, item := range response.Case {
 		inPath, err := utils.JudgeFilePath(tid, response.Version, strconv.Itoa(index), "in")
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		if err := ioutil.WriteFile(inPath, item.Stdin, 0644); err != nil {
-			return err
+			return nil, err
 		}
 
 		outPath, err := utils.JudgeFilePath(tid, response.Version, strconv.Itoa(index), "out")
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		if err := ioutil.WriteFile(outPath, item.Stdout, 0644); err != nil {
-			return err
+			return nil, err
 		}
 	}
 
 	storage := ReadStorageFile()
-	storage = append(storage, Storage{
+	newStorage := &Storage{
 		Tid:          tid,
 		Version:      response.Version,
 		DatasetCount: uint32(len(response.Case)),
-	})
-	return SaveStorageFile(storage)
+	}
+	storage = append(storage, *newStorage)
+	return newStorage, SaveStorageFile(storage)
 }
 
-func InitTestCase(tid, version string) error {
+func InitTestCase(tid, version string) (*Storage, error) {
 	storageFileContent := ReadStorageFile()
 
 	containsFlag, storage := false, &Storage{}
@@ -115,6 +116,6 @@ func InitTestCase(tid, version string) error {
 	if (!containsFlag) || (containsFlag && storage.Version != version) {
 		return FetchTestCase(tid)
 	} else {
-		return nil
+		return storage, nil
 	}
 }

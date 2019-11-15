@@ -29,30 +29,55 @@ func InitLanguage() {
 
 	CompileObject = map[string]CompileInfo{
 		"cpp11": {
-			Args:        "g++ -std=c++11 /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
-			Image:       "gcc:9.2.0",
-			CompileTime: 5,
+			BuildArgs:   "g++ -std=c++11 /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
+			BuildTime:   5,
+			BuildImage:  "gcc:9.2.0",
+			BuildSource: "/compile/code.cpp",
+			BuildTarget: "/compile/code.o",
+			RunArgs:     "/compile/code.o",
+			RunImage:    "alpine:latest",
+			RunMaxTimeout: 120,
 		},
 		"cpp14": {
-			Args:        "g++ -std=c++14 /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
-			Image:       "gcc:9.2.0",
-			CompileTime: 5,
+			BuildArgs:   "g++ -std=c++14 /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
+			BuildTime:   5,
+			BuildImage:  "gcc:9.2.0",
+			BuildSource: "/compile/code.cpp",
+			BuildTarget: "/compile/code.o",
+			RunArgs:     "/compile/code.o",
+			RunImage:    "alpine:latest",
+			RunMaxTimeout: 120,
 		},
 		"cpp17": {
-			Args:        "g++ -std=c++17 /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
-			Image:       "gcc:9.2.0",
-			CompileTime: 5,
+			BuildArgs:   "g++ -std=c++17 /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
+			BuildTime:   5,
+			BuildImage:  "gcc:9.2.0",
+			BuildSource: "/compile/code.cpp",
+			BuildTarget: "/compile/code.o",
+			RunArgs:     "/compile/code.o",
+			RunImage:    "alpine:latest",
+			RunMaxTimeout: 120,
 		},
 		"cpp20": {
-			Args:        "g++ -std=c++2a /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
-			Image:       "gcc:9.2.0",
-			CompileTime: 5,
+			BuildArgs:   "g++ -std=c++2a /submit/code.cpp -Wall -lm --static -O2 -o /compile/code.o",
+			BuildTime:   5,
+			BuildImage:  "gcc:9.2.0",
+			BuildSource: "/compile/code.cpp",
+			BuildTarget: "/compile/code.o",
+			RunArgs:     "/compile/code.o",
+			RunImage:    "alpine:latest",
+			RunMaxTimeout: 120,
 		},
 	}
 }
 
 type CompileInfo struct {
-	Args        string
-	Image       string
-	CompileTime int // unit: seconds
+	BuildArgs     string
+	BuildSource   string
+	BuildTarget   string
+	BuildImage    string
+	BuildTime     int // unit: seconds
+	RunArgs       string
+	RunImage      string
+	RunMaxTimeout int // unit: seconds
 }

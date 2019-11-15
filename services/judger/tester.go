@@ -1,6 +1,7 @@
 package judger
 
 import (
+	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/utils"
 	"encoding/json"
 	"errors"
@@ -18,13 +19,6 @@ const (
 	StatusRE  = "RE"
 )
 
-type TestResult struct {
-	CaseId    int64
-	Status    string
-	TimeUsed  uint32
-	SpaceUsed uint32
-}
-
 func max(a, b int64) int64 {
 	if a < b {
 		return b
@@ -33,13 +27,13 @@ func max(a, b int64) int64 {
 	}
 }
 
-func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
-	cmd := exec.Command("/compile/code.o")
+func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, execCommand string) {
+	cmd := exec.Command(execCommand)
 	peakMemory := int64(0)
 
 	in, err := os.OpenFile(utils.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
-		testResult[i-1].Status = StatusRE
+		testResult.Status = StatusRE
 		return
 	}
 	defer func() {
@@ -58,7 +52,7 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 	cmd.Stdin, cmd.Stdout = in, out
 
 	if err := cmd.Start(); err != nil {
-		testResult[i-1].Status = StatusRE
+		testResult.Status = StatusRE
 		return
 	}
 	startTime := time.Now()
@@ -102,21 +96,21 @@ func TestOne(testResult []TestResult, i, timeLimit, spaceLimit int64) {
 
 	select {
 	case <-memoryMonitorChan:
-		testResult[i-1].Status = StatusMLE
-		testResult[i-1].TimeUsed = uint32(timeLimit)
+		testResult.Status = StatusMLE
+		testResult.TimeUsed = uint32(timeLimit)
 		_ = cmd.Process.Kill()
 	case <-successChan:
-		testResult[i-1].Status = StatusOK
+		testResult.Status = StatusOK
 		usedTime := time.Since(startTime)
-		testResult[i-1].TimeUsed = uint32(usedTime.Milliseconds())
-		testResult[i-1].SpaceUsed = uint32(peakMemory)
+		testResult.TimeUsed = uint32(usedTime.Milliseconds())
+		testResult.SpaceUsed = uint32(peakMemory)
 	case <-time.After(time.Duration(timeLimit) * time.Millisecond):
-		testResult[i-1].Status = StatusTLE
-		testResult[i-1].TimeUsed = uint32(timeLimit)
-		testResult[i-1].SpaceUsed = uint32(peakMemory)
+		testResult.Status = StatusTLE
+		testResult.TimeUsed = uint32(timeLimit)
+		testResult.SpaceUsed = uint32(peakMemory)
 		_ = cmd.Process.Kill()
 	case <-errChan:
-		testResult[i-1].Status = StatusRE
+		testResult.Status = StatusRE
 	}
 
 	memoryMonitorCloseChan <- true
@@ -147,6 +141,11 @@ func Tester() {
 		}
 	}
 
+	execCommand := os.Getenv("EXEC_COMMAND")
+	if execCommand == "" {
+		panic(err)
+	}
+
 	file, err := os.Create("/result/info.json")
 	if err != nil {
 		panic(err)
@@ -156,9 +155,9 @@ func Tester() {
 	}()
 
 	// <-- step2 : get_result
-	testResult := make([]TestResult, testCaseCount)
-	for i := int64(1); i <= testCaseCount; i++ {
-		TestOne(testResult, i, timeLimit, spaceLimit)
+	testResult := make([]models.TestResult, testCaseCount)
+	for i := int64(0); i <= testCaseCount; i++ {
+		TestOne(&testResult[i], i, timeLimit, spaceLimit, execCommand)
 	}
 
 	// <-- step3 : write info

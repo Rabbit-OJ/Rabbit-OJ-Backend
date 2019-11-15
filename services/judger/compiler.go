@@ -9,17 +9,12 @@ import (
 	"time"
 )
 
-func Compiler(codePath, language string) error {
-	compileOptions, ok := utils.CompileObject[language]
-	if !ok {
-		return errors.New("language doesn't exist")
-	}
-
+func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 	containerConfig := &container.Config{
-		Entrypoint:      []string{compileOptions.Args},
-		Image:           compileOptions.Image,
+		Entrypoint:      []string{compileInfo.BuildArgs},
+		Image:           compileInfo.BuildImage,
 		NetworkDisabled: true,
-		StopTimeout:     &compileOptions.CompileTime,
+		StopTimeout:     &compileInfo.BuildTime,
 	}
 
 	containerHostConfig := &container.HostConfig{
@@ -27,12 +22,12 @@ func Compiler(codePath, language string) error {
 		Mounts: []mount.Mount{
 			{
 				Source:   codePath,
-				Target:   "/submit/code.cpp",
+				Target:   compileInfo.BuildSource,
 				ReadOnly: true,
 			},
 			{
 				Source: codePath + ".o",
-				Target: "/compile/code.o",
+				Target: compileInfo.BuildTarget,
 			},
 		},
 	}
@@ -50,12 +45,10 @@ func Compiler(codePath, language string) error {
 	statusCh, errCh := DockerClient.ContainerWait(DockerContext, resp.ID, container.WaitConditionNotRunning)
 	select {
 	case err := <-errCh:
-		if err != nil {
-			return err
-		}
+		return err
 	case status := <-statusCh:
 		fmt.Println(status)
-	case <-time.After(time.Duration(compileOptions.CompileTime) * time.Second):
+	case <-time.After(time.Duration(compileInfo.BuildTime) * time.Second):
 		return errors.New("compile timeout")
 	}
 

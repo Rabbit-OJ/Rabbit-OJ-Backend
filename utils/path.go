@@ -36,12 +36,41 @@ func CodeGenerateFileNameWithMkdir(uid string) (string, error) {
 	return fmt.Sprintf("%s/%s_%d", t.Format("2006/01/02"), uid, t.UnixNano()), nil
 }
 
+func JudgeBaseDir(sid string) string {
+	return fmt.Sprintf("/judge/%s_", sid)
+}
+
+func JudgeGenerateDirWithMkdir(sid string) (string, error) {
+	t := time.Now()
+	path := JudgeBaseDir(sid) + t.Format("2006/01/02")
+
+	if !Exists(path) {
+		if err := os.MkdirAll(path, 0755); err != nil {
+			return "", err
+		}
+	}
+
+	return path, nil
+}
+
+func JudgeGenerateOutputDirWithMkdir(baseDir string) (string, error) {
+	path := baseDir + "/output"
+
+	if !Exists(path) {
+		if err := os.MkdirAll(path, 0755); err != nil {
+			return "", err
+		}
+	}
+
+	return path, nil
+}
+
 func DockerCasePath(caseId int64) string {
 	return fmt.Sprintf("/case/%d.in", caseId)
 }
 
 func DockerOutputPath(caseId int64) string {
-	return fmt.Sprintf("/output/%d.in", caseId)
+	return fmt.Sprintf("/output/%d.out", caseId)
 }
 
 func StorageFilePath() (string, error) {
@@ -49,7 +78,7 @@ func StorageFilePath() (string, error) {
 }
 
 func JudgeDirPathWithMkdir(tid, version string) (string, error) {
-	path, err :=  filepath.Abs(fmt.Sprintf("./files/judge/%s/%s", tid, version))
+	path, err := filepath.Abs(fmt.Sprintf("./files/judge/%s/%s", tid, version))
 	if err != nil {
 		return "", err
 	}
@@ -60,6 +89,10 @@ func JudgeDirPathWithMkdir(tid, version string) (string, error) {
 		}
 	}
 	return path, nil
+}
+
+func JudgeCaseDir(tid, version string) (string, error) {
+	return filepath.Abs(fmt.Sprintf("./files/judge/%s/%s", tid, version))
 }
 
 func JudgeFilePath(tid, version, caseId, caseType string) (string, error) {

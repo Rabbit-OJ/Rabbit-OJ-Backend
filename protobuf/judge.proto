@@ -7,7 +7,10 @@ message JudgeRequest {
     string tid = 2;
     string version = 3;
     string language = 4;
-    bytes code = 5;
+    uint32 time_limit = 5;
+    uint32 space_limit = 6;
+    string comp_mode = 7;
+    bytes code = 8;
 }
 
 message JudgeCaseResult {
