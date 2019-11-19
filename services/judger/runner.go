@@ -9,7 +9,14 @@ import (
 	"time"
 )
 
-func Runner(codePath string, compileInfo *utils.CompileInfo, caseCount, timeLimit, spaceLimit, casePath, outputPath string) error {
+func Runner(
+	codePath string,
+	compileInfo *utils.CompileInfo,
+	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
+) error {
+
+	fmt.Println("Compile OK, start run container " + codePath)
+
 	containerConfig := &container.Config{
 		Entrypoint:      []string{"/app/tester"},
 		Image:           compileInfo.RunImage,

@@ -19,6 +19,8 @@ type CollectedStdout struct {
 func Scheduler(request *protobuf.JudgeRequest) error {
 	sid := request.Sid
 
+	fmt.Println("[Scheduler] Received judge request " + sid)
+
 	// init path
 	currentPath, err := utils.JudgeGenerateDirWithMkdir(sid)
 	if err != nil {
@@ -83,6 +85,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	// collect std::out
+	fmt.Println("Collecting stdout " + sid)
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(0); i < storage.DatasetCount; i++ {
 
@@ -115,6 +118,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		}
 	}
 	// judge std::out
+	fmt.Println("Judging stdout " + sid)
 	resultList := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 
 	for index, item := range allStdin {

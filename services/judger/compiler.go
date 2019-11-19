@@ -10,6 +10,8 @@ import (
 )
 
 func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
+	fmt.Println("Start compile: " + codePath)
+
 	containerConfig := &container.Config{
 		Entrypoint:      []string{compileInfo.BuildArgs},
 		Image:           compileInfo.BuildImage,

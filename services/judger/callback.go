@@ -4,10 +4,13 @@ import (
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/utils"
+	"fmt"
 	"github.com/gogo/protobuf/proto"
 )
 
 func callbackAllError(status, sid string, storage *Storage) error {
+	fmt.Println("Callback judge error : " + sid + " with status " + status)
+
 	ceResult := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 
 	for i := range ceResult {
@@ -31,6 +34,8 @@ func callbackAllError(status, sid string, storage *Storage) error {
 }
 
 func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) error {
+	fmt.Println("Callback judge success : " + sid)
+
 	response := &protobuf.JudgeResponse{
 		Sid:    sid,
 		Result: resultList,
