@@ -44,5 +44,4 @@ func Router(baseRouter *gin.Engine) {
 	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(), Edit)
 	questionRouter.DELETE("/item/:tid", middlewares.AuthJWT(), Delete)
 	questionRouter.POST("/submit/:tid", middlewares.AuthJWT(), Submit)
-
 }

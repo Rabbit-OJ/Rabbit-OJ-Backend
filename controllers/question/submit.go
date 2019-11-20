@@ -81,7 +81,6 @@ func Submit(c *gin.Context) {
 	}
 
 	go question.UpdateAttemptCount(tid)
-	// todo: add websocket to deliver state
 	c.JSON(200, gin.H{
 		"code":    200,
 		"message": sid,

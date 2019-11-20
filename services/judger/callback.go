@@ -1,6 +1,7 @@
 package judger
 
 import (
+	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/utils"
@@ -50,4 +51,8 @@ func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) error {
 		utils.DefaultExchangeName,
 		utils.JudgeResultRoutingKey,
 		pro)
+}
+
+func callbackWebSocket(sid string) {
+	websocket.SocketHub.Broadcast <- sid
 }

@@ -131,6 +131,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		resultList[index].TimeUsed = judgeResult.TimeUsed
 	}
 	// mq return result
+	go callbackWebSocket(sid)
 	if err := callbackSuccess(
 		sid,
 		resultList); err != nil {
