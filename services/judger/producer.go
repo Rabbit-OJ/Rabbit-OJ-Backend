@@ -1,17 +1,18 @@
-package mq
+package judger
 
 import (
+	"Rabbit-OJ-Backend/services/mq"
 	"fmt"
 	"github.com/streadway/amqp"
 )
 
 func Publish(exchangeName, routingKey string, body []byte) error {
-	if err := Channel.Confirm(false); err != nil {
+	if err := mq.Channel.Confirm(false); err != nil {
 		fmt.Println(err)
 
 		return err
 	} else {
-		confirms := Channel.NotifyPublish(make(chan amqp.Confirmation, 1))
+		confirms := mq.Channel.NotifyPublish(make(chan amqp.Confirmation, 1))
 
 		defer func() {
 			if confirmed := <-confirms; confirmed.Ack {
@@ -22,7 +23,7 @@ func Publish(exchangeName, routingKey string, body []byte) error {
 		}()
 	}
 
-	if err := Channel.Publish(exchangeName,
+	if err := mq.Channel.Publish(exchangeName,
 		routingKey,
 		false,
 		false,

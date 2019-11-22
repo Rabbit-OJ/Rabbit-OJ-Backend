@@ -20,6 +20,5 @@ COPY --from=build /app/statics .
 
 RUN chmod +x ./server
 RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /output && mkdir -p /case && mkdir -p /result
-RUN cp ./server ./tester
 
 ENTRYPOINT ["/app/server"]

@@ -14,7 +14,6 @@ func Runner(
 	compileInfo *utils.CompileInfo,
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 ) error {
-
 	fmt.Println("Compile OK, start run container " + codePath)
 
 	containerConfig := &container.Config{
@@ -39,7 +38,7 @@ func Runner(
 				ReadOnly: true,
 			},
 			{
-				Source:   "/app/tester",
+				Source:   "/app/server",
 				Target:   "/app/tester",
 				ReadOnly: true,
 			},

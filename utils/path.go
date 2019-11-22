@@ -36,13 +36,20 @@ func CodeGenerateFileNameWithMkdir(uid string) (string, error) {
 	return fmt.Sprintf("%s/%s_%d", t.Format("2006/01/02"), uid, t.UnixNano()), nil
 }
 
-func JudgeBaseDir(sid string) string {
-	return fmt.Sprintf("/judge/%s_", sid)
+func JudgeBaseDir(sid string) (string, error) {
+	return filepath.Abs(fmt.Sprintf("./files/judge/%s_", sid))
+	//return fmt.Sprintf("/judge/%s_", sid)
 }
 
 func JudgeGenerateDirWithMkdir(sid string) (string, error) {
 	t := time.Now()
-	path := JudgeBaseDir(sid) + t.Format("2006/01/02")
+	path, err := JudgeBaseDir(sid)
+
+	if err != nil {
+		return "", err
+	} else {
+		path += t.Format("2006/01/02")
+	}
 
 	if !Exists(path) {
 		if err := os.MkdirAll(path, 0755); err != nil {

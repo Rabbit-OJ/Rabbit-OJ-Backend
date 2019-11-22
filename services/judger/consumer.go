@@ -1,4 +1,4 @@
-package mq
+package judger
 
 import (
 	"github.com/streadway/amqp"

@@ -1,6 +1,10 @@
 package rpc
 
-import "net/rpc"
+import (
+	"fmt"
+	"net/rpc"
+	"os"
+)
 
 type AnyType interface{}
 
@@ -9,7 +13,7 @@ var (
 )
 
 func DialInit() error {
-	client, err := rpc.Dial("tcp", "localhost")
+	client, err := rpc.Dial("tcp", fmt.Sprintf("%s", os.Getenv("CASE_DIAL")))
 	if err != nil {
 		return err
 	}

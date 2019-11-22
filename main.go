@@ -18,8 +18,9 @@ import (
 
 func main() {
 	mq.Init()
-	utils.InitConstant()
+	judger.InitMQ()
 
+	utils.InitConstant()
 	defer func() {
 		if err := mq.Channel.Close(); err != nil {
 			fmt.Println(err)
