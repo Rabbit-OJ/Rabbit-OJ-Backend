@@ -20,7 +20,6 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	sid := request.Sid
 
 	fmt.Println("[Scheduler] Received judge request " + sid)
-
 	// init path
 	currentPath, err := utils.JudgeGenerateDirWithMkdir(sid)
 	if err != nil {
@@ -48,6 +47,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		return errors.New("language doesn't support")
 	}
 
+	fmt.Println("[Scheduler] Initing test cases")
 	// get case
 	storage, err := InitTestCase(request.Tid, request.Version)
 	if err != nil {
@@ -55,12 +55,15 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	// compile
+	fmt.Println("[Scheduler] Start Compile")
 	if err := Compiler(codePath, &compileInfo); err != nil {
-		fmt.Println("CE", err)
+		fmt.Println("[Scheduler] CE", err)
 		return callbackAllError("CE", sid, storage)
 	}
+	fmt.Println("[Scheduler] Compile OK")
 
 	// run
+	fmt.Println("[Scheduler] Start Runner")
 	if err := Runner(
 		codePath,
 		&compileInfo,
@@ -73,7 +76,9 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		fmt.Println("RE", err)
 		return callbackAllError("RE", sid, storage)
 	}
+	fmt.Println("[Scheduler] Runner OK")
 
+	fmt.Println("[Scheduler] Reading result")
 	jsonFileByte, err := ioutil.ReadFile(jsonPath)
 	if err != nil {
 		return callbackAllError("RE", sid, storage)
@@ -85,7 +90,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	// collect std::out
-	fmt.Println("Collecting stdout " + sid)
+	fmt.Println("[Schedule] Collecting stdout " + sid)
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(0); i < storage.DatasetCount; i++ {
 
@@ -131,13 +136,16 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		resultList[index].TimeUsed = judgeResult.TimeUsed
 	}
 	// mq return result
+	fmt.Println("[Scheduler] Calling back results")
 	go callbackWebSocket(sid)
 	if err := callbackSuccess(
 		sid,
 		resultList); err != nil {
+		fmt.Println(err)
 		return err
 	}
 	// todo: clear cache
 
+	fmt.Println("[Scheduler] Finish " + sid)
 	return nil
 }

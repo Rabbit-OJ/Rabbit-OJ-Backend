@@ -5,6 +5,7 @@ import (
 	"Rabbit-OJ-Backend/services/rpc"
 	"Rabbit-OJ-Backend/utils"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"strconv"
 )
@@ -62,10 +63,13 @@ func SaveStorageFile(storage []Storage) error {
 func FetchTestCase(tid string) (*Storage, error) {
 	request, response := &protobuf.TestCaseRequest{Tid: tid}, &protobuf.TestCaseResponse{}
 
+	fmt.Println("[Test Case] Preparing rpc to fetch case " + tid)
 	if err := rpc.DialCall("CaseService", "Case", request, response); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
+	fmt.Println("[Test Case] Storage to localhost")
 	_, err := utils.JudgeDirPathWithMkdir(tid, response.Version)
 	if err != nil {
 		return nil, err
@@ -91,6 +95,7 @@ func FetchTestCase(tid string) (*Storage, error) {
 		}
 	}
 
+	fmt.Println("[Test Case] Writing to index")
 	storage := ReadStorageFile()
 	newStorage := &Storage{
 		Tid:          tid,
@@ -98,12 +103,16 @@ func FetchTestCase(tid string) (*Storage, error) {
 		DatasetCount: uint32(len(response.Case)),
 	}
 	storage = append(storage, *newStorage)
+
+	fmt.Println("[Test Case] Fetch OK")
 	return newStorage, SaveStorageFile(storage)
 }
 
 func InitTestCase(tid, version string) (*Storage, error) {
+	fmt.Println("[Test Case] Reading index")
 	storageFileContent := ReadStorageFile()
 
+	fmt.Println("[Test Case] checking valid status")
 	containsFlag, storage := false, &Storage{}
 	for _, item := range storageFileContent {
 		if item.Tid == tid {
@@ -114,8 +123,10 @@ func InitTestCase(tid, version string) (*Storage, error) {
 	}
 
 	if (!containsFlag) || (containsFlag && storage.Version != version) {
+		fmt.Println("[Test Case] Check failed, Start Fetch")
 		return FetchTestCase(tid)
 	} else {
+		fmt.Println("[Test Case] Check OK")
 		return storage, nil
 	}
 }

@@ -16,25 +16,28 @@ import (
 	"os"
 )
 
+var (
+	Role = ""
+)
+
 func main() {
-	mq.Init()
-	judger.InitMQ()
-
+	Role = os.Getenv("Role")
 	utils.InitConstant()
-	defer func() {
-		if err := mq.Channel.Close(); err != nil {
-			fmt.Println(err)
-		}
 
-		if err := mq.Connection.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
-
-	if os.Getenv("Role") == "Server" {
+	if Role == "Server" {
 		db.Init()
+		mq.Init()
+		judger.InitMQ()
 
 		defer func() {
+			if err := mq.Channel.Close(); err != nil {
+				fmt.Println(err)
+			}
+
+			if err := mq.Connection.Close(); err != nil {
+				fmt.Println(err)
+			}
+
 			if err := db.DB.Close(); err != nil {
 				fmt.Println(err)
 			}
@@ -53,14 +56,23 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-	}
+	} else if Role == "Judge" {
+		mq.Init()
+		judger.InitMQ()
 
-	if os.Getenv("Role") == "Judge" {
+		defer func() {
+			if err := mq.Channel.Close(); err != nil {
+				fmt.Println(err)
+			}
+
+			if err := mq.Connection.Close(); err != nil {
+				fmt.Println(err)
+			}
+		}()
+
 		judger.InitDocker()
 		judger.CheckTestCase()
-	}
-
-	if os.Getenv("Role") == "Tester" {
+	} else if Role == "Tester" {
 		judger.Tester()
 	}
 }

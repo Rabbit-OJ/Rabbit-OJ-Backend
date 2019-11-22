@@ -10,7 +10,7 @@ import (
 )
 
 func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
-	fmt.Println("Start compile: " + codePath)
+	fmt.Println("[Compile] Start" + codePath)
 
 	containerConfig := &container.Config{
 		Entrypoint:      []string{compileInfo.BuildArgs},
@@ -33,7 +33,7 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 			},
 		},
 	}
-
+	fmt.Println("[Compile] Creating container")
 	resp, err := DockerClient.ContainerCreate(DockerContext,
 		containerConfig,
 		containerHostConfig,
@@ -45,6 +45,7 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 	}
 
 	statusCh, errCh := DockerClient.ContainerWait(DockerContext, resp.ID, container.WaitConditionNotRunning)
+	fmt.Println("[Compile] Waiting for status")
 	select {
 	case err := <-errCh:
 		return err

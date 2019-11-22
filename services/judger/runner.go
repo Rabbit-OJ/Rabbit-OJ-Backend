@@ -14,7 +14,7 @@ func Runner(
 	compileInfo *utils.CompileInfo,
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 ) error {
-	fmt.Println("Compile OK, start run container " + codePath)
+	fmt.Println("[Runner] Compile OK, start run container " + codePath)
 
 	containerConfig := &container.Config{
 		Entrypoint:      []string{"/app/tester"},
@@ -58,6 +58,7 @@ func Runner(
 		},
 	}
 
+	fmt.Println("[Runner] Creating container")
 	resp, err := DockerClient.ContainerCreate(DockerContext,
 		containerConfig,
 		containerHostConfig,
@@ -69,7 +70,7 @@ func Runner(
 	}
 
 	statusCh, errCh := DockerClient.ContainerWait(DockerContext, resp.ID, container.WaitConditionNotRunning)
-
+	fmt.Println("[Runner] Waiting for status")
 	select {
 	case err := <-errCh:
 		return err
