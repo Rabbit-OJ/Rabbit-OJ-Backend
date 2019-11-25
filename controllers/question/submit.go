@@ -32,7 +32,17 @@ func Submit(c *gin.Context) {
 	}
 
 	tid := c.Param("tid")
-	if _, err := question.Detail(tid); err != nil {
+	questionJudge, err := question.JudgeInfo(tid)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"code":    404,
+			"message": err.Error(),
+		})
+
+		return
+	}
+	questionDetail, err := question.Detail(tid)
+	if err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
 			"message": err.Error(),
@@ -70,7 +80,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	sid, err := SubmissionService.Create(tid, authObject.Uid, submitForm.Language, fileName)
+	submission, err := SubmissionService.Create(tid, authObject.Uid, submitForm.Language, fileName)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
@@ -80,9 +90,11 @@ func Submit(c *gin.Context) {
 		return
 	}
 
+	go SubmissionService.Starter([]byte(submitForm.Code), submission, questionJudge, questionDetail)
 	go question.UpdateAttemptCount(tid)
+
 	c.JSON(200, gin.H{
 		"code":    200,
-		"message": sid,
+		"message": submission.Sid,
 	})
 }

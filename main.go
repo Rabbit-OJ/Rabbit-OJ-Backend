@@ -72,6 +72,13 @@ func main() {
 
 		judger.InitDocker()
 		judger.CheckTestCase()
+
+		exitChan := make(chan bool)
+
+		select {
+		case <-exitChan:
+			os.Exit(0)
+		}
 	} else if Role == "Tester" {
 		judger.Tester()
 	}

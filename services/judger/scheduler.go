@@ -19,6 +19,7 @@ type CollectedStdout struct {
 func Scheduler(request *protobuf.JudgeRequest) error {
 	sid := request.Sid
 
+	fmt.Println("========START JUDGE ========")
 	fmt.Println("[Scheduler] Received judge request " + sid)
 	// init path
 	currentPath, err := utils.JudgeGenerateDirWithMkdir(sid)

@@ -32,11 +32,8 @@ func (h *Hub) run() {
 				delete(h.clients, client.sid)
 			}
 		case sid := <-h.Broadcast:
-			for clientSid := range h.clients {
-				if clientSid == sid {
-					h.clients[sid].send <- []byte("OK")
-					break
-				}
+			if _, ok := h.clients[sid]; ok {
+				h.clients[sid].send <- []byte("OK")
 			}
 		}
 	}

@@ -7,11 +7,11 @@ import (
 	"encoding/json"
 )
 
-func Create(tid, uid, language, fileName string) (string, error) {
+func Create(tid, uid, language, fileName string) (*models.Submission, error) {
 	questionJudge, err := question.JudgeInfo(tid)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	judgeArr := make([]models.JudgeResult, questionJudge.DatasetCount)
@@ -21,7 +21,7 @@ func Create(tid, uid, language, fileName string) (string, error) {
 	judgeJSON, err := json.Marshal(judgeArr)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	submission := &models.Submission{
@@ -34,8 +34,8 @@ func Create(tid, uid, language, fileName string) (string, error) {
 	}
 
 	if err := db.DB.Create(submission).Error; err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return submission.Sid, nil
+	return submission, nil
 }

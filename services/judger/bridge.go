@@ -3,6 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/services/submission"
 	"Rabbit-OJ-Backend/utils"
 	"fmt"
@@ -10,7 +11,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func JudgeStart(delivery *amqp.Delivery) {
+func JudgeRequestBridge(delivery *amqp.Delivery) {
 	judgeRequest := &protobuf.JudgeRequest{}
 	if err := proto.Unmarshal(delivery.Body, judgeRequest); err != nil {
 		fmt.Println(err)
@@ -23,7 +24,7 @@ func JudgeStart(delivery *amqp.Delivery) {
 	}
 }
 
-func JudgeResultStart(delivery *amqp.Delivery) {
+func JudgeResponseBridge(delivery *amqp.Delivery) {
 	judgeResult := &protobuf.JudgeResponse{}
 	if err := proto.Unmarshal(delivery.Body, judgeResult); err != nil {
 		fmt.Println(err)
@@ -37,7 +38,7 @@ func JudgeResultStart(delivery *amqp.Delivery) {
 }
 
 func callbackAllError(status, sid string, storage *Storage) error {
-	fmt.Println("Callback judge error : " + sid + " with status " + status)
+	fmt.Printf("(%s) Callback judge error with status: %s \n", sid, status)
 
 	ceResult := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 
@@ -55,14 +56,14 @@ func callbackAllError(status, sid string, storage *Storage) error {
 		return err
 	}
 
-	return Publish(
+	return mq.Publish(
 		utils.DefaultExchangeName,
 		utils.JudgeResultRoutingKey,
 		pro)
 }
 
 func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) error {
-	fmt.Println("Callback judge success : " + sid)
+	fmt.Printf("(%s) Callback judge success \n", sid)
 
 	response := &protobuf.JudgeResponse{
 		Sid:    sid,
@@ -74,7 +75,7 @@ func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) error {
 		return err
 	}
 
-	return Publish(
+	return mq.Publish(
 		utils.DefaultExchangeName,
 		utils.JudgeResultRoutingKey,
 		pro)
