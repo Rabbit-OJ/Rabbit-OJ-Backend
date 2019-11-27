@@ -1,0 +1,2 @@
+FOR DEV JUDGE:
+docker run -e Role=Judge -e CASE_DIAL=localhost:8090 -e Password=P@ssw0rd -it --network host -d judger

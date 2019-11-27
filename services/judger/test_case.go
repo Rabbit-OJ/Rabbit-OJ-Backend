@@ -20,11 +20,11 @@ type StorageFile = []Storage
 
 func ReadStorageFile() []Storage {
 	storageFilePath, err := utils.StorageFilePath()
-	if err != nil {
-		panic(err)
-	}
-
 	storage := make([]Storage, 0)
+
+	if err != nil {
+		return storage
+	}
 
 	if !utils.Exists(storageFilePath) {
 		return storage
