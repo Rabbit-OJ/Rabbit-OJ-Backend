@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/utils"
 	"errors"
 	"fmt"
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"time"
@@ -15,6 +16,13 @@ func Runner(
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 ) error {
 	fmt.Println("[Runner] Compile OK, start run container " + codePath)
+
+	err := utils.TouchFile(codePath + ".result")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println("[Runner] Touched empty result file for build")
 
 	containerConfig := &container.Config{
 		Entrypoint:      []string{"/app/tester"},
@@ -47,7 +55,7 @@ func Runner(
 			{
 				Source: codePath + ".result",
 				Target: "/result/info.json",
-				Type:     mount.TypeBind,
+				Type:   mount.TypeBind,
 			},
 			{
 				Source:   casePath,
@@ -58,8 +66,15 @@ func Runner(
 			{
 				Source: outputPath,
 				Target: "/output",
-				Type:     mount.TypeBind,
+				Type:   mount.TypeBind,
 			},
+		},
+		Binds: []string{
+			utils.DockerHostConfigBinds(codePath, compileInfo.BuildTarget),
+			utils.DockerHostConfigBinds("/app/server", "/app/tester"),
+			utils.DockerHostConfigBinds(codePath + ".result", "/result/info.json"),
+			utils.DockerHostConfigBinds(casePath, "/case"),
+			utils.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
 
@@ -71,6 +86,12 @@ func Runner(
 		"")
 
 	if err != nil {
+		return err
+	}
+
+	fmt.Println("[Runner] Running container")
+	if err := DockerClient.ContainerStart(DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
+		fmt.Println(err)
 		return err
 	}
 

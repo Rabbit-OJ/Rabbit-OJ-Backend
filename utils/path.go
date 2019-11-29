@@ -106,3 +106,7 @@ func JudgeCaseDir(tid, version string) (string, error) {
 func JudgeFilePath(tid, version, caseId, caseType string) (string, error) {
 	return filepath.Abs(fmt.Sprintf("./files/judge/%s/%s/%s.%s", tid, version, caseId, caseType))
 }
+
+func DockerHostConfigBinds(source, target string) string {
+	return fmt.Sprintf("%s:%s", source, target)
+}

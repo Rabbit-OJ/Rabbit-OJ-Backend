@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/utils"
 	"errors"
 	"fmt"
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"time"
@@ -12,6 +13,13 @@ import (
 func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 	fmt.Println("[Compile] Start" + codePath)
 
+	err := utils.TouchFile(codePath + ".o")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	fmt.Println("[Compile] Touched empty output file for build")
 	containerConfig := &container.Config{
 		Entrypoint:      []string{compileInfo.BuildArgs},
 		Image:           compileInfo.BuildImage,
@@ -34,7 +42,12 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 				Type:     mount.TypeBind,
 			},
 		},
+		Binds: []string{
+			utils.DockerHostConfigBinds(codePath, compileInfo.BuildSource),
+			utils.DockerHostConfigBinds(codePath + ".o", compileInfo.BuildTarget),
+		},
 	}
+
 	fmt.Println("[Compile] Creating container")
 	resp, err := DockerClient.ContainerCreate(DockerContext,
 		containerConfig,
@@ -43,6 +56,12 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 		"")
 
 	if err != nil {
+		return err
+	}
+
+	fmt.Println("[Compile] Running container")
+	if err := DockerClient.ContainerStart(DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
