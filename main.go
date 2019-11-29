@@ -72,7 +72,7 @@ func main() {
 			}
 		}()
 
-		judger.InitDocker()
+		judger.DockerInit()
 		judger.CheckTestCase()
 
 		exitChan := make(chan bool)

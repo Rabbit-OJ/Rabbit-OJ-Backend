@@ -33,9 +33,6 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	codePath := fmt.Sprintf("%s/%s.code", currentPath, sid)
-	if err := ioutil.WriteFile(codePath, request.Code, 0644); err != nil {
-		return err
-	}
 
 	jsonPath := codePath + ".json"
 	casePath, err := utils.JudgeCaseDir(request.Tid, request.Version)
@@ -58,7 +55,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	// compile
 	fmt.Println("[Scheduler] Start Compile")
-	if err := Compiler(codePath, &compileInfo); err != nil {
+	if err := Compiler(codePath, request.Code, &compileInfo); err != nil {
 		fmt.Println("[Scheduler] CE", err)
 		return callbackAllError("CE", sid, storage)
 	}

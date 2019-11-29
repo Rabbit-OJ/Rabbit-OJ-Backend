@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
-	"github.com/docker/docker/api/types/mount"
 	"time"
 )
 
-func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
+func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) error {
 	fmt.Println("[Compile] Start" + codePath)
 
 	err := utils.TouchFile(codePath + ".o")
@@ -21,7 +20,10 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 
 	fmt.Println("[Compile] Touched empty output file for build")
 	containerConfig := &container.Config{
-		Entrypoint:      []string{compileInfo.BuildArgs},
+		//Entrypoint:      []string{compileInfo.BuildArgs},
+		Entrypoint:      []string{"bash"},
+		Tty:             true,
+		OpenStdin:       true,
 		Image:           compileInfo.BuildImage,
 		NetworkDisabled: true,
 		StopTimeout:     &compileInfo.BuildTime,
@@ -29,18 +31,8 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 
 	containerHostConfig := &container.HostConfig{
 		//AutoRemove: true,
-		Mounts: []mount.Mount{
-			{
-				Source:   codePath,
-				Target:   compileInfo.BuildSource,
-				ReadOnly: true,
-				Type:     mount.TypeBind,
-			},
-			{
-				Source: codePath + ".o",
-				Target: compileInfo.BuildTarget,
-				Type:     mount.TypeBind,
-			},
+		Binds: []string{
+			utils.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
 		},
 	}
 
@@ -52,6 +44,19 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 		"")
 
 	if err != nil {
+		return err
+	}
+
+	fmt.Println("[Compile] Copying files to container")
+	if err := DockerClient.CopyToContainer(
+		DockerContext,
+		resp.ID,
+		compileInfo.ExecFilePath,
+		utils.ConvertToTar(compileInfo.SourceFileName, code),
+		types.CopyToContainerOptions{
+			AllowOverwriteDirWithFile: true,
+			CopyUIDGID:                false,
+		}); err != nil {
 		return err
 	}
 

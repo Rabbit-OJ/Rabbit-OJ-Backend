@@ -25,7 +25,6 @@ func Runner(
 	fmt.Println("[Runner] Touched empty result file for build")
 
 	containerConfig := &container.Config{
-		Entrypoint:      []string{"/app/tester"},
 		Image:           compileInfo.RunImage,
 		NetworkDisabled: true,
 		Env: []string{
@@ -38,36 +37,42 @@ func Runner(
 	}
 
 	containerHostConfig := &container.HostConfig{
-		//AutoRemove: true,
+		AutoRemove: true,
 		Mounts: []mount.Mount{
-			{
-				Source:   codePath + ".o",
-				Target:   compileInfo.BuildTarget,
-				ReadOnly: true,
-				Type:     mount.TypeBind,
-			},
-			{
-				Source:   "/app/server",
-				Target:   "/app/tester",
-				ReadOnly: true,
-				Type:     mount.TypeBind,
-			},
-			{
-				Source: codePath + ".result",
-				Target: "/result/info.json",
-				Type:   mount.TypeBind,
-			},
+			//	{
+			//		Source:   codePath + ".o",
+			//		Target:   compileInfo.BuildTarget,
+			//		ReadOnly: true,
+			//		Type:     mount.TypeBind,
+			//	},
+			//	{
+			//		Source:   "/app/server",
+			//		Target:   "/app/tester",
+			//		ReadOnly: true,
+			//		Type:     mount.TypeBind,
+			//	},
+			//	{
+			//		Source: codePath + ".result",
+			//		Target: "/result/info.json",
+			//		Type:   mount.TypeBind,
+			//	},
 			{
 				Source:   casePath,
 				Target:   "/case",
 				ReadOnly: true,
 				Type:     mount.TypeBind,
 			},
-			{
-				Source: outputPath,
-				Target: "/output",
-				Type:   mount.TypeBind,
-			},
+			//	{
+			//		Source: outputPath,
+			//		Target: "/output",
+			//		Type:   mount.TypeBind,
+			//	},
+		},
+		Binds: []string{
+			utils.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
+			utils.DockerHostConfigBinds(codePath+".result", "/result/info.json"),
+			//utils.DockerHostConfigBinds(casePath, "/case"),
+			utils.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
 

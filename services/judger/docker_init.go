@@ -10,7 +10,7 @@ var (
 	DockerClient  *client.Client
 )
 
-func InitDocker() {
+func DockerInit() {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {

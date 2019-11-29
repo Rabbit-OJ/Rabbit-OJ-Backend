@@ -34,7 +34,7 @@ func Router(baseRouter *gin.Engine) {
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		if err := v.RegisterValidation("language", languageValidator); err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(err)
 		}
 	}
 

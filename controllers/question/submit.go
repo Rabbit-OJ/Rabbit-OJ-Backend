@@ -90,7 +90,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	go SubmissionService.Starter([]byte(submitForm.Code), submission, questionJudge, questionDetail)
+	go func() { _ = SubmissionService.Starter([]byte(submitForm.Code), submission, questionJudge, questionDetail) }()
 	go question.UpdateAttemptCount(tid)
 
 	c.JSON(200, gin.H{
