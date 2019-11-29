@@ -36,24 +36,29 @@ func Runner(
 				Source:   codePath + ".o",
 				Target:   compileInfo.BuildTarget,
 				ReadOnly: true,
+				Type:     mount.TypeBind,
 			},
 			{
 				Source:   "/app/server",
 				Target:   "/app/tester",
 				ReadOnly: true,
+				Type:     mount.TypeBind,
 			},
 			{
 				Source: codePath + ".result",
 				Target: "/result/info.json",
+				Type:     mount.TypeBind,
 			},
 			{
 				Source:   casePath,
 				Target:   "/case",
 				ReadOnly: true,
+				Type:     mount.TypeBind,
 			},
 			{
 				Source: outputPath,
 				Target: "/output",
+				Type:     mount.TypeBind,
 			},
 		},
 	}

@@ -26,10 +26,12 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 				Source:   codePath,
 				Target:   compileInfo.BuildSource,
 				ReadOnly: true,
+				Type:     mount.TypeBind,
 			},
 			{
 				Source: codePath + ".o",
 				Target: compileInfo.BuildTarget,
+				Type:     mount.TypeBind,
 			},
 		},
 	}

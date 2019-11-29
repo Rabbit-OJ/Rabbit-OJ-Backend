@@ -18,8 +18,9 @@ func Case(tid string, response *protobuf.TestCaseResponse) error {
 
 	count := judgeObj.DatasetCount
 	*response = protobuf.TestCaseResponse{
-		Tid:  tid,
-		Case: make([]*protobuf.Case, 0, count),
+		Tid:     tid,
+		Case:    make([]*protobuf.Case, 0, count),
+		Version: strconv.FormatUint(uint64(judgeObj.Version), 10),
 	}
 
 	for i := uint32(1); i <= count; i++ {

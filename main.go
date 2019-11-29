@@ -57,6 +57,8 @@ func main() {
 			fmt.Println(err)
 		}
 	} else if Role == "Judge" {
+		judger.DockerScript()
+
 		mq.Init()
 		judger.InitMQ()
 

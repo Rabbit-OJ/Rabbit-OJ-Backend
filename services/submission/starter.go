@@ -5,7 +5,7 @@ import (
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/utils"
-	"github.com/gogo/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 	"strconv"
 )
 

@@ -22,7 +22,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	fmt.Println("========START JUDGE ========")
 	fmt.Println("[Scheduler] Received judge request " + sid)
 	// init path
-	currentPath, err := utils.JudgeGenerateDirWithMkdir(sid)
+	currentPath, err := utils.SubmissionGenerateDirWithMkdir(sid)
 	if err != nil {
 		return err
 	}
@@ -48,10 +48,11 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		return errors.New("language doesn't support")
 	}
 
-	fmt.Println("[Scheduler] Initing test cases")
+	fmt.Println("[Scheduler] Init test cases")
 	// get case
 	storage, err := InitTestCase(request.Tid, request.Version)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -93,7 +94,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	// collect std::out
 	fmt.Println("[Schedule] Collecting stdout " + sid)
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
-	for i := uint32(0); i < storage.DatasetCount; i++ {
+	for i := uint32(1); i <= storage.DatasetCount; i++ {
 
 		path, err := utils.JudgeFilePath(
 			storage.Tid,
@@ -110,17 +111,17 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 			return err
 		}
 
-		allStdin[i].RightStdout = string(stdoutByte)
+		allStdin[i-1].RightStdout = string(stdoutByte)
 	}
 
-	for i := uint32(0); i < storage.DatasetCount; i++ {
+	for i := uint32(1); i <= storage.DatasetCount; i++ {
 		path := fmt.Sprintf("%s/%d.out", outputPath, i)
 
 		stdoutByte, err := ioutil.ReadFile(path)
 		if err != nil {
-			allStdin[i].Stdout = ""
+			allStdin[i-1].Stdout = ""
 		} else {
-			allStdin[i].Stdout = string(stdoutByte)
+			allStdin[i-1].Stdout = string(stdoutByte)
 		}
 	}
 	// judge std::out
@@ -129,9 +130,9 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	for index, item := range allStdin {
 		testResult := &testResultArr[index]
+		resultList[index] = &protobuf.JudgeCaseResult{}
 
 		judgeResult := JudgeOneCase(testResult, item.Stdout, item.RightStdout, request.CompMode)
-
 		resultList[index].Status = judgeResult.Status
 		resultList[index].SpaceUsed = judgeResult.SpaceUsed
 		resultList[index].TimeUsed = judgeResult.TimeUsed

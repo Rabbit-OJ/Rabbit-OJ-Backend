@@ -1,11 +1,14 @@
 package rpc
 
 import (
+	"fmt"
 	"net"
 	"net/rpc"
 )
 
 func Register() {
+	fmt.Println("[RPC] registering case service")
+
 	if err := rpc.RegisterName("CaseService", new(CaseService)); err != nil {
 		panic(err)
 	}
@@ -15,10 +18,5 @@ func Register() {
 		panic(err)
 	}
 
-	conn, err := listener.Accept()
-	if err != nil {
-		panic(err)
-	}
-
-	rpc.ServeConn(conn)
+	rpc.Accept(listener)
 }

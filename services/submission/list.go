@@ -14,6 +14,7 @@ func List(uid string, page uint32) ([]models.SubmissionLite, error) {
 		Table("submission").
 		Joins("INNER JOIN question ON `submission`.`tid` = `question`.`tid`").
 		Where("`submission`.`uid` = ?", uid).
+		Order("`submission`.`sid` DESC").
 		Limit(utils.PageSize).
 		Offset((page - 1) * utils.PageSize).
 		Scan(&list).Error
