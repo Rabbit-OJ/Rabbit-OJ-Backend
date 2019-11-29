@@ -38,7 +38,7 @@ func Runner(
 	}
 
 	containerHostConfig := &container.HostConfig{
-		AutoRemove: true,
+		//AutoRemove: true,
 		Mounts: []mount.Mount{
 			{
 				Source:   codePath + ".o",
@@ -68,13 +68,6 @@ func Runner(
 				Target: "/output",
 				Type:   mount.TypeBind,
 			},
-		},
-		Binds: []string{
-			utils.DockerHostConfigBinds(codePath, compileInfo.BuildTarget),
-			utils.DockerHostConfigBinds("/app/server", "/app/tester"),
-			utils.DockerHostConfigBinds(codePath + ".result", "/result/info.json"),
-			utils.DockerHostConfigBinds(casePath, "/case"),
-			utils.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
 

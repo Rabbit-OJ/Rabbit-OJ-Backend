@@ -1,2 +1,2 @@
-FOR DEV JUDGE:
-docker run -e Role=Judge -e CASE_DIAL=localhost:8090 -e Password=P@ssw0rd -it --network host -d judger
+docker build -t judger -f .\judge.Dockerfile .
+docker run -it -e Password=P@ssw0rd -e Role=Judge -e CASE_DIAL=host.docker.internal:8090 --privileged --network host -d judger

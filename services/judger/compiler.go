@@ -28,7 +28,7 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 	}
 
 	containerHostConfig := &container.HostConfig{
-		AutoRemove: true,
+		//AutoRemove: true,
 		Mounts: []mount.Mount{
 			{
 				Source:   codePath,
@@ -41,10 +41,6 @@ func Compiler(codePath string, compileInfo *utils.CompileInfo) error {
 				Target: compileInfo.BuildTarget,
 				Type:     mount.TypeBind,
 			},
-		},
-		Binds: []string{
-			utils.DockerHostConfigBinds(codePath, compileInfo.BuildSource),
-			utils.DockerHostConfigBinds(codePath + ".o", compileInfo.BuildTarget),
 		},
 	}
 
