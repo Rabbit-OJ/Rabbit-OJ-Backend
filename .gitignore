@@ -7,4 +7,6 @@
 /files/submission/**/*.code
 /files/submission/**/*.code.o
 /files/submission/**/*.code.result
+/files/submission/**/*.in
+/files/submission/**/*.out
 /files/storage.json
