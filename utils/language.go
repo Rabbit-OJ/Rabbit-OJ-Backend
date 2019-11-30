@@ -29,7 +29,7 @@ func InitLanguage() {
 
 	CompileObject = map[string]CompileInfo{
 		"cpp11": {
-			BuildArgs:      "g++ -std=c++11 /home/code.cpp -Wall -lm --static -O2 -o /home/code.o",
+			BuildArgs:      []string{"g++", "-std=c++11", "/home/code.cpp", "-Wall", "-lm", "--static", "-O2", "-o", "/home/code.o"},
 			BuildTime:      5,
 			BuildImage:     "gcc:9.2.0",
 			BuildSource:    "/home/code.cpp",
@@ -41,7 +41,7 @@ func InitLanguage() {
 			RunMaxTimeout:  120,
 		},
 		"cpp14": {
-			BuildArgs:      "g++ -std=c++14 /home/code.cpp -Wall -lm --static -O2 -o /home/code.o",
+			BuildArgs:      []string{"g++", "-std=c++14", "/home/code.cpp", "-Wall", "-lm", "--static", "-O2", "-o", "/home/code.o"},
 			BuildTime:      5,
 			BuildImage:     "gcc:9.2.0",
 			BuildSource:    "/home/code.cpp",
@@ -53,7 +53,7 @@ func InitLanguage() {
 			RunMaxTimeout:  120,
 		},
 		"cpp17": {
-			BuildArgs:      "g++ -std=c++17 /home/code.cpp -Wall -lm --static -O2 -o /home/code.o",
+			BuildArgs:      []string{"g++", "-std=c++17", "/home/code.cpp", "-Wall", "-lm", "--static", "-O2", "-o", "/home/code.o"},
 			BuildTime:      5,
 			BuildImage:     "gcc:9.2.0",
 			BuildSource:    "/home/code.cpp",
@@ -65,7 +65,7 @@ func InitLanguage() {
 			RunMaxTimeout:  120,
 		},
 		"cpp20": {
-			BuildArgs:      "g++ -std=c++2a /home/code.cpp -Wall -lm --static -O2 -o /home/code.o",
+			BuildArgs:      []string{"g++", "-std=c++2a", "/home/code.cpp", "-Wall", "-lm", "--static", "-O2", "-o", "/home/code.o"},
 			BuildTime:      5,
 			BuildImage:     "gcc:9.2.0",
 			BuildSource:    "/home/code.cpp",
@@ -80,7 +80,7 @@ func InitLanguage() {
 }
 
 type CompileInfo struct {
-	BuildArgs      string
+	BuildArgs      []string
 	BuildSource    string
 	BuildTarget    string
 	BuildImage     string

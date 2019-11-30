@@ -33,8 +33,6 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	codePath := fmt.Sprintf("%s/%s.code", currentPath, sid)
-
-	jsonPath := codePath + ".json"
 	casePath, err := utils.JudgeCaseDir(request.Tid, request.Version)
 	if err != nil {
 		return err
@@ -78,7 +76,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	fmt.Println("[Scheduler] Runner OK")
 
 	fmt.Println("[Scheduler] Reading result")
-	jsonFileByte, err := ioutil.ReadFile(jsonPath)
+	jsonFileByte, err := ioutil.ReadFile(codePath + ".result")
 	if err != nil {
 		return callbackAllError("RE", sid, storage)
 	}
@@ -136,7 +134,6 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 	// mq return result
 	fmt.Println("[Scheduler] Calling back results")
-	go callbackWebSocket(sid)
 	if err := callbackSuccess(
 		sid,
 		resultList); err != nil {

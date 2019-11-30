@@ -20,8 +20,8 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 
 	fmt.Println("[Compile] Touched empty output file for build")
 	containerConfig := &container.Config{
-		//Entrypoint:      []string{compileInfo.BuildArgs},
-		Entrypoint:      []string{"bash"},
+		Entrypoint:      compileInfo.BuildArgs,
+		//Entrypoint:      []string{"bash"},
 		Tty:             true,
 		OpenStdin:       true,
 		Image:           compileInfo.BuildImage,
@@ -30,7 +30,7 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 	}
 
 	containerHostConfig := &container.HostConfig{
-		//AutoRemove: true,
+		AutoRemove: true,
 		Binds: []string{
 			utils.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
 		},
@@ -48,11 +48,16 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 	}
 
 	fmt.Println("[Compile] Copying files to container")
+	io, err := utils.ConvertToTar([]utils.TarFileBasicInfo{{compileInfo.SourceFileName, code}})
+	if err != nil {
+		return err
+	}
+
 	if err := DockerClient.CopyToContainer(
 		DockerContext,
 		resp.ID,
 		compileInfo.ExecFilePath,
-		utils.ConvertToTar(compileInfo.SourceFileName, code),
+		io,
 		types.CopyToContainerOptions{
 			AllowOverwriteDirWithFile: true,
 			CopyUIDGID:                false,

@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+// todo : should enable auto remove after stable version
+
 func Runner(
 	codePath string,
 	compileInfo *utils.CompileInfo,
@@ -71,7 +73,6 @@ func Runner(
 		Binds: []string{
 			utils.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
 			utils.DockerHostConfigBinds(codePath+".result", "/result/info.json"),
-			//utils.DockerHostConfigBinds(casePath, "/case"),
 			utils.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}

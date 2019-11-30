@@ -157,7 +157,7 @@ func Tester() {
 	// <-- step2 : get_result
 	testResult := make([]models.TestResult, testCaseCount)
 	for i := int64(1); i <= testCaseCount; i++ {
-		TestOne(&testResult[i], i, timeLimit, spaceLimit, execCommand)
+		TestOne(&testResult[i - 1], i, timeLimit, spaceLimit, execCommand)
 	}
 
 	// <-- step3 : write info

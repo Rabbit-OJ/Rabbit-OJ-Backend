@@ -40,4 +40,6 @@ func JudgeResponseBridge(delivery *amqp.Delivery, okChan chan bool) {
 		fmt.Println(err)
 		return
 	}
+
+	go callbackWebSocket(judgeResult.Sid)
 }
