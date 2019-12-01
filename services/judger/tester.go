@@ -3,6 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/utils"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -28,6 +29,8 @@ func max(a, b int64) int64 {
 }
 
 func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, execCommand string) {
+	ctx, cancel := context.WithCancel(context.Background())
+
 	cmd := exec.Command(execCommand)
 	peakMemory := int64(0)
 
@@ -57,26 +60,35 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 	}
 	startTime := time.Now()
 
-	errChan, successChan, memoryMonitorChan, memoryMonitorCloseChan := make(chan error), make(chan bool), make(chan bool), make(chan bool)
+	errChan, memoryMonitorChan := make(chan error), make(chan bool)
 	defer func() {
 		close(errChan)
-		close(successChan)
 		close(memoryMonitorChan)
-		close(memoryMonitorCloseChan)
+
+		cancel()
 	}()
 
 	go func() {
-		err := cmd.Wait()
-		if err != nil {
-			errChan <- err
-		} else {
-			successChan <- true
+		waitChan := make(chan error)
+
+		go func() {
+			err := cmd.Wait()
+			waitChan <- err
+			close(waitChan)
+		}()
+
+		select {
+		case <-ctx.Done():
+			return
+		case ans := <-waitChan:
+			errChan <- ans
 		}
 	}()
+
 	go func(pid int) {
 		for {
 			select {
-			case <-memoryMonitorCloseChan:
+			case <-ctx.Done():
 				return
 			default:
 				stat, err := utils.GetStat(pid)
@@ -99,21 +111,22 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 		testResult.Status = StatusMLE
 		testResult.TimeUsed = uint32(timeLimit)
 		_ = cmd.Process.Kill()
-	case <-successChan:
-		testResult.Status = StatusOK
-		usedTime := time.Since(startTime)
-		testResult.TimeUsed = uint32(usedTime.Milliseconds())
-		testResult.SpaceUsed = uint32(peakMemory)
 	case <-time.After(time.Duration(timeLimit) * time.Millisecond):
 		testResult.Status = StatusTLE
 		testResult.TimeUsed = uint32(timeLimit)
 		testResult.SpaceUsed = uint32(peakMemory)
 		_ = cmd.Process.Kill()
-	case <-errChan:
-		testResult.Status = StatusRE
+	case err := <-errChan:
+		if err != nil {
+			fmt.Println(err)
+			testResult.Status = StatusRE
+		} else {
+			testResult.Status = StatusOK
+			usedTime := time.Since(startTime)
+			testResult.TimeUsed = uint32(usedTime.Milliseconds())
+			testResult.SpaceUsed = uint32(peakMemory)
+		}
 	}
-
-	memoryMonitorCloseChan <- true
 }
 
 func Tester() {
@@ -146,7 +159,7 @@ func Tester() {
 		panic(err)
 	}
 
-	file, err := os.Create("/result/info.json")
+	file, err := os.Create(utils.DockerResultFile())
 	if err != nil {
 		panic(err)
 	}
@@ -157,7 +170,7 @@ func Tester() {
 	// <-- step2 : get_result
 	testResult := make([]models.TestResult, testCaseCount)
 	for i := int64(1); i <= testCaseCount; i++ {
-		TestOne(&testResult[i - 1], i, timeLimit, spaceLimit, execCommand)
+		TestOne(&testResult[i-1], i, timeLimit, spaceLimit, execCommand)
 	}
 
 	// <-- step3 : write info

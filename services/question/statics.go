@@ -19,7 +19,7 @@ func UpdateAttemptCount(tid string) {
 
 func UpdateAcceptedCount(tid string) {
 	if err := db.DB.Table("question").
-		Update("accepted", gorm.Expr("accepted + 1")).
+		Update("accept", gorm.Expr("accept + 1")).
 		Where("tid = ?", tid).Error;
 		err != nil {
 

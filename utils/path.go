@@ -81,6 +81,10 @@ func DockerOutputPath(caseId int64) string {
 	return fmt.Sprintf("/output/%d.out", caseId)
 }
 
+func DockerResultFile() string {
+	return "/result/info.json"
+}
+
 func StorageFilePath() (string, error) {
 	return filepath.Abs("./files/storage.json")
 }

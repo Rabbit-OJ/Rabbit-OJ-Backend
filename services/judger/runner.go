@@ -37,7 +37,7 @@ func Runner(
 	}
 
 	containerHostConfig := &container.HostConfig{
-		AutoRemove: true,
+		//AutoRemove: true,
 		Mounts: []mount.Mount{
 			//	{
 			//		Source:   codePath + ".o",

@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+	"time"
 )
 
 type CollectedStdout struct {
@@ -22,6 +23,12 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	fmt.Println("========START JUDGE ========")
 	fmt.Println("[Scheduler] Received judge request " + sid)
+
+	startSchedule := time.Now()
+	defer func() {
+		fmt.Println("[Scheduler] total cost : " + strconv.FormatInt(time.Since(startSchedule).Milliseconds(), 10) + "ms")
+	}()
+
 	// init path
 	currentPath, err := utils.SubmissionGenerateDirWithMkdir(sid)
 	if err != nil {
@@ -30,7 +37,9 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	defer func() {
 		fmt.Println("[Scheduler] Cleaning path " + sid)
-		_ = os.RemoveAll(currentPath)
+		if os.Getenv("ENV") == "production" {
+			_ = os.RemoveAll(currentPath)
+		}
 	}()
 
 	outputPath, err := utils.JudgeGenerateOutputDirWithMkdir(currentPath)
@@ -64,6 +73,12 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		return callbackAllError("CE", sid, storage)
 	}
 	fmt.Println("[Scheduler] Compile OK")
+
+	fileStat, err := os.Stat(codePath+".o")
+	if err != nil || fileStat.Size() == 0 {
+		fmt.Println("[Scheduler] CE", err)
+		return callbackAllError("CE", sid, storage)
+	}
 
 	// run
 	fmt.Println("[Scheduler] Start Runner")
@@ -146,7 +161,6 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		fmt.Println(err)
 		return err
 	}
-	// todo: clear cache
 
 	fmt.Println("[Scheduler] Finish " + sid)
 	return nil

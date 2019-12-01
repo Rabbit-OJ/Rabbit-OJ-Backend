@@ -21,7 +21,6 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 	fmt.Println("[Compile] Touched empty output file for build")
 	containerConfig := &container.Config{
 		Entrypoint:      compileInfo.BuildArgs,
-		//Entrypoint:      []string{"bash"},
 		Tty:             true,
 		OpenStdin:       true,
 		Image:           compileInfo.BuildImage,
