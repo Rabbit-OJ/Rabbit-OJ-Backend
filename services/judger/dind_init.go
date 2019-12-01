@@ -18,7 +18,7 @@ func pullImage(tag string) {
 func buildImage(tag string) {
 	fmt.Println("[DIND] building image from local Dockerfile : " + tag)
 
-	dockerFileBytes, err := utils.ReadFileBytes(fmt.Sprintf("./%s.Dockerfile", tag))
+	dockerFileBytes, err := utils.ReadFileBytes(fmt.Sprintf("./dockerfiles/%s/Dockerfile", tag))
 	if err != nil {
 		panic(err)
 	}
