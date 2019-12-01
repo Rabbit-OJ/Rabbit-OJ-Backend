@@ -3,6 +3,7 @@ package judger
 import (
 	"github.com/docker/docker/client"
 	"golang.org/x/net/context"
+	"os"
 )
 
 var (
@@ -18,4 +19,7 @@ func DockerInit() {
 	}
 
 	DockerContext, DockerClient = ctx, cli
+	if os.Getenv("ENV") == "production" {
+		InitImages()
+	}
 }

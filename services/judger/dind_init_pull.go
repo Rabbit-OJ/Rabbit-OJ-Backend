@@ -1,5 +1,0 @@
-package judger
-
-func PullImages() {
-
-}

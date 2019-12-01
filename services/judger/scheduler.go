@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
 )
 
@@ -26,6 +27,11 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		fmt.Println("[Scheduler] Cleaning path " + sid)
+		_ = os.RemoveAll(currentPath)
+	}()
 
 	outputPath, err := utils.JudgeGenerateOutputDirWithMkdir(currentPath)
 	if err != nil {

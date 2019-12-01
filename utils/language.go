@@ -5,9 +5,14 @@ import "Rabbit-OJ-Backend/models"
 var (
 	SupportLanguage []models.SupportLanguage
 	CompileObject   map[string]CompileInfo
+	LocalImages     map[string]bool
 )
 
 func InitLanguage() {
+	LocalImages = map[string]bool{
+		"alpine_tester:latest": true,
+	}
+
 	SupportLanguage = []models.SupportLanguage{
 		{
 			Name:  "C++/11",

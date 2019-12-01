@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-// todo : should enable auto remove after stable version
-
 func Runner(
 	codePath string,
 	compileInfo *utils.CompileInfo,
