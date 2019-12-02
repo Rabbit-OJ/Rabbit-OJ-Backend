@@ -4,18 +4,24 @@ import (
 	"Rabbit-OJ-Backend/utils"
 	"fmt"
 	"github.com/docker/docker/api/types"
+	"io"
+	"os"
 )
 
-func pullImage(tag string) {
+func PullImage(tag string) {
 	fmt.Println("[DIND] pulling image : " + tag)
 	out, err := DockerClient.ImagePull(DockerContext, tag, types.ImagePullOptions{})
 	if err != nil {
 		panic(err)
 	}
 	defer func() { _ = out.Close() }()
+
+	if _, err := io.Copy(os.Stderr, out); err != nil {
+		fmt.Println(err)
+	}
 }
 
-func buildImage(tag string) {
+func BuildImage(tag string) {
 	fmt.Println("[DIND] building image from local Dockerfile : " + tag)
 
 	dockerFileBytes, err := utils.ReadFileBytes(fmt.Sprintf("./dockerfiles/%s/Dockerfile", tag))
@@ -40,10 +46,16 @@ func buildImage(tag string) {
 		panic(err)
 	}
 
-	if _, err := DockerClient.ImageBuild(DockerContext, tarBytes, types.ImageBuildOptions{
-		Tags: []string{tag},
-	}); err != nil {
+	resp, err := DockerClient.ImageBuild(DockerContext, tarBytes, types.ImageBuildOptions{
+		Tags:   []string{tag},
+		Remove: true,
+	})
+	if err != nil {
 		panic(err)
+	}
+
+	if _, err := io.Copy(os.Stderr, resp.Body); err != nil {
+		fmt.Println(err)
 	}
 }
 
@@ -76,9 +88,9 @@ func InitImages() {
 		}
 
 		if v, ok := utils.LocalImages[imageTag]; ok && v {
-			pullImage(imageTag)
+			PullImage(imageTag)
 		} else {
-			buildImage(imageTag)
+			BuildImage(imageTag)
 		}
 	}
 }
