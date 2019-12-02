@@ -29,8 +29,6 @@ func max(a, b int64) int64 {
 }
 
 func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, execCommand string) {
-	ctx, cancel := context.WithCancel(context.Background())
-
 	cmd := exec.Command(execCommand)
 	peakMemory := int64(0)
 
@@ -52,14 +50,7 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 		_ = out.Close()
 	}()
 
-	cmd.Stdin, cmd.Stdout = in, out
-
-	if err := cmd.Start(); err != nil {
-		testResult.Status = StatusRE
-		return
-	}
-	startTime := time.Now()
-
+	ctx, cancel := context.WithCancel(context.Background())
 	errChan, memoryMonitorChan := make(chan error), make(chan bool)
 	defer func() {
 		close(errChan)
@@ -67,6 +58,14 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 
 		cancel()
 	}()
+
+	cmd.Stdin, cmd.Stdout = in, out
+
+	if err := cmd.Start(); err != nil {
+		testResult.Status = StatusRE
+		return
+	}
+	startTime := time.Now()
 
 	go func() {
 		waitChan := make(chan error)
@@ -117,12 +116,13 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 		testResult.SpaceUsed = uint32(peakMemory)
 		_ = cmd.Process.Kill()
 	case err := <-errChan:
+		usedTime := time.Since(startTime)
+		
 		if err != nil {
 			fmt.Println(err)
 			testResult.Status = StatusRE
 		} else {
 			testResult.Status = StatusOK
-			usedTime := time.Since(startTime)
 			testResult.TimeUsed = uint32(usedTime.Milliseconds())
 			testResult.SpaceUsed = uint32(peakMemory)
 		}
