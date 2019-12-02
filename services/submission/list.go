@@ -24,3 +24,11 @@ func List(uid string, page uint32) ([]models.SubmissionLite, error) {
 	}
 	return list, nil
 }
+
+func ListCount(uid string) (uint32, error) {
+	count := uint32(0)
+	if err := db.DB.Table("submission").Where("uid = ?", uid).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}

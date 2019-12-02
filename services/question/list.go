@@ -20,3 +20,11 @@ func List(page uint32) ([]models.Question, error) {
 	}
 	return list, nil
 }
+
+func ListCount() (uint32, error) {
+	count := uint32(0)
+	if err := db.DB.Table("question").Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}

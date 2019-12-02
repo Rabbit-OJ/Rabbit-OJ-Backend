@@ -1,6 +1,7 @@
 package question
 
 import (
+	"Rabbit-OJ-Backend/models/responses"
 	QuestionService "Rabbit-OJ-Backend/services/question"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -28,8 +29,23 @@ func List(c *gin.Context) {
 		return
 	}
 
+	count, err := QuestionService.ListCount()
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	response := &responses.QuestionList{
+		List:  list,
+		Count: count,
+	}
+
 	c.JSON(200, gin.H{
-		"code": 200,
-		"message": list,
+		"code":    200,
+		"message": response,
 	})
 }
