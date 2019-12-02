@@ -18,12 +18,11 @@ func Result(judgeResult *protobuf.JudgeResponse) error {
 
 	status, spaceUsed, timeUsed := "AC", uint32(0), uint32(0)
 	for _, res := range judgeResult.Result {
+		spaceUsed += res.SpaceUsed
+		timeUsed += res.TimeUsed
+
 		if res.Status != "AC" {
 			status = "NO"
-			break
-		} else {
-			spaceUsed += res.SpaceUsed
-			timeUsed += res.TimeUsed
 		}
 	}
 

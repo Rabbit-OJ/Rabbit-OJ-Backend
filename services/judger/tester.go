@@ -123,9 +123,10 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 			testResult.Status = StatusRE
 		} else {
 			testResult.Status = StatusOK
-			testResult.TimeUsed = uint32(usedTime.Milliseconds())
-			testResult.SpaceUsed = uint32(peakMemory)
 		}
+
+		testResult.TimeUsed = uint32(usedTime.Milliseconds())
+		testResult.SpaceUsed = uint32(peakMemory)
 	}
 }
 
