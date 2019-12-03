@@ -1,9 +1,11 @@
 package websocket
 
 import (
+	SubmissionService "Rabbit-OJ-Backend/services/submission"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
+	"net/http"
 	"time"
 )
 
@@ -17,6 +19,9 @@ const (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(_ *http.Request) bool {
+		return true
+	},
 }
 
 type Client struct {
@@ -27,10 +32,10 @@ type Client struct {
 }
 
 func (c *Client) readPump() {
-	defer func() {
-		c.hub.unregister <- c
-		_ = c.conn.Close()
-	}()
+	//defer func() {
+	//	c.hub.unregister <- c
+	//	_ = c.conn.Close()
+	//}()
 
 	c.conn.SetReadLimit(maxMessageSize)
 	_ = c.conn.SetReadDeadline(time.Now().Add(pongWait))
@@ -41,7 +46,7 @@ func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		_ = c.conn.Close()
+		//_ = c.conn.Close()
 	}()
 
 	for {
@@ -80,6 +85,11 @@ func (c *Client) writePump() {
 func serveWs(hub *Hub) func(*gin.Context) {
 	return func(c *gin.Context) {
 		sid := c.Param("sid")
+
+		submission, err := SubmissionService.Detail(sid)
+		if err != nil || submission.Status != "ING" {
+			return
+		}
 
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {

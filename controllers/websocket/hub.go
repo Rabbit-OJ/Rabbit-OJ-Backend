@@ -32,8 +32,9 @@ func (h *Hub) run() {
 				delete(h.clients, client.sid)
 			}
 		case sid := <-h.Broadcast:
-			if _, ok := h.clients[sid]; ok {
-				h.clients[sid].send <- []byte("OK")
+			if client, ok := h.clients[sid]; ok {
+				client.send <- []byte("{\"ok\":1}")
+				h.unregister <- client
 			}
 		}
 	}

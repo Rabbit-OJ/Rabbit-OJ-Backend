@@ -39,6 +39,7 @@ func Router(baseRouter *gin.Engine) {
 	}
 
 	questionRouter.GET("/list/:page", List)
+	questionRouter.GET("/record/:tid/:page", middlewares.AuthJWT(), Record)
 	questionRouter.GET("/item/:tid", Detail)
 	questionRouter.POST("/item", middlewares.AuthJWT(), Create)
 	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(), Edit)
