@@ -11,3 +11,4 @@
 /files/submission/**/*.out
 /files/storage.json
 config.json
+**/.DS_Store

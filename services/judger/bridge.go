@@ -8,13 +8,13 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
+func JudgeRequestBridge(body []byte, okChan chan bool) {
 	defer func() {
 		okChan <- true
 	}()
 
 	judgeRequest := &protobuf.JudgeRequest{}
-	if err := proto.Unmarshal(delivery.Body, judgeRequest); err != nil {
+	if err := proto.Unmarshal(body, judgeRequest); err != nil {
 		fmt.Println(err)
 		return
 	}

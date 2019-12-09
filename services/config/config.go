@@ -11,9 +11,14 @@ var (
 )
 
 type GlobalConfigType struct {
-	Rpc      string `json:"rpc"`
-	RabbitMQ string `json:"rabbit_mq"`
-	MySQL    string `json:"mysql"`
+	Rpc        string     `json:"rpc"`
+	RabbitMQ   string     `json:"rabbit_mq"`
+	MySQL      string     `json:"mysql"`
+	Concurrent concurrent `json:"concurrent"`
+}
+
+type concurrent struct {
+	JudgeCount uint `json:"judge_count"`
 }
 
 func readFile(config *GlobalConfigType) {

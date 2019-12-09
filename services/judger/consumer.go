@@ -1,22 +1,21 @@
 package judger
 
 import (
+	"Rabbit-OJ-Backend/services/config"
 	"github.com/streadway/amqp"
 )
 
-// We should NOT judge multiple codes at the same time, or the time will not accurate
-
 func JudgeHandler(deliveries <-chan amqp.Delivery) {
+	queueChan := make(chan []byte)
+
+	for i := uint(0); i < config.Global.Concurrent.JudgeCount; i++ {
+		go StartMachine(i, queueChan)
+	}
+
 	for delivery := range deliveries {
-		okChan := make(chan bool)
-
+		queueChan <- delivery.Body
+		// block until one machine receive the request body, then ACK
 		_ = delivery.Ack(false)
-		go JudgeRequestBridge(&delivery, okChan)
-
-		select {
-		case <-okChan:
-			close(okChan)
-		}
 	}
 }
 
