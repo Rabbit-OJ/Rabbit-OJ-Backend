@@ -11,18 +11,18 @@ import (
 )
 
 func Runner(
-	codePath string,
+	sid, codePath string,
 	compileInfo *utils.CompileInfo,
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 ) error {
-	fmt.Println("[Runner] Compile OK, start run container " + codePath)
+	fmt.Printf("(%s) [Runner] Compile OK, start run container %s \n", sid, codePath)
 
 	err := utils.TouchFile(codePath + ".result")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
 	}
-	fmt.Println("[Runner] Touched empty result file for build")
+	fmt.Printf("(%s) [Runner] Touched empty result file for build \n", sid)
 
 	containerConfig := &container.Config{
 		Image:           compileInfo.RunImage,
@@ -75,7 +75,7 @@ func Runner(
 		},
 	}
 
-	fmt.Println("[Runner] Creating container")
+	fmt.Printf("(%s) [Runner] Creating container \n", sid)
 	resp, err := DockerClient.ContainerCreate(DockerContext,
 		containerConfig,
 		containerHostConfig,
@@ -86,19 +86,19 @@ func Runner(
 		return err
 	}
 
-	fmt.Println("[Runner] Running container")
+	fmt.Printf("(%s) [Runner] Running container \n", sid)
 	if err := DockerClient.ContainerStart(DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
-		fmt.Println(err)
+		fmt.Printf("(%s) [Runner] %+v \n", sid, err)
 		return err
 	}
 
 	statusCh, errCh := DockerClient.ContainerWait(DockerContext, resp.ID, container.WaitConditionNotRunning)
-	fmt.Println("[Runner] Waiting for status")
+	fmt.Printf("(%s) [Runner] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
-		fmt.Println(status)
+		fmt.Printf("(%s) %+v \n", sid, status)
 	case <-time.After(120 * time.Second):
 		return errors.New("run timeout")
 	}

@@ -89,6 +89,10 @@ func StorageFilePath() (string, error) {
 	return filepath.Abs("./files/storage.json")
 }
 
+func ConfigFilePath() (string, error) {
+	return filepath.Abs("./config.json")
+}
+
 func JudgeDirPathWithMkdir(tid, version string) (string, error) {
 	path, err := filepath.Abs(fmt.Sprintf("./files/judge/%s/%s", tid, version))
 	if err != nil {

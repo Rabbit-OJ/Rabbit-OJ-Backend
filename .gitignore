@@ -10,3 +10,4 @@
 /files/submission/**/*.in
 /files/submission/**/*.out
 /files/storage.json
+config.json

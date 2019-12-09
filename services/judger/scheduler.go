@@ -21,12 +21,12 @@ type CollectedStdout struct {
 func Scheduler(request *protobuf.JudgeRequest) error {
 	sid := request.Sid
 
-	fmt.Println("========START JUDGE ========")
-	fmt.Println("[Scheduler] Received judge request " + sid)
+	fmt.Printf("========START JUDGE(%s)======== \n", sid)
+	fmt.Printf("(%s) [Scheduler] Received judge request \n", sid)
 
 	startSchedule := time.Now()
 	defer func() {
-		fmt.Println("[Scheduler] total cost : " + strconv.FormatInt(time.Since(startSchedule).Milliseconds(), 10) + "ms")
+		fmt.Printf("(%s) [Scheduler] total cost : %d ms \n", sid, time.Since(startSchedule).Milliseconds())
 	}()
 
 	// init path
@@ -36,7 +36,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	defer func() {
-		fmt.Println("[Scheduler] Cleaning path " + sid)
+		fmt.Printf("(%s) [Scheduler] Cleaning path \n", sid)
 		if os.Getenv("ENV") == "production" {
 			_ = os.RemoveAll(currentPath)
 		}
@@ -58,31 +58,32 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		return errors.New("language doesn't support")
 	}
 
-	fmt.Println("[Scheduler] Init test cases")
+	fmt.Printf("(%s) [Scheduler] Init test cases \n", sid)
 	// get case
 	storage, err := InitTestCase(request.Tid, request.Version)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("(%s) [Scheduler] Case Error %+v \n", sid, err)
 		return err
 	}
 
 	// compile
-	fmt.Println("[Scheduler] Start Compile")
-	if err := Compiler(codePath, request.Code, &compileInfo); err != nil {
-		fmt.Println("[Scheduler] CE", err)
+	fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
+	if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
+		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
 		return callbackAllError("CE", sid, storage)
 	}
-	fmt.Println("[Scheduler] Compile OK")
+	fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
 
-	fileStat, err := os.Stat(codePath+".o")
+	fileStat, err := os.Stat(codePath + ".o")
 	if err != nil || fileStat.Size() == 0 {
-		fmt.Println("[Scheduler] CE", err)
+		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
 		return callbackAllError("CE", sid, storage)
 	}
 
 	// run
-	fmt.Println("[Scheduler] Start Runner")
+	fmt.Printf("(%s) [Scheduler] Start Runner \n", sid)
 	if err := Runner(
+		sid,
 		codePath,
 		&compileInfo,
 		strconv.FormatUint(uint64(storage.DatasetCount), 10),
@@ -91,12 +92,12 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		casePath,
 		outputPath); err != nil {
 
-		fmt.Println("RE", err)
+		fmt.Printf("(%s) [Scheduler] RE %+v \n", sid, err)
 		return callbackAllError("RE", sid, storage)
 	}
-	fmt.Println("[Scheduler] Runner OK")
+	fmt.Printf("(%s) [Scheduler] Runner OK \n", sid)
 
-	fmt.Println("[Scheduler] Reading result")
+	fmt.Printf("(%s) [Scheduler] Reading result \n", sid)
 	jsonFileByte, err := ioutil.ReadFile(codePath + ".result")
 	if err != nil {
 		return callbackAllError("RE", sid, storage)
@@ -108,7 +109,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	// collect std::out
-	fmt.Println("[Schedule] Collecting stdout " + sid)
+	fmt.Printf("(%s) [Schedule] Collecting stdout \n", sid)
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(1); i <= storage.DatasetCount; i++ {
 
@@ -141,7 +142,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		}
 	}
 	// judge std::out
-	fmt.Println("Judging stdout " + sid)
+	fmt.Printf("(%s) [Scheduler] Judging stdout \n", sid)
 	resultList := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 
 	for index, item := range allStdin {
@@ -154,14 +155,14 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		resultList[index].TimeUsed = judgeResult.TimeUsed
 	}
 	// mq return result
-	fmt.Println("[Scheduler] Calling back results")
+	fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
 	if err := callbackSuccess(
 		sid,
 		resultList); err != nil {
-		fmt.Println(err)
+		fmt.Printf("(%s) [Scheduler] MQ Callback error %+v \n", sid, err)
 		return err
 	}
 
-	fmt.Println("[Scheduler] Finish " + sid)
+	fmt.Printf("(%s) [Scheduler] Finish \n", sid)
 	return nil
 }

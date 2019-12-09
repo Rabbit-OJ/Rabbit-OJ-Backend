@@ -1,9 +1,8 @@
 package mq
 
 import (
-	"fmt"
+	"Rabbit-OJ-Backend/services/config"
 	"github.com/streadway/amqp"
-	"os"
 )
 
 var (
@@ -12,15 +11,7 @@ var (
 )
 
 func Init() {
-	username := "user"
-	password := os.Getenv("Password")
-
-	server := "localhost:5672"
-	if os.Getenv("ENV") == "production" {
-		server = "rabbitmq:5672"
-	}
-
-	connStr := fmt.Sprintf("amqp://%s:%s@%s/", username, password, server)
+	connStr := config.Global.RabbitMQ
 
 	if conn, err := amqp.Dial(connStr); err != nil {
 		panic(err)

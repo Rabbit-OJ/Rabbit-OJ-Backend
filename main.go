@@ -7,6 +7,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/middlewares"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/services/rpc"
@@ -25,6 +26,7 @@ func main() {
 	utils.InitConstant()
 
 	if Role == "Server" {
+		config.Init()
 		db.Init()
 		mq.Init()
 		judger.InitMQ()
@@ -59,6 +61,7 @@ func main() {
 	} else if Role == "Judge" {
 		judger.DockerScript()
 
+		config.Init()
 		mq.Init()
 		judger.InitMQ()
 

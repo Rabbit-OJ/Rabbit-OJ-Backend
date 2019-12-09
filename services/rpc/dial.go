@@ -1,9 +1,8 @@
 package rpc
 
 import (
-	"fmt"
+	"Rabbit-OJ-Backend/services/config"
 	"net/rpc"
-	"os"
 )
 
 type AnyType interface{}
@@ -13,7 +12,7 @@ var (
 )
 
 func DialInit() error {
-	client, err := rpc.Dial("tcp", fmt.Sprintf("%s", os.Getenv("CASE_DIAL")))
+	client, err := rpc.Dial("tcp", config.Global.Rpc)
 	if err != nil {
 		return err
 	}

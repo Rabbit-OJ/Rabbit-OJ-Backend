@@ -8,6 +8,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"sync"
+)
+
+var (
+	fetchTestCaseMutex sync.Mutex
 )
 
 type Storage struct {
@@ -37,7 +42,6 @@ func ReadStorageFile() []Storage {
 		return storage
 	}
 
-	fmt.Println(string(rawJson))
 	if err := json.Unmarshal(rawJson, &storage); err != nil {
 		fmt.Println(err)
 		return storage
@@ -67,6 +71,9 @@ func SaveStorageFile(storage []Storage) error {
 }
 
 func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
+	fetchTestCaseMutex.Lock()
+	defer fetchTestCaseMutex.Unlock()
+
 	request, response := &protobuf.TestCaseRequest{Tid: tid}, &protobuf.TestCaseResponse{}
 
 	fmt.Println("[Test Case] Preparing rpc to fetch case " + tid)

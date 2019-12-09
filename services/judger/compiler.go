@@ -9,16 +9,16 @@ import (
 	"time"
 )
 
-func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) error {
-	fmt.Println("[Compile] Start" + codePath)
+func Compiler(sid, codePath string, code []byte, compileInfo *utils.CompileInfo) error {
+	fmt.Printf("(%s) [Compile] Start %s \n", sid, codePath)
 
 	err := utils.TouchFile(codePath + ".o")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
 	}
 
-	fmt.Println("[Compile] Touched empty output file for build")
+	fmt.Printf("(%s) [Compile] Touched empty output file for build \n", sid)
 	containerConfig := &container.Config{
 		Entrypoint:      compileInfo.BuildArgs,
 		Tty:             true,
@@ -35,7 +35,7 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 		},
 	}
 
-	fmt.Println("[Compile] Creating container")
+	fmt.Printf("(%s) [Compile] Creating container \n", sid)
 	resp, err := DockerClient.ContainerCreate(DockerContext,
 		containerConfig,
 		containerHostConfig,
@@ -46,7 +46,7 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 		return err
 	}
 
-	fmt.Println("[Compile] Copying files to container")
+	fmt.Printf("(%s) [Compile] Copying files to container \n", sid)
 	io, err := utils.ConvertToTar([]utils.TarFileBasicInfo{{compileInfo.SourceFileName, code}})
 	if err != nil {
 		return err
@@ -64,19 +64,19 @@ func Compiler(codePath string, code []byte, compileInfo *utils.CompileInfo) erro
 		return err
 	}
 
-	fmt.Println("[Compile] Running container")
+	fmt.Printf("(%s) [Compile] Running container \n", sid)
 	if err := DockerClient.ContainerStart(DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
-		fmt.Println(err)
+		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
 	}
 
 	statusCh, errCh := DockerClient.ContainerWait(DockerContext, resp.ID, container.WaitConditionNotRunning)
-	fmt.Println("[Compile] Waiting for status")
+	fmt.Printf("(%s) [Compile] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
-		fmt.Println(status)
+		fmt.Printf("(%s) %+v \n", sid, status)
 	case <-time.After(time.Duration(compileInfo.BuildTime) * time.Second):
 		return errors.New("compile timeout")
 	}
