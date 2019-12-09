@@ -155,13 +155,14 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		resultList[index].TimeUsed = judgeResult.TimeUsed
 	}
 	// mq return result
-	fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
-	if err := callbackSuccess(
-		sid,
-		resultList); err != nil {
-		fmt.Printf("(%s) [Scheduler] MQ Callback error %+v \n", sid, err)
-		return err
-	}
+	go func() {
+		fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
+		if err := callbackSuccess(
+			sid,
+			resultList); err != nil {
+			fmt.Printf("(%s) [Scheduler] MQ Callback error %+v \n", sid, err)
+		}
+	}()
 
 	fmt.Printf("(%s) [Scheduler] Finish \n", sid)
 	return nil

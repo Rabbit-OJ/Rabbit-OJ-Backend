@@ -18,7 +18,7 @@ type GlobalConfigType struct {
 }
 
 type concurrent struct {
-	JudgeCount uint `json:"judge_count"`
+	Judge uint `json:"judge"`
 }
 
 func readFile(config *GlobalConfigType) {

@@ -25,16 +25,14 @@ func JudgeRequestBridge(body []byte, okChan chan bool) {
 	}
 }
 
-func JudgeResponseBridge(delivery *amqp.Delivery, okChan chan bool) {
-	defer func() {
-		okChan <- true
-	}()
-
+func JudgeResponseBridge(delivery *amqp.Delivery) {
 	judgeResult := &protobuf.JudgeResponse{}
 	if err := proto.Unmarshal(delivery.Body, judgeResult); err != nil {
 		fmt.Println(err)
 		return
 	}
+
+	fmt.Printf("[TEMP] received message : %+v \n",judgeResult)
 
 	if err := submission.Result(judgeResult); err != nil {
 		fmt.Println(err)

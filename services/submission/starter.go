@@ -15,7 +15,6 @@ func Starter(
 	questionJudge *models.QuestionJudge,
 	question *models.QuestionDetail,
 ) error {
-
 	request := &protobuf.JudgeRequest{
 		Sid:        submission.Sid,
 		Tid:        submission.Tid,

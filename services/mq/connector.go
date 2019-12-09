@@ -2,17 +2,26 @@ package mq
 
 import (
 	"Rabbit-OJ-Backend/services/config"
+	"fmt"
 	"github.com/streadway/amqp"
 )
 
 var (
-	Connection *amqp.Connection
-	Channel    *amqp.Channel
+	Connection      *amqp.Connection
+	Channel         *amqp.Channel
 )
+
+func handleReconnect(closeChan chan *amqp.Error) {
+	select {
+	case err := <-closeChan:
+		fmt.Printf("Reconnecting rabbitmq, meet error: %+v \n", err)
+		Init()
+		// todo: declare consumer
+	}
+}
 
 func Init() {
 	connStr := config.Global.RabbitMQ
-
 	if conn, err := amqp.Dial(connStr); err != nil {
 		panic(err)
 	} else {
@@ -24,6 +33,10 @@ func Init() {
 	} else {
 		Channel = channel
 	}
+
+	closeChan := make(chan *amqp.Error)
+	Connection.NotifyClose(closeChan)
+	go handleReconnect(closeChan)
 }
 
 func DeclareConsumer(queueName, consumerTag string) (<-chan amqp.Delivery, error) {

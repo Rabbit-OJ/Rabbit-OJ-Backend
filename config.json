@@ -3,6 +3,6 @@
   "rabbit_mq": "amqp://user:P@ssw0rd@localhost:5672/",
   "mysql": "root:P@ssw0rd@tcp(localhost:3306)/oj?&parseTime=True&loc=Local",
   "concurrent": {
-    "judge_count": 2
+    "judge": 2
   }
 }
