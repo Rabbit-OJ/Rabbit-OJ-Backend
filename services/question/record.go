@@ -2,8 +2,8 @@ package question
 
 import (
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/db"
-	"Rabbit-OJ-Backend/utils"
 )
 
 func Record(uid, tid string, page uint32) ([]models.SubmissionLite, error) {
@@ -15,8 +15,8 @@ func Record(uid, tid string, page uint32) ([]models.SubmissionLite, error) {
 		Joins("INNER JOIN question ON `submission`.`tid` = `question`.`tid`").
 		Where("`submission`.`uid` = ? AND `submission`.`tid` = ?", uid, tid).
 		Order("`submission`.`sid` DESC").
-		Limit(utils.PageSize).
-		Offset((page - 1) * utils.PageSize).
+		Limit(config.PageSize).
+		Offset((page - 1) * config.PageSize).
 		Scan(&list).Error
 
 	if err != nil {

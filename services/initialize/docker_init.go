@@ -14,7 +14,7 @@ func Docker() {
 		panic(err)
 	}
 
-	docker.DockerContext, docker.DockerClient = ctx, cli
+	docker.Context, docker.Client = ctx, cli
 	if os.Getenv("ENV") == "production" {
 		DockerImages()
 	}

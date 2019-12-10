@@ -1,7 +1,7 @@
 package docker
 
 import (
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"io"
@@ -10,7 +10,7 @@ import (
 
 func PullImage(tag string) {
 	fmt.Println("[DIND] pulling image : " + tag)
-	out, err := DockerClient.ImagePull(DockerContext, tag, types.ImagePullOptions{})
+	out, err := Client.ImagePull(Context, tag, types.ImagePullOptions{})
 	if err != nil {
 		panic(err)
 	}
@@ -24,15 +24,15 @@ func PullImage(tag string) {
 func BuildImage(tag string) {
 	fmt.Println("[DIND] building image from local Dockerfile : " + tag)
 
-	dockerFileBytes, err := utils.ReadFileBytes(fmt.Sprintf("./dockerfiles/%s/Dockerfile", tag))
+	dockerFileBytes, err := path.ReadFileBytes(fmt.Sprintf("./dockerfiles/%s/Dockerfile", tag))
 	if err != nil {
 		panic(err)
 	}
-	serverFileBytes, err := utils.ReadFileBytes("./server")
+	serverFileBytes, err := path.ReadFileBytes("./server")
 	if err != nil {
 		panic(err)
 	}
-	tarBytes, err := utils.ConvertToTar([]utils.TarFileBasicInfo{
+	tarBytes, err := path.ConvertToTar([]path.TarFileBasicInfo{
 		{
 			Name: "Dockerfile",
 			Body: dockerFileBytes,
@@ -46,7 +46,7 @@ func BuildImage(tag string) {
 		panic(err)
 	}
 
-	resp, err := DockerClient.ImageBuild(DockerContext, tarBytes, types.ImageBuildOptions{
+	resp, err := Client.ImageBuild(Context, tarBytes, types.ImageBuildOptions{
 		Tags:   []string{tag},
 		Remove: true,
 	})

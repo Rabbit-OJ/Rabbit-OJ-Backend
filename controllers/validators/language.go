@@ -1,7 +1,7 @@
 package validators
 
 import (
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/services/config"
 	"gopkg.in/go-playground/validator.v8"
 	"reflect"
 )
@@ -14,7 +14,7 @@ func Language(
 	if language, ok := field.Interface().(string); ok {
 		supportLanguage := false
 
-		for _, lang := range utils.SupportLanguage {
+		for _, lang := range config.SupportLanguage {
 			if language == lang.Value {
 				supportLanguage = true
 				break

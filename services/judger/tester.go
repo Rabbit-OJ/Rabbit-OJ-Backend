@@ -3,6 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"context"
 	"encoding/json"
 	"errors"
@@ -32,7 +33,7 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 	cmd := exec.Command(execCommand)
 	peakMemory := int64(0)
 
-	in, err := os.OpenFile(utils.DockerCasePath(i), os.O_RDONLY, 0644)
+	in, err := os.OpenFile(path.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
 		testResult.Status = StatusRE
 		return
@@ -41,7 +42,7 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 		_ = in.Close()
 	}()
 
-	out, err := os.OpenFile(utils.DockerOutputPath(i), os.O_CREATE|os.O_WRONLY, 0644)
+	out, err := os.OpenFile(path.DockerOutputPath(i), os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -150,7 +151,7 @@ func Tester() {
 	}
 
 	for i := int64(1); i <= testCaseCount; i++ {
-		if !utils.Exists(utils.DockerCasePath(i)) {
+		if !path.Exists(path.DockerCasePath(i)) {
 			panic(errors.New(fmt.Sprintf("Case #%d doesn't exist", i)))
 		}
 	}
@@ -160,7 +161,7 @@ func Tester() {
 		panic(err)
 	}
 
-	file, err := os.Create(utils.DockerResultFile())
+	file, err := os.Create(path.DockerResultFile())
 	if err != nil {
 		panic(err)
 	}

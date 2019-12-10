@@ -3,8 +3,8 @@ package submission
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/mq"
-	"Rabbit-OJ-Backend/utils"
 	"github.com/golang/protobuf/proto"
 	"strconv"
 )
@@ -32,7 +32,7 @@ func Starter(
 	}
 
 	return mq.Publish(
-		utils.DefaultExchangeName,
-		utils.JudgeRoutingKey,
+		config.DefaultExchangeName,
+		config.JudgeRoutingKey,
 		pro)
 }

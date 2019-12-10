@@ -3,8 +3,8 @@ package judger
 import (
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/mq"
-	"Rabbit-OJ-Backend/utils"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 )
@@ -33,8 +33,8 @@ func callbackAllError(status, sid string, storage *Storage) {
 		}
 
 		if err := mq.Publish(
-			utils.DefaultExchangeName,
-			utils.JudgeResultRoutingKey,
+			config.DefaultExchangeName,
+			config.JudgeResultRoutingKey,
 			pro); err != nil {
 			fmt.Println(err)
 			return
@@ -58,8 +58,8 @@ func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) {
 		}
 
 		if err := mq.Publish(
-			utils.DefaultExchangeName,
-			utils.JudgeResultRoutingKey,
+			config.DefaultExchangeName,
+			config.JudgeResultRoutingKey,
 			pro); err != nil {
 			fmt.Println(err)
 			return

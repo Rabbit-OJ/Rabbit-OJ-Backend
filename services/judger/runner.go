@@ -3,7 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/docker"
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"errors"
 	"fmt"
 	"github.com/docker/docker/api/types"
@@ -14,12 +14,12 @@ import (
 
 func Runner(
 	sid, codePath string,
-	compileInfo *utils.CompileInfo,
+	compileInfo *config.CompileInfo,
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 ) error {
 	fmt.Printf("(%s) [Runner] Compile OK, start run container %s \n", sid, codePath)
 
-	err := utils.TouchFile(codePath + ".result")
+	err := path.TouchFile(codePath + ".result")
 	if err != nil {
 		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
@@ -70,9 +70,9 @@ func Runner(
 			//	},
 		},
 		Binds: []string{
-			utils.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
-			utils.DockerHostConfigBinds(codePath+".result", "/result/info.json"),
-			utils.DockerHostConfigBinds(outputPath, "/output"),
+			path.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
+			path.DockerHostConfigBinds(codePath+".result", "/result/info.json"),
+			path.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
 
@@ -81,7 +81,7 @@ func Runner(
 	}
 
 	fmt.Printf("(%s) [Runner] Creating container \n", sid)
-	resp, err := docker.DockerClient.ContainerCreate(docker.DockerContext,
+	resp, err := docker.Client.ContainerCreate(docker.Context,
 		containerConfig,
 		containerHostConfig,
 		nil,
@@ -92,12 +92,12 @@ func Runner(
 	}
 
 	fmt.Printf("(%s) [Runner] Running container \n", sid)
-	if err := docker.DockerClient.ContainerStart(docker.DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
+	if err := docker.Client.ContainerStart(docker.Context, resp.ID, types.ContainerStartOptions{}); err != nil {
 		fmt.Printf("(%s) [Runner] %+v \n", sid, err)
 		return err
 	}
 
-	statusCh, errCh := docker.DockerClient.ContainerWait(docker.DockerContext, resp.ID, container.WaitConditionNotRunning)
+	statusCh, errCh := docker.Client.ContainerWait(docker.Context, resp.ID, container.WaitConditionNotRunning)
 	fmt.Printf("(%s) [Runner] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:

@@ -2,7 +2,7 @@ package user
 
 import (
 	"Rabbit-OJ-Backend/controllers/auth"
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -10,14 +10,14 @@ import (
 func Avatar(c *gin.Context) {
 	uid := c.Param("uid")
 
-	avatarPath, _ := utils.AvatarPath(uid)
+	avatarPath, _ := path.AvatarPath(uid)
 
 	c.Writer.WriteHeader(200)
 	c.Header("Content-Disposition", "attachment; filename=avatar.png")
 	c.Header("Content-Type", "application/octet-stream")
 
 	if _, err := os.Stat(avatarPath); err != nil {
-		defaultPath, _ := utils.DefaultAvatarPath()
+		defaultPath, _ := path.DefaultAvatarPath()
 		c.File(defaultPath)
 	} else {
 		c.File(avatarPath)
@@ -45,7 +45,7 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	avatarPath, err := utils.AvatarPath(uid)
+	avatarPath, err := path.AvatarPath(uid)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

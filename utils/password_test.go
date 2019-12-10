@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"Rabbit-OJ-Backend/services/config"
 	"fmt"
 	"testing"
 )
@@ -8,8 +9,8 @@ import (
 func TestSaltPassword(t *testing.T) {
 	weakPassword := "P@ssw0rd"
 
-	InitConstant()
-	fmt.Println(Secret)
+	config.InitConstant()
+	fmt.Println(config.Secret)
 
 	if salted := SaltPassword(weakPassword); salted != "" {
 		fmt.Println(salted)

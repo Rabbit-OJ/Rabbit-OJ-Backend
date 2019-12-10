@@ -1,7 +1,9 @@
 package utils
 
+import "Rabbit-OJ-Backend/services/config"
+
 func SaltPasswordWithSecret(firstMd5 string) string {
-	return Md5(firstMd5 + Secret)
+	return Md5(firstMd5 + config.Secret)
 }
 
 func SaltPassword(password string) string {

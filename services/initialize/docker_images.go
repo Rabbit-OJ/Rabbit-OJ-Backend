@@ -1,8 +1,8 @@
 package initialize
 
 import (
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/docker"
-	"Rabbit-OJ-Backend/utils"
 	"fmt"
 	"github.com/docker/docker/api/types"
 )
@@ -10,13 +10,13 @@ import (
 func DockerImages() {
 	needImages := make(map[string]bool)
 
-	for _, item := range utils.CompileObject {
+	for _, item := range config.CompileObject {
 		needImages[item.RunImage] = true
 		needImages[item.RunImage] = true
 	}
 
 	fmt.Println("[DIND] fetching image list")
-	images, err := docker.DockerClient.ImageList(docker.DockerContext, types.ImageListOptions{})
+	images, err := docker.Client.ImageList(docker.Context, types.ImageListOptions{})
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +35,7 @@ func DockerImages() {
 			continue
 		}
 
-		if v, ok := utils.LocalImages[imageTag]; ok && v {
+		if v, ok := config.LocalImages[imageTag]; ok && v {
 			docker.PullImage(imageTag)
 		} else {
 			docker.BuildImage(imageTag)

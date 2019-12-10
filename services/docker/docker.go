@@ -6,6 +6,6 @@ import (
 )
 
 var (
-	DockerContext context.Context
-	DockerClient  *client.Client
+	Context context.Context
+	Client  *client.Client
 )

@@ -3,18 +3,19 @@ package judger
 import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/docker"
-	"Rabbit-OJ-Backend/utils"
+	path2 "Rabbit-OJ-Backend/utils/path"
 	"errors"
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"path"
 	"time"
 )
 
-func Compiler(sid, codePath string, code []byte, compileInfo *utils.CompileInfo) error {
+func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo) error {
 	fmt.Printf("(%s) [Compile] Start %s \n", sid, codePath)
 
-	err := utils.TouchFile(codePath + ".o")
+	err := path2.TouchFile(codePath + ".o")
 	if err != nil {
 		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
@@ -27,12 +28,11 @@ func Compiler(sid, codePath string, code []byte, compileInfo *utils.CompileInfo)
 		OpenStdin:       true,
 		Image:           compileInfo.BuildImage,
 		NetworkDisabled: true,
-		StopTimeout:     &compileInfo.BuildTime,
 	}
 
 	containerHostConfig := &container.HostConfig{
 		Binds: []string{
-			utils.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
+			path2.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
 		},
 	}
 
@@ -41,7 +41,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *utils.CompileInfo)
 	}
 
 	fmt.Printf("(%s) [Compile] Creating container \n", sid)
-	resp, err := docker.DockerClient.ContainerCreate(docker.DockerContext,
+	resp, err := docker.Client.ContainerCreate(docker.Context,
 		containerConfig,
 		containerHostConfig,
 		nil,
@@ -52,15 +52,15 @@ func Compiler(sid, codePath string, code []byte, compileInfo *utils.CompileInfo)
 	}
 
 	fmt.Printf("(%s) [Compile] Copying files to container \n", sid)
-	io, err := utils.ConvertToTar([]utils.TarFileBasicInfo{{compileInfo.SourceFileName, code}})
+	io, err := path2.ConvertToTar([]path2.TarFileBasicInfo{{path.Base(compileInfo.Source), code}})
 	if err != nil {
 		return err
 	}
 
-	if err := docker.DockerClient.CopyToContainer(
-		docker.DockerContext,
+	if err := docker.Client.CopyToContainer(
+		docker.Context,
 		resp.ID,
-		compileInfo.ExecFilePath,
+		path.Dir(compileInfo.Source),
 		io,
 		types.CopyToContainerOptions{
 			AllowOverwriteDirWithFile: true,
@@ -70,19 +70,20 @@ func Compiler(sid, codePath string, code []byte, compileInfo *utils.CompileInfo)
 	}
 
 	fmt.Printf("(%s) [Compile] Running container \n", sid)
-	if err := docker.DockerClient.ContainerStart(docker.DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
+	if err := docker.Client.ContainerStart(docker.Context, resp.ID, types.ContainerStartOptions{}); err != nil {
 		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
 	}
 
-	statusCh, errCh := docker.DockerClient.ContainerWait(docker.DockerContext, resp.ID, container.WaitConditionNotRunning)
+	statusCh, errCh := docker.Client.ContainerWait(docker.Context, resp.ID, container.WaitConditionNotRunning)
 	fmt.Printf("(%s) [Compile] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
 		fmt.Printf("(%s) %+v \n", sid, status)
-	case <-time.After(time.Duration(compileInfo.BuildTime) * time.Second):
+	case <-time.After(time.Duration(compileInfo.BuildTimeout) * time.Second):
+		go docker.ForceContainerRemove(resp.ID)
 		return errors.New("compile timeout")
 	}
 

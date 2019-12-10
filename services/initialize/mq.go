@@ -4,7 +4,6 @@ import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/mq"
-	"Rabbit-OJ-Backend/utils"
 	"fmt"
 	"github.com/streadway/amqp"
 	"os"
@@ -49,29 +48,29 @@ func connect() {
 }
 
 func declareServices() {
-	if err := mq.DeclareExchange(utils.DefaultExchangeName, "direct"); err != nil {
+	if err := mq.DeclareExchange(config.DefaultExchangeName, "direct"); err != nil {
 		panic(err)
 	}
 
-	if err := mq.DeclareQueue(utils.JudgeQueueName); err != nil {
+	if err := mq.DeclareQueue(config.JudgeQueueName); err != nil {
 		panic(err)
 	}
 
-	if err := mq.DeclareQueue(utils.JudgeResultQueueName); err != nil {
+	if err := mq.DeclareQueue(config.JudgeResultQueueName); err != nil {
 		panic(err)
 	}
 
-	if err := mq.BindQueue(utils.JudgeQueueName, utils.JudgeRoutingKey, utils.DefaultExchangeName); err != nil {
+	if err := mq.BindQueue(config.JudgeQueueName, config.JudgeRoutingKey, config.DefaultExchangeName); err != nil {
 		panic(err)
 	}
 
-	if err := mq.BindQueue(utils.JudgeResultQueueName, utils.JudgeResultRoutingKey, utils.DefaultExchangeName); err != nil {
+	if err := mq.BindQueue(config.JudgeResultQueueName, config.JudgeResultRoutingKey, config.DefaultExchangeName); err != nil {
 		panic(err)
 	}
 
 	if os.Getenv("Role") == "Judge" {
 		// judge mode
-		deliveries, err := mq.DeclareConsumer(utils.JudgeQueueName, utils.JudgeRoutingKey)
+		deliveries, err := mq.DeclareConsumer(config.JudgeQueueName, config.JudgeRoutingKey)
 		if err != nil {
 			panic(err)
 		}
@@ -81,7 +80,7 @@ func declareServices() {
 
 	if os.Getenv("Role") == "Server" {
 		// server mode
-		deliveries, err := mq.DeclareConsumer(utils.JudgeResultQueueName, utils.JudgeResultRoutingKey)
+		deliveries, err := mq.DeclareConsumer(config.JudgeResultQueueName, config.JudgeResultRoutingKey)
 		if err != nil {
 			panic(err)
 		}

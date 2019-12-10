@@ -4,7 +4,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/config"
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -31,7 +31,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}()
 
 	// initialize path
-	currentPath, err := utils.SubmissionGenerateDirWithMkdir(sid)
+	currentPath, err := path.SubmissionGenerateDirWithMkdir(sid)
 	if err != nil {
 		return err
 	}
@@ -43,18 +43,18 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		}
 	}()
 
-	outputPath, err := utils.JudgeGenerateOutputDirWithMkdir(currentPath)
+	outputPath, err := path.JudgeGenerateOutputDirWithMkdir(currentPath)
 	if err != nil {
 		return err
 	}
 
 	codePath := fmt.Sprintf("%s/%s.code", currentPath, sid)
-	casePath, err := utils.JudgeCaseDir(request.Tid, request.Version)
+	casePath, err := path.JudgeCaseDir(request.Tid, request.Version)
 	if err != nil {
 		return err
 	}
 
-	compileInfo, ok := utils.CompileObject[request.Language]
+	compileInfo, ok := config.CompileObject[request.Language]
 	if !ok {
 		return errors.New("language doesn't support")
 	}
@@ -69,7 +69,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	// compile
 	fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
-	if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
+	if err := Compiler(sid, codePath, request.Code, compileInfo); err != nil {
 		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
 		callbackAllError("CE", sid, storage)
 	}
@@ -86,7 +86,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	if err := Runner(
 		sid,
 		codePath,
-		&compileInfo,
+		compileInfo,
 		strconv.FormatUint(uint64(storage.DatasetCount), 10),
 		strconv.FormatUint(uint64(request.TimeLimit), 10),
 		strconv.FormatUint(uint64(request.SpaceLimit), 10),
@@ -114,7 +114,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(1); i <= storage.DatasetCount; i++ {
 
-		path, err := utils.JudgeFilePath(
+		path, err := path.JudgeFilePath(
 			storage.Tid,
 			storage.Version,
 			strconv.FormatUint(uint64(i), 10),

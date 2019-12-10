@@ -2,8 +2,8 @@ package question
 
 import (
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/db"
-	"Rabbit-OJ-Backend/utils"
 )
 
 func List(page uint32) ([]models.Question, error) {
@@ -11,8 +11,8 @@ func List(page uint32) ([]models.Question, error) {
 
 	err := db.DB.Table("question").
 		Order("tid asc").
-		Limit(utils.PageSize).
-		Offset((page - 1) * utils.PageSize).
+		Limit(config.PageSize).
+		Offset((page - 1) * config.PageSize).
 		Scan(&list).Error
 
 	if err != nil {

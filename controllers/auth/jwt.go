@@ -2,7 +2,7 @@ package auth
 
 import (
 	"Rabbit-OJ-Backend/models"
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/services/config"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -31,12 +31,12 @@ func SignJWT(user *models.User) (string, error) {
 	}
 	tokenObj := jwt.NewWithClaims(jwt.SigningMethodHS512, jwtObject)
 
-	return tokenObj.SignedString([]byte(utils.Secret))
+	return tokenObj.SignedString([]byte(config.Secret))
 }
 
 func VerifyJWT(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(utils.Secret), nil
+		return []byte(config.Secret), nil
 	})
 
 	if tokenClaims != nil {

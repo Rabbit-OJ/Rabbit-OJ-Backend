@@ -9,7 +9,6 @@ import (
 	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/rpc"
-	"Rabbit-OJ-Backend/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -27,7 +26,6 @@ func main() {
 	}()
 
 	Role = os.Getenv("Role")
-	utils.InitConstant()
 
 	if Role == "Server" {
 		initialize.Config()

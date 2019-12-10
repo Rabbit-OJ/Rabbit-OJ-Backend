@@ -3,7 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/rpc"
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -24,7 +24,7 @@ type Storage struct {
 type StorageFile = []Storage
 
 func ReadStorageFile() []Storage {
-	storageFilePath, err := utils.StorageFilePath()
+	storageFilePath, err := path.StorageFilePath()
 	storage := make([]Storage, 0)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func ReadStorageFile() []Storage {
 		return storage
 	}
 
-	if !utils.Exists(storageFilePath) {
+	if !path.Exists(storageFilePath) {
 		return storage
 	}
 
@@ -51,7 +51,7 @@ func ReadStorageFile() []Storage {
 }
 
 func SaveStorageFile(storage []Storage) error {
-	storageFilePath, err := utils.StorageFilePath()
+	storageFilePath, err := path.StorageFilePath()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -83,12 +83,12 @@ func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
 	}
 
 	fmt.Println("[Test Case] Storage to localhost")
-	if _, err := utils.JudgeDirPathWithMkdir(tid, response.Version); err != nil {
+	if _, err := path.JudgeDirPathWithMkdir(tid, response.Version); err != nil {
 		return nil, err
 	}
 
 	for index, item := range response.Case {
-		inPath, err := utils.JudgeFilePath(tid, response.Version, strconv.Itoa(index + 1), "in")
+		inPath, err := path.JudgeFilePath(tid, response.Version, strconv.Itoa(index + 1), "in")
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -99,7 +99,7 @@ func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
 			return nil, err
 		}
 
-		outPath, err := utils.JudgeFilePath(tid, response.Version, strconv.Itoa(index + 1), "out")
+		outPath, err := path.JudgeFilePath(tid, response.Version, strconv.Itoa(index + 1), "out")
 		if err != nil {
 			fmt.Println(err)
 			return nil, err

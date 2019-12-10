@@ -2,7 +2,7 @@ package submission
 
 import (
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
-	"Rabbit-OJ-Backend/utils"
+	"Rabbit-OJ-Backend/utils/path"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -20,7 +20,7 @@ func Code(c *gin.Context) {
 		return
 	}
 
-	codePath, _ := utils.CodePath(submission.FileName)
+	codePath, _ := path.CodePath(submission.FileName)
 	c.Writer.WriteHeader(200)
 	c.Header("Content-Disposition", "attachment; filename=code.txt")
 	c.Header("Content-Type", "text/plain")
