@@ -1,8 +1,6 @@
 package mq
 
 import (
-	"Rabbit-OJ-Backend/services/config"
-	"fmt"
 	"github.com/streadway/amqp"
 )
 
@@ -11,40 +9,6 @@ var (
 	ConsumerChannel *amqp.Channel
 	PublishChannel  *amqp.Channel
 )
-
-func handleReconnect(closeChan chan *amqp.Error) {
-	select {
-	case err := <-closeChan:
-		fmt.Printf("Reconnecting rabbitmq, meet error: %+v \n", err)
-		Init()
-		// todo: re-declare consumer
-	}
-}
-
-func Init() {
-	connStr := config.Global.RabbitMQ
-	if conn, err := amqp.Dial(connStr); err != nil {
-		panic(err)
-	} else {
-		Connection = conn
-	}
-
-	if channel, err := Connection.Channel(); err != nil {
-		panic(err)
-	} else {
-		ConsumerChannel = channel
-	}
-
-	if channel, err := Connection.Channel(); err != nil {
-		panic(err)
-	} else {
-		PublishChannel = channel
-	}
-
-	closeChan := make(chan *amqp.Error)
-	Connection.NotifyClose(closeChan)
-	go handleReconnect(closeChan)
-}
 
 func DeclareConsumer(queueName, consumerTag string) (<-chan amqp.Delivery, error) {
 	deliveries, err := ConsumerChannel.Consume(

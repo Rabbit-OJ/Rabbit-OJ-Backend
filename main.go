@@ -5,11 +5,9 @@ import (
 	"Rabbit-OJ-Backend/controllers/submission"
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/controllers/websocket"
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/middlewares"
-	"Rabbit-OJ-Backend/services/config"
+	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/judger"
-	"Rabbit-OJ-Backend/services/mq"
 	"Rabbit-OJ-Backend/services/rpc"
 	"Rabbit-OJ-Backend/utils"
 	"fmt"
@@ -22,28 +20,19 @@ var (
 )
 
 func main() {
+	exitChan := make(chan bool)
+	defer func() {
+		exitChan <- true
+		close(exitChan)
+	}()
+
 	Role = os.Getenv("Role")
 	utils.InitConstant()
 
 	if Role == "Server" {
-		config.Init()
-		db.Init()
-		mq.Init()
-		judger.InitMQ()
-
-		defer func() {
-			if err := mq.Channel.Close(); err != nil {
-				fmt.Println(err)
-			}
-
-			if err := mq.Connection.Close(); err != nil {
-				fmt.Println(err)
-			}
-
-			if err := db.DB.Close(); err != nil {
-				fmt.Println(err)
-			}
-		}()
+		initialize.Config()
+		initialize.DB(exitChan)
+		initialize.MQ(exitChan)
 
 		go rpc.Register()
 		server := gin.Default()
@@ -59,24 +48,13 @@ func main() {
 			fmt.Println(err)
 		}
 	} else if Role == "Judge" {
-		judger.DockerScript()
+		initialize.DockerScript()
 
-		config.Init()
-		mq.Init()
-		judger.InitMQ()
+		initialize.Config()
+		initialize.MQ(exitChan)
 
-		defer func() {
-			if err := mq.Channel.Close(); err != nil {
-				fmt.Println(err)
-			}
-
-			if err := mq.Connection.Close(); err != nil {
-				fmt.Println(err)
-			}
-		}()
-
-		judger.DockerInit()
-		judger.CheckTestCase()
+		initialize.Docker()
+		initialize.CheckTestCase()
 
 		exitChan := make(chan bool)
 

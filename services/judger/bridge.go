@@ -32,8 +32,6 @@ func JudgeResponseBridge(delivery *amqp.Delivery) {
 		return
 	}
 
-	fmt.Printf("[TEMP] received message : %+v \n",judgeResult)
-
 	if err := submission.Result(judgeResult); err != nil {
 		fmt.Println(err)
 		return

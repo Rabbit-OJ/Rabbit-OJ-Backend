@@ -1,6 +1,8 @@
 package judger
 
 import (
+	"Rabbit-OJ-Backend/services/config"
+	"Rabbit-OJ-Backend/services/docker"
 	"Rabbit-OJ-Backend/utils"
 	"errors"
 	"fmt"
@@ -37,7 +39,6 @@ func Runner(
 	}
 
 	containerHostConfig := &container.HostConfig{
-		//AutoRemove: true,
 		Mounts: []mount.Mount{
 			//	{
 			//		Source:   codePath + ".o",
@@ -75,8 +76,12 @@ func Runner(
 		},
 	}
 
+	if config.Global.AutoRemove.Containers {
+		containerHostConfig.AutoRemove = true
+	}
+
 	fmt.Printf("(%s) [Runner] Creating container \n", sid)
-	resp, err := DockerClient.ContainerCreate(DockerContext,
+	resp, err := docker.DockerClient.ContainerCreate(docker.DockerContext,
 		containerConfig,
 		containerHostConfig,
 		nil,
@@ -87,12 +92,12 @@ func Runner(
 	}
 
 	fmt.Printf("(%s) [Runner] Running container \n", sid)
-	if err := DockerClient.ContainerStart(DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
+	if err := docker.DockerClient.ContainerStart(docker.DockerContext, resp.ID, types.ContainerStartOptions{}); err != nil {
 		fmt.Printf("(%s) [Runner] %+v \n", sid, err)
 		return err
 	}
 
-	statusCh, errCh := DockerClient.ContainerWait(DockerContext, resp.ID, container.WaitConditionNotRunning)
+	statusCh, errCh := docker.DockerClient.ContainerWait(docker.DockerContext, resp.ID, container.WaitConditionNotRunning)
 	fmt.Printf("(%s) [Runner] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:

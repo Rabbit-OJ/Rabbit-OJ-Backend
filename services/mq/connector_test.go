@@ -1,15 +1,15 @@
 package mq
 
 import (
-	"Rabbit-OJ-Backend/services/config"
+	"Rabbit-OJ-Backend/services/initialize"
 	"fmt"
 	"testing"
 	"time"
 )
 
 func TestInit(t *testing.T) {
-	config.Init()
-	Init()
+	initialize.Config()
+	initialize.MQ(make(chan bool))
 	if err := DeclareExchange("test_exchange", "direct"); err != nil {
 		panic(err)
 	}

@@ -7,7 +7,6 @@ import (
 )
 
 func UpdateAttemptCount(tid string) {
-	fmt.Println("[ATTEMPT] INCREMENT COUNT " + tid)
 	if err := db.DB.Table("question").
 		Update("attempt", gorm.Expr("attempt + 1")).
 		Where("tid = ?", tid).Error;

@@ -3,6 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/utils"
 	"encoding/json"
 	"errors"
@@ -29,7 +30,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		fmt.Printf("(%s) [Scheduler] total cost : %d ms \n", sid, time.Since(startSchedule).Milliseconds())
 	}()
 
-	// init path
+	// initialize path
 	currentPath, err := utils.SubmissionGenerateDirWithMkdir(sid)
 	if err != nil {
 		return err
@@ -37,7 +38,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	defer func() {
 		fmt.Printf("(%s) [Scheduler] Cleaning path \n", sid)
-		if os.Getenv("ENV") == "production" {
+		if config.Global.AutoRemove.Files {
 			_ = os.RemoveAll(currentPath)
 		}
 	}()

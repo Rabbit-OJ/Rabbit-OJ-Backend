@@ -15,13 +15,18 @@ type GlobalConfigType struct {
 	RabbitMQ   string     `json:"rabbit_mq"`
 	MySQL      string     `json:"mysql"`
 	Concurrent concurrent `json:"concurrent"`
+	AutoRemove autoRemove `json:"auto_remove"`
 }
 
 type concurrent struct {
 	Judge uint `json:"judge"`
 }
+type autoRemove struct {
+	Containers bool `json:"containers"`
+	Files      bool `json:"files"`
+}
 
-func readFile(config *GlobalConfigType) {
+func ReadFile(config *GlobalConfigType) {
 	configPath, err := utils.ConfigFilePath()
 	if err != nil {
 		panic(err)
@@ -35,9 +40,4 @@ func readFile(config *GlobalConfigType) {
 	if err := json.Unmarshal(content, config); err != nil {
 		panic(err)
 	}
-}
-
-func Init() {
-	Global = &GlobalConfigType{}
-	readFile(Global)
 }

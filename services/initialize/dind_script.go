@@ -1,4 +1,4 @@
-package judger
+package initialize
 
 import (
 	"fmt"

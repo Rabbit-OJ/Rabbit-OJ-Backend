@@ -100,7 +100,7 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 						memoryMonitorChan <- true
 					}
 				}
-				time.Sleep(200 * time.Millisecond)
+				time.Sleep(50 * time.Millisecond)
 			}
 		}
 	}(cmd.Process.Pid)

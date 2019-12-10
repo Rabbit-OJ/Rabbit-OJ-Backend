@@ -1,4 +1,4 @@
-package judger
+package docker
 
 import (
 	"Rabbit-OJ-Backend/utils"
@@ -56,41 +56,5 @@ func BuildImage(tag string) {
 
 	if _, err := io.Copy(os.Stderr, resp.Body); err != nil {
 		fmt.Println(err)
-	}
-}
-
-func InitImages() {
-	needImages := make(map[string]bool)
-
-	for _, item := range utils.CompileObject {
-		needImages[item.RunImage] = true
-		needImages[item.RunImage] = true
-	}
-
-	fmt.Println("[DIND] fetching image list")
-	images, err := DockerClient.ImageList(DockerContext, types.ImageListOptions{})
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("[DIND] comparing image list")
-	for _, image := range images {
-		for _, tag := range image.RepoTags {
-			if _, ok := needImages[tag]; ok {
-				needImages[tag] = false
-			}
-		}
-	}
-
-	for imageTag, need := range needImages {
-		if !need {
-			continue
-		}
-
-		if v, ok := utils.LocalImages[imageTag]; ok && v {
-			PullImage(imageTag)
-		} else {
-			BuildImage(imageTag)
-		}
 	}
 }

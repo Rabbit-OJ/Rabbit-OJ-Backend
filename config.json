@@ -2,6 +2,10 @@
   "rpc": "localhost:8090",
   "rabbit_mq": "amqp://user:P@ssw0rd@localhost:5672/",
   "mysql": "root:P@ssw0rd@tcp(localhost:3306)/oj?&parseTime=True&loc=Local",
+  "auto_remove":{
+    "containers": true,
+    "files": true
+  },
   "concurrent": {
     "judge": 2
   }
