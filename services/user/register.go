@@ -1,9 +1,9 @@
 package user
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/forms"
+	"Rabbit-OJ-Backend/services/db"
 	"Rabbit-OJ-Backend/utils"
 	"errors"
 	"time"

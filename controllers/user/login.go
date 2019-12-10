@@ -1,7 +1,7 @@
 package user
 
 import (
-	"Rabbit-OJ-Backend/auth"
+	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/models/forms"
 	"Rabbit-OJ-Backend/models/responses"
 	UserService "Rabbit-OJ-Backend/services/user"

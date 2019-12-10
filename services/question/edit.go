@@ -1,8 +1,8 @@
 package question
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/db"
 )
 
 func Edit(tid, subject, content string, difficulty uint8, timeLimit, spaceLimit uint32) error {

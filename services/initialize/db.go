@@ -1,8 +1,8 @@
 package initialize
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/services/config"
+	"Rabbit-OJ-Backend/services/db"
 	"fmt"
 	"github.com/jinzhu/gorm"
 )

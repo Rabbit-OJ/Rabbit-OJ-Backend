@@ -1,7 +1,7 @@
 package question
 
 import (
-	"Rabbit-OJ-Backend/auth"
+	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/models/forms"
 	QuestionService "Rabbit-OJ-Backend/services/question"
 	"github.com/gin-gonic/gin"

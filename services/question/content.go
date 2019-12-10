@@ -1,8 +1,8 @@
 package question
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/db"
 )
 
 func Content (tid string) (*models.QuestionContent, error) {

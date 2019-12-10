@@ -1,8 +1,8 @@
 package question
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/db"
 )
 
 // NOTE: DELETE a problem WILL NOT CASCADE DELETE its submission records and codes, do it manually!

@@ -1,8 +1,8 @@
 package user
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/db"
 )
 
 func UsernameToUid(username string) (string, error) {

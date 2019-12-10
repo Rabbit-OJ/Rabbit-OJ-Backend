@@ -1,7 +1,7 @@
 package user
 
 import (
-	"Rabbit-OJ-Backend/db"
+	"Rabbit-OJ-Backend/services/db"
 	"fmt"
 	"testing"
 )

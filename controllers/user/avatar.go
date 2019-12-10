@@ -1,7 +1,7 @@
 package user
 
 import (
-	"Rabbit-OJ-Backend/auth"
+	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/utils"
 	"github.com/gin-gonic/gin"
 	"os"

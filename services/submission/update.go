@@ -1,8 +1,8 @@
 package submission
 
 import (
-	"Rabbit-OJ-Backend/db"
 	"Rabbit-OJ-Backend/models"
+	"Rabbit-OJ-Backend/services/db"
 )
 
 func Update(sid string, timeUsed, spaceUsed uint32, status string, judge []byte) error {

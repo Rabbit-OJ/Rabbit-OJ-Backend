@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"Rabbit-OJ-Backend/auth"
+	"Rabbit-OJ-Backend/controllers/auth"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
