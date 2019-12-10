@@ -9,50 +9,62 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-func callbackAllError(status, sid string, storage *Storage) error {
-	fmt.Printf("(%s) Callback judge error with status: %s \n", sid, status)
+func callbackAllError(status, sid string, storage *Storage) {
+	go func() {
+		fmt.Printf("(%s) Callback judge error with status: %s \n", sid, status)
 
-	ceResult := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
+		ceResult := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 
-	for i := range ceResult {
-		ceResult[i] = &protobuf.JudgeCaseResult{
-			Status: status,
+		for i := range ceResult {
+			ceResult[i] = &protobuf.JudgeCaseResult{
+				Status: status,
+			}
 		}
-	}
 
-	response := &protobuf.JudgeResponse{
-		Sid:    sid,
-		Result: ceResult,
-	}
+		response := &protobuf.JudgeResponse{
+			Sid:    sid,
+			Result: ceResult,
+		}
 
-	pro, err := proto.Marshal(response)
-	if err != nil {
-		return err
-	}
+		pro, err := proto.Marshal(response)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
-	return mq.Publish(
-		utils.DefaultExchangeName,
-		utils.JudgeResultRoutingKey,
-		pro)
+		if err := mq.Publish(
+			utils.DefaultExchangeName,
+			utils.JudgeResultRoutingKey,
+			pro); err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 }
 
-func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) error {
-	fmt.Printf("(%s) Callback judge success \n", sid)
+func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) {
+	go func() {
+		fmt.Printf("(%s) Callback judge success \n", sid)
 
-	response := &protobuf.JudgeResponse{
-		Sid:    sid,
-		Result: resultList,
-	}
+		response := &protobuf.JudgeResponse{
+			Sid:    sid,
+			Result: resultList,
+		}
 
-	pro, err := proto.Marshal(response)
-	if err != nil {
-		return err
-	}
+		pro, err := proto.Marshal(response)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
-	return mq.Publish(
-		utils.DefaultExchangeName,
-		utils.JudgeResultRoutingKey,
-		pro)
+		if err := mq.Publish(
+			utils.DefaultExchangeName,
+			utils.JudgeResultRoutingKey,
+			pro); err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 }
 
 func callbackWebSocket(sid string) {

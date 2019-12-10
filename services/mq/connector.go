@@ -8,7 +8,8 @@ import (
 
 var (
 	Connection      *amqp.Connection
-	Channel         *amqp.Channel
+	ConsumerChannel *amqp.Channel
+	PublishChannel  *amqp.Channel
 )
 
 func handleReconnect(closeChan chan *amqp.Error) {
@@ -16,7 +17,7 @@ func handleReconnect(closeChan chan *amqp.Error) {
 	case err := <-closeChan:
 		fmt.Printf("Reconnecting rabbitmq, meet error: %+v \n", err)
 		Init()
-		// todo: declare consumer
+		// todo: re-declare consumer
 	}
 }
 
@@ -31,7 +32,13 @@ func Init() {
 	if channel, err := Connection.Channel(); err != nil {
 		panic(err)
 	} else {
-		Channel = channel
+		ConsumerChannel = channel
+	}
+
+	if channel, err := Connection.Channel(); err != nil {
+		panic(err)
+	} else {
+		PublishChannel = channel
 	}
 
 	closeChan := make(chan *amqp.Error)
@@ -40,7 +47,7 @@ func Init() {
 }
 
 func DeclareConsumer(queueName, consumerTag string) (<-chan amqp.Delivery, error) {
-	deliveries, err := Channel.Consume(
+	deliveries, err := ConsumerChannel.Consume(
 		queueName,
 		consumerTag,
 		false,
@@ -58,7 +65,7 @@ func DeclareConsumer(queueName, consumerTag string) (<-chan amqp.Delivery, error
 }
 
 func DeclareExchange(exchangeName, exchangeType string) error {
-	if err := Channel.ExchangeDeclare(
+	if err := ConsumerChannel.ExchangeDeclare(
 		exchangeName,
 		exchangeType,
 		true,
@@ -73,7 +80,7 @@ func DeclareExchange(exchangeName, exchangeType string) error {
 }
 
 func DeclareQueue(queueName string) error {
-	_, err := Channel.QueueDeclare(
+	_, err := ConsumerChannel.QueueDeclare(
 		queueName,
 		true,
 		false,
@@ -90,7 +97,7 @@ func DeclareQueue(queueName string) error {
 }
 
 func BindQueue(queueName, routingKey, sourceExchange string) error {
-	if err := Channel.QueueBind(queueName,
+	if err := ConsumerChannel.QueueBind(queueName,
 		routingKey,
 		sourceExchange,
 		false,

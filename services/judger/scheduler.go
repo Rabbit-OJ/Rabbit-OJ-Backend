@@ -70,14 +70,14 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
 	if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
 		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
-		return callbackAllError("CE", sid, storage)
+		callbackAllError("CE", sid, storage)
 	}
 	fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
 
 	fileStat, err := os.Stat(codePath + ".o")
 	if err != nil || fileStat.Size() == 0 {
 		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
-		return callbackAllError("CE", sid, storage)
+		callbackAllError("CE", sid, storage)
 	}
 
 	// run
@@ -93,19 +93,19 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		outputPath); err != nil {
 
 		fmt.Printf("(%s) [Scheduler] RE %+v \n", sid, err)
-		return callbackAllError("RE", sid, storage)
+		callbackAllError("RE", sid, storage)
 	}
 	fmt.Printf("(%s) [Scheduler] Runner OK \n", sid)
 
 	fmt.Printf("(%s) [Scheduler] Reading result \n", sid)
 	jsonFileByte, err := ioutil.ReadFile(codePath + ".result")
 	if err != nil {
-		return callbackAllError("RE", sid, storage)
+		callbackAllError("RE", sid, storage)
 	}
 
 	var testResultArr []models.TestResult
 	if err := json.Unmarshal(jsonFileByte, &testResultArr); err != nil {
-		return callbackAllError("RE", sid, storage)
+		callbackAllError("RE", sid, storage)
 	}
 
 	// collect std::out
@@ -155,14 +155,8 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		resultList[index].TimeUsed = judgeResult.TimeUsed
 	}
 	// mq return result
-	go func() {
-		fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
-		if err := callbackSuccess(
-			sid,
-			resultList); err != nil {
-			fmt.Printf("(%s) [Scheduler] MQ Callback error %+v \n", sid, err)
-		}
-	}()
+	fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
+	callbackSuccess(sid, resultList)
 
 	fmt.Printf("(%s) [Scheduler] Finish \n", sid)
 	return nil
