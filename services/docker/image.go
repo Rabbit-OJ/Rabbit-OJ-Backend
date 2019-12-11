@@ -6,10 +6,11 @@ import (
 	"github.com/docker/docker/api/types"
 	"io"
 	"os"
+	"strings"
 )
 
 func PullImage(tag string) {
-	fmt.Println("[DIND] pulling image : " + tag)
+	fmt.Println("[Docker] pulling image : " + tag)
 	out, err := Client.ImagePull(Context, tag, types.ImagePullOptions{})
 	if err != nil {
 		panic(err)
@@ -22,9 +23,10 @@ func PullImage(tag string) {
 }
 
 func BuildImage(tag string) {
-	fmt.Println("[DIND] building image from local Dockerfile : " + tag)
+	fmt.Println("[Docker] building image from local Dockerfile : " + tag)
 
-	dockerFileBytes, err := files.ReadFileBytes(fmt.Sprintf("./dockerfiles/%s/Dockerfile", tag))
+	name := strings.Split(tag, ":")[0]
+	dockerFileBytes, err := files.ReadFileBytes(fmt.Sprintf("./dockerfiles/%s/Dockerfile", name))
 	if err != nil {
 		panic(err)
 	}

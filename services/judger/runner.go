@@ -42,40 +42,19 @@ func Runner(
 
 	containerHostConfig := &container.HostConfig{
 		Mounts: []mount.Mount{
-			//	{
-			//		Source:   codePath + ".o",
-			//		Target:   compileInfo.BuildTarget,
-			//		ReadOnly: true,
-			//		Type:     mount.TypeBind,
-			//	},
-			//	{
-			//		Source:   "/app/server",
-			//		Target:   "/app/tester",
-			//		ReadOnly: true,
-			//		Type:     mount.TypeBind,
-			//	},
-			//	{
-			//		Source: codePath + ".result",
-			//		Target: "/result/info.json",
-			//		Type:   mount.TypeBind,
-			//	},
 			{
 				Source:   casePath,
 				Target:   "/case",
 				ReadOnly: true,
 				Type:     mount.TypeBind,
 			},
-			//	{
-			//		Source: outputPath,
-			//		Target: "/output",
-			//		Type:   mount.TypeBind,
-			//	},
 		},
 		Binds: []string{
 			files.DockerHostConfigBinds(codePath+".result", "/result/info.json"),
 			files.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
+	// todo : limit memory usage
 
 	if !compileInfo.NoBuild {
 		containerHostConfig.Binds = append(containerHostConfig.Binds,
