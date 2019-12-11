@@ -3,7 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/utils"
-	"Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"context"
 	"encoding/json"
 	"errors"
@@ -29,11 +29,16 @@ func max(a, b int64) int64 {
 	}
 }
 
-func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, execCommand string) {
-	cmd := exec.Command(execCommand)
+func TestOne(
+	testResult *models.TestResult,
+	i, timeLimit, spaceLimit int64,
+	execCommand string,
+	execArgs []string) {
+
+	cmd := exec.Command(execCommand, execArgs...)
 	peakMemory := int64(0)
 
-	in, err := os.OpenFile(path.DockerCasePath(i), os.O_RDONLY, 0644)
+	in, err := os.OpenFile(files.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
 		testResult.Status = StatusRE
 		return
@@ -42,7 +47,7 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 		_ = in.Close()
 	}()
 
-	out, err := os.OpenFile(path.DockerOutputPath(i), os.O_CREATE|os.O_WRONLY, 0644)
+	out, err := os.OpenFile(files.DockerOutputPath(i), os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -94,10 +99,10 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 				stat, err := utils.GetStat(pid)
 				if err == nil {
 					peakMemory = max(peakMemory,
-						int64(stat.Memory/1024/1024),
+						int64(stat.Memory/1024),
 					)
 
-					if peakMemory >= spaceLimit {
+					if peakMemory >= spaceLimit * 1024 {
 						memoryMonitorChan <- true
 					}
 				}
@@ -118,7 +123,7 @@ func TestOne(testResult *models.TestResult, i, timeLimit, spaceLimit int64, exec
 		_ = cmd.Process.Kill()
 	case err := <-errChan:
 		usedTime := time.Since(startTime)
-		
+
 		if err != nil {
 			fmt.Println(err)
 			testResult.Status = StatusRE
@@ -146,22 +151,28 @@ func Tester() {
 		panic(err)
 	}
 
+	// todo: optimistic ? can we should believe the scheduler and do less check ???
 	if testCaseCount <= 0 {
 		panic(errors.New("invalid test case"))
 	}
 
 	for i := int64(1); i <= testCaseCount; i++ {
-		if !path.Exists(path.DockerCasePath(i)) {
+		if !files.Exists(files.DockerCasePath(i)) {
 			panic(errors.New(fmt.Sprintf("Case #%d doesn't exist", i)))
 		}
 	}
 
-	execCommand := os.Getenv("EXEC_COMMAND")
-	if execCommand == "" {
+	execCommandRaw := os.Getenv("EXEC_COMMAND")
+	if execCommandRaw == "" {
 		panic(err)
 	}
+	var execCommandArr []string
+	if err := json.Unmarshal([]byte(execCommandRaw), &execCommandArr); err != nil {
+		panic(err)
+	}
+	execCommand, execArgs := execCommandArr[0], execCommandArr[1:]
 
-	file, err := os.Create(path.DockerResultFile())
+	file, err := os.Create(files.DockerResultFile())
 	if err != nil {
 		panic(err)
 	}
@@ -172,7 +183,8 @@ func Tester() {
 	// <-- step2 : get_result
 	testResult := make([]models.TestResult, testCaseCount)
 	for i := int64(1); i <= testCaseCount; i++ {
-		TestOne(&testResult[i-1], i, timeLimit, spaceLimit, execCommand)
+		fmt.Printf("Test #%d Case...\n", i)
+		TestOne(&testResult[i-1], i, timeLimit, spaceLimit, execCommand, execArgs)
 	}
 
 	// <-- step3 : write info
@@ -184,4 +196,6 @@ func Tester() {
 	if _, err := file.Write(result); err != nil {
 		panic(err)
 	}
+
+	os.Exit(0)
 }

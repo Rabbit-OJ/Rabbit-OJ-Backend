@@ -6,11 +6,15 @@
     "containers": true,
     "files": true
   },
+  "extensions": {
+    "dind": false
+  },
   "concurrent": {
     "judge": 2
   },
   "local_images": [
-    "alpine_tester:latest"
+    "alpine_tester:latest",
+    "python2_tester:latest"
   ],
   "languages": [
     {
@@ -32,10 +36,12 @@
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
-        "run_args": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
         "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_max_timeout": 120
+        "run_timeout": 120
       }
     },
     {
@@ -57,10 +63,12 @@
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
-        "run_args": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
         "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_max_timeout": 120
+        "run_timeout": 120
       }
     },
     {
@@ -82,10 +90,12 @@
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
-        "run_args": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
         "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_max_timeout": 120
+        "run_timeout": 120
       }
     },
     {
@@ -107,10 +117,33 @@
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
-        "run_args": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
         "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_max_timeout": 120
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "python2",
+      "name": "Python/2",
+      "args": {
+        "build_args": [
+          "python",
+          "/home/code.py"
+        ],
+        "build_image": "-",
+        "no_build": true,
+        "source": "/home/code.py",
+        "build_target": "-",
+        "run_args": [
+          "python",
+          "/home/code.py"
+        ],
+        "build_timeout": 120,
+        "run_image": "python2_tester:latest",
+        "run_timeout": 120
       }
     }
   ]

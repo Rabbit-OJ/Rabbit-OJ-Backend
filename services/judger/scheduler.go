@@ -4,7 +4,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/config"
-	"Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,26 +30,26 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		fmt.Printf("(%s) [Scheduler] total cost : %d ms \n", sid, time.Since(startSchedule).Milliseconds())
 	}()
 
-	// initialize path
-	currentPath, err := path.SubmissionGenerateDirWithMkdir(sid)
+	// initialize files
+	currentPath, err := files.SubmissionGenerateDirWithMkdir(sid)
 	if err != nil {
 		return err
 	}
 
 	defer func() {
-		fmt.Printf("(%s) [Scheduler] Cleaning path \n", sid)
+		fmt.Printf("(%s) [Scheduler] Cleaning files \n", sid)
 		if config.Global.AutoRemove.Files {
 			_ = os.RemoveAll(currentPath)
 		}
 	}()
 
-	outputPath, err := path.JudgeGenerateOutputDirWithMkdir(currentPath)
+	outputPath, err := files.JudgeGenerateOutputDirWithMkdir(currentPath)
 	if err != nil {
 		return err
 	}
 
 	codePath := fmt.Sprintf("%s/%s.code", currentPath, sid)
-	casePath, err := path.JudgeCaseDir(request.Tid, request.Version)
+	casePath, err := files.JudgeCaseDir(request.Tid, request.Version)
 	if err != nil {
 		return err
 	}
@@ -67,18 +67,20 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 		return err
 	}
 
-	// compile
-	fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
-	if err := Compiler(sid, codePath, request.Code, compileInfo); err != nil {
-		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
-		callbackAllError("CE", sid, storage)
-	}
-	fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
+	if !compileInfo.NoBuild {
+		// compile
+		fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
+		if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
+			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
+			callbackAllError("CE", sid, storage)
+		}
+		fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
 
-	fileStat, err := os.Stat(codePath + ".o")
-	if err != nil || fileStat.Size() == 0 {
-		fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
-		callbackAllError("CE", sid, storage)
+		fileStat, err := os.Stat(codePath + ".o")
+		if err != nil || fileStat.Size() == 0 {
+			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
+			callbackAllError("CE", sid, storage)
+		}
 	}
 
 	// run
@@ -86,12 +88,13 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	if err := Runner(
 		sid,
 		codePath,
-		compileInfo,
+		&compileInfo,
 		strconv.FormatUint(uint64(storage.DatasetCount), 10),
 		strconv.FormatUint(uint64(request.TimeLimit), 10),
 		strconv.FormatUint(uint64(request.SpaceLimit), 10),
 		casePath,
-		outputPath); err != nil {
+		outputPath,
+		request.Code); err != nil {
 
 		fmt.Printf("(%s) [Scheduler] RE %+v \n", sid, err)
 		callbackAllError("RE", sid, storage)
@@ -114,7 +117,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(1); i <= storage.DatasetCount; i++ {
 
-		path, err := path.JudgeFilePath(
+		path, err := files.JudgeFilePath(
 			storage.Tid,
 			storage.Version,
 			strconv.FormatUint(uint64(i), 10),

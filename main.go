@@ -46,9 +46,9 @@ func main() {
 			fmt.Println(err)
 		}
 	} else if Role == "Judge" {
-		initialize.DockerScript()
-
 		initialize.Config()
+
+		initialize.DindScript()
 		initialize.MQ(exitChan)
 
 		initialize.Docker()

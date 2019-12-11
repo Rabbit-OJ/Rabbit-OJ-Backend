@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"Rabbit-OJ-Backend/services/judger"
-	"Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"strconv"
 )
 
@@ -14,19 +14,19 @@ func CheckTestCase()  {
 		valid := true
 
 		for i := uint32(1); i <= item.DatasetCount; i++ {
-			inputFilePath, err := path.JudgeFilePath(item.Tid, item.Version, strconv.FormatUint(uint64(i), 10), "in")
+			inputFilePath, err := files.JudgeFilePath(item.Tid, item.Version, strconv.FormatUint(uint64(i), 10), "in")
 			if err != nil {
 				valid = false
 			}
-			if !path.Exists(inputFilePath) {
+			if !files.Exists(inputFilePath) {
 				valid = false
 			}
 
-			outputFilePath, err := path.JudgeFilePath(item.Tid, item.Version, strconv.FormatUint(uint64(i), 10), "out")
+			outputFilePath, err := files.JudgeFilePath(item.Tid, item.Version, strconv.FormatUint(uint64(i), 10), "out")
 			if err != nil {
 				valid = false
 			}
-			if !path.Exists(outputFilePath) {
+			if !files.Exists(outputFilePath) {
 				valid = false
 			}
 		}

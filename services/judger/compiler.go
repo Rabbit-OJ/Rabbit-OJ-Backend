@@ -3,7 +3,7 @@ package judger
 import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/docker"
-	path2 "Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"errors"
 	"fmt"
 	"github.com/docker/docker/api/types"
@@ -15,7 +15,7 @@ import (
 func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo) error {
 	fmt.Printf("(%s) [Compile] Start %s \n", sid, codePath)
 
-	err := path2.TouchFile(codePath + ".o")
+	err := files.TouchFile(codePath + ".o")
 	if err != nil {
 		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
@@ -32,7 +32,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 
 	containerHostConfig := &container.HostConfig{
 		Binds: []string{
-			path2.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
+			files.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
 		},
 	}
 
@@ -52,7 +52,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 	}
 
 	fmt.Printf("(%s) [Compile] Copying files to container \n", sid)
-	io, err := path2.ConvertToTar([]path2.TarFileBasicInfo{{path.Base(compileInfo.Source), code}})
+	io, err := files.ConvertToTar([]files.TarFileBasicInfo{{path.Base(compileInfo.Source), code}})
 	if err != nil {
 		return err
 	}

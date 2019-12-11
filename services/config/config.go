@@ -1,7 +1,7 @@
 package config
 
 import (
-	"Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
 	"io/ioutil"
 )
@@ -18,8 +18,12 @@ type GlobalConfigType struct {
 	Concurrent  concurrent `json:"concurrent"`
 	LocalImages []string   `json:"local_images"`
 	Languages   []language `json:"languages"`
+	Extensions  extensions `json:"extensions"`
 }
 
+type extensions struct {
+	Dind bool `json:"dind"`
+}
 type language struct {
 	ID   string      `json:"id"`
 	Name string      `json:"name"`
@@ -34,7 +38,7 @@ type autoRemove struct {
 }
 
 func ReadFile(config *GlobalConfigType) {
-	configPath, err := path.ConfigFilePath()
+	configPath, err := files.ConfigFilePath()
 	if err != nil {
 		panic(err)
 	}

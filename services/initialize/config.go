@@ -3,6 +3,7 @@ package initialize
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/config"
+	"encoding/json"
 	"os"
 )
 
@@ -17,7 +18,7 @@ func Language() {
 	languageCount := len(config.Global.Languages)
 
 	config.LocalImages = map[string]bool{}
-	config.CompileObject = map[string]*config.CompileInfo{}
+	config.CompileObject = map[string]config.CompileInfo{}
 	config.SupportLanguage = make([]models.SupportLanguage, languageCount)
 
 	for _, item := range config.Global.LocalImages {
@@ -29,6 +30,13 @@ func Language() {
 			Value: item.ID,
 		}
 
-		config.CompileObject[item.ID] = &item.Args
+		runArgsJson, err := json.Marshal(item.Args.RunArgs)
+		if err != nil {
+			panic(err)
+		}
+
+		currentCompileObject := item.Args
+		currentCompileObject.RunArgsJSON = string(runArgsJson)
+		config.CompileObject[item.ID] = currentCompileObject
 	}
 }

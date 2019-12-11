@@ -2,7 +2,7 @@ package question
 
 import (
 	"Rabbit-OJ-Backend/protobuf"
-	"Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -56,7 +56,7 @@ func Case(tid string, response *protobuf.TestCaseResponse) error {
 }
 
 func readCaseFile(tid, version, caseId, caseType string) ([]byte, error) {
-	filePath, err := path.JudgeFilePath(tid, version, caseId, caseType)
+	filePath, err := files.JudgeFilePath(tid, version, caseId, caseType)
 	if err != nil {
 		return nil, err
 	}

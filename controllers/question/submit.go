@@ -5,7 +5,7 @@ import (
 	"Rabbit-OJ-Backend/models/forms"
 	"Rabbit-OJ-Backend/services/question"
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
-	"Rabbit-OJ-Backend/utils/path"
+	"Rabbit-OJ-Backend/utils/files"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 )
@@ -51,7 +51,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	fileName, err := path.CodeGenerateFileNameWithMkdir(authObject.Uid)
+	fileName, err := files.CodeGenerateFileNameWithMkdir(authObject.Uid)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
@@ -61,7 +61,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	filePath, err := path.CodePath(fileName)
+	filePath, err := files.CodePath(fileName)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
