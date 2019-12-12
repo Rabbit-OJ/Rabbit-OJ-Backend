@@ -14,7 +14,8 @@
   },
   "local_images": [
     "alpine_tester:latest",
-    "python2_tester:latest"
+    "python2_tester:latest",
+    "python3_tester:latest"
   ],
   "languages": [
     {
@@ -143,6 +144,27 @@
         ],
         "build_timeout": 120,
         "run_image": "python2_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "python3",
+      "name": "Python/3",
+      "args": {
+        "build_args": [
+          "python",
+          "/home/code.py"
+        ],
+        "build_image": "-",
+        "no_build": true,
+        "source": "/home/code.py",
+        "build_target": "-",
+        "run_args": [
+          "python",
+          "/home/code.py"
+        ],
+        "build_timeout": 120,
+        "run_image": "python3_tester:latest",
         "run_timeout": 120
       }
     }
