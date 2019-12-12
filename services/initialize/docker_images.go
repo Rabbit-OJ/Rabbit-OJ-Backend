@@ -15,13 +15,13 @@ func DockerImages() {
 		needImages[item.RunImage] = true
 	}
 
-	fmt.Println("[DIND] fetching image list")
+	fmt.Println("[Docker] fetching image list")
 	images, err := docker.Client.ImageList(docker.Context, types.ImageListOptions{})
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("[DIND] comparing image list")
+	fmt.Println("[Docker] comparing image list")
 	for _, image := range images {
 		for _, tag := range image.RepoTags {
 			if _, ok := needImages[tag]; ok {
@@ -36,9 +36,9 @@ func DockerImages() {
 		}
 
 		if v, ok := config.LocalImages[imageTag]; ok && v {
-			docker.PullImage(imageTag)
-		} else {
 			docker.BuildImage(imageTag)
+		} else {
+			docker.PullImage(imageTag)
 		}
 	}
 }

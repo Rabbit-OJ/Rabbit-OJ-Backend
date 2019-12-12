@@ -1,10 +1,10 @@
 package initialize
 
 import (
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/docker"
 	"github.com/docker/docker/client"
 	"golang.org/x/net/context"
-	"os"
 )
 
 func Docker() {
@@ -15,7 +15,7 @@ func Docker() {
 	}
 
 	docker.Context, docker.Client = ctx, cli
-	if os.Getenv("ENV") == "production" {
+	if config.Global.Extensions.AutoPull {
 		DockerImages()
 	}
 }

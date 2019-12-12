@@ -22,7 +22,8 @@ type GlobalConfigType struct {
 }
 
 type extensions struct {
-	Dind bool `json:"dind"`
+	Dind     bool `json:"dind"`
+	AutoPull bool `json:"auto_pull"`
 }
 type language struct {
 	ID   string      `json:"id"`

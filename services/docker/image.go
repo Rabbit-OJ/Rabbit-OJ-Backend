@@ -30,7 +30,7 @@ func BuildImage(tag string) {
 	if err != nil {
 		panic(err)
 	}
-	serverFileBytes, err := files.ReadFileBytes("./server")
+	serverFileBytes, err := files.ReadFileBytes("./tester")
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +40,7 @@ func BuildImage(tag string) {
 			Body: dockerFileBytes,
 		},
 		{
-			Name: "server",
+			Name: "tester",
 			Body: serverFileBytes,
 		},
 	})

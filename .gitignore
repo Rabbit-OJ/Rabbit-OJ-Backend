@@ -1,6 +1,7 @@
 /.idea
 /target
 /server
+/tester
 /files/avatar/*.avatar
 /files/judge/**/*.in
 /files/judge/**/*.out

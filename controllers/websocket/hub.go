@@ -16,6 +16,13 @@ func newHub() *Hub {
 	}
 }
 
+func (h *Hub) remove(client *Client) {
+	if _, ok := h.clients[client.sid]; ok {
+		close(client.send)
+		delete(h.clients, client.sid)
+	}
+}
+
 func (h *Hub) run() {
 	for {
 		select {
@@ -27,14 +34,11 @@ func (h *Hub) run() {
 
 			h.clients[client.sid] = client
 		case client := <-h.unregister:
-			if _, ok := h.clients[client.sid]; ok {
-				close(client.send)
-				delete(h.clients, client.sid)
-			}
+			h.remove(client)
 		case sid := <-h.Broadcast:
 			if client, ok := h.clients[sid]; ok {
 				client.send <- []byte("{\"ok\":1}")
-				h.unregister <- client
+				h.remove(client)
 			}
 		}
 	}

@@ -108,7 +108,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	}
 
 	var testResultArr []models.TestResult
-	if err := json.Unmarshal(jsonFileByte, &testResultArr); err != nil {
+	if err := json.Unmarshal(jsonFileByte, &testResultArr); err != nil || testResultArr == nil {
 		callbackAllError("RE", sid, storage)
 	}
 

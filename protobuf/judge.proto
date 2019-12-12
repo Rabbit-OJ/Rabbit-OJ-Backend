@@ -15,7 +15,7 @@ message JudgeRequest {
 
 message JudgeCaseResult {
     string status = 1;
-    uint32 space_used = 2;
+    double space_used = 2;
     uint32 time_used = 3;
 }
 

@@ -94,6 +94,5 @@ func handleReconnect(closeChan chan *amqp.Error) {
 	case err := <-closeChan:
 		fmt.Printf("Reconnecting rabbitmq, meet error: %+v \n", err)
 		connect()
-		// todo: re-declare consumer
 	}
 }

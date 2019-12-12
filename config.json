@@ -7,15 +7,15 @@
     "files": true
   },
   "extensions": {
-    "dind": false
+    "dind": false,
+    "auto_pull": true
   },
   "concurrent": {
     "judge": 2
   },
   "local_images": [
     "alpine_tester:latest",
-    "python2_tester:latest",
-    "python3_tester:latest"
+    "python_tester:latest"
   ],
   "languages": [
     {
@@ -139,11 +139,11 @@
         "source": "/home/code.py",
         "build_target": "-",
         "run_args": [
-          "python",
+          "python2",
           "/home/code.py"
         ],
         "build_timeout": 120,
-        "run_image": "python2_tester:latest",
+        "run_image": "python_tester:latest",
         "run_timeout": 120
       }
     },
@@ -164,7 +164,7 @@
           "/home/code.py"
         ],
         "build_timeout": 120,
-        "run_image": "python3_tester:latest",
+        "run_image": "python_tester:latest",
         "run_timeout": 120
       }
     }

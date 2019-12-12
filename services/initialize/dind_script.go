@@ -3,7 +3,6 @@ package initialize
 import (
 	"Rabbit-OJ-Backend/services/config"
 	"fmt"
-	"os"
 	"os/exec"
 )
 
@@ -14,16 +13,12 @@ func DindScript() {
 
 		if err := cmd.Run(); err != nil {
 			fmt.Println(err)
-			if os.Getenv("ENV") == "production" {
-				panic(err)
-			}
+			panic(err)
 		}
 
 		if err := cmd.Wait(); err != nil {
 			fmt.Println(err)
-			if os.Getenv("ENV") == "production" {
-				panic(err)
-			}
+			panic(err)
 		}
 	}
 }

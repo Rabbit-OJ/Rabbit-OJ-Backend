@@ -2,9 +2,9 @@ package websocket
 
 import (
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"log"
 	"net/http"
 	"time"
 )
@@ -25,7 +25,6 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
-	hub  *Hub
 	conn *websocket.Conn
 	send chan []byte
 	sid  string
@@ -82,24 +81,23 @@ func (c *Client) writePump() {
 	}
 }
 
-func serveWs(hub *Hub) func(*gin.Context) {
-	return func(c *gin.Context) {
-		sid := c.Param("sid")
+func serveWs(c *gin.Context) {
+	sid := c.Param("sid")
 
-		submission, err := SubmissionService.Detail(sid)
-		if err != nil || submission.Status != "ING" {
-			return
-		}
-
-		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), sid: sid}
-		client.hub.register <- client
-
-		go client.writePump()
-		go client.readPump()
+	submission, err := SubmissionService.Detail(sid)
+	if err != nil || submission.Status != "ING" {
+		return
 	}
+
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	client := &Client{conn: conn, send: make(chan []byte, 256), sid: sid}
+	SocketHub.register <- client
+
+	go client.writePump()
+	go client.readPump()
 }

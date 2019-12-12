@@ -25,9 +25,9 @@ func JudgeOneCase(testResult *models.TestResult, stdout, rightStdout, compMode s
 		} else {
 			result.Status = "WA"
 		}
-
-		result.TimeUsed, result.SpaceUsed = testResult.TimeUsed, testResult.SpaceUsed
 	}
+
+	result.TimeUsed, result.SpaceUsed = testResult.TimeUsed, testResult.SpaceUsed
 
 	return result
 }

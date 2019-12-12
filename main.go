@@ -49,10 +49,10 @@ func main() {
 		initialize.Config()
 
 		initialize.DindScript()
-		initialize.MQ(exitChan)
-
 		initialize.Docker()
 		initialize.CheckTestCase()
+
+		initialize.MQ(exitChan)
 
 		exitChan := make(chan bool)
 

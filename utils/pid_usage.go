@@ -50,6 +50,7 @@ func init() {
 		platform = "win"
 		eol = "\r\n"
 	}
+
 	history = make(map[int]Stat)
 	fnMap = make(map[string]fn)
 	fnMap["darwin"] = wrapper("ps")
@@ -58,7 +59,7 @@ func init() {
 	fnMap["aix"] = wrapper("ps")
 	fnMap["linux"] = wrapper("proc")
 	fnMap["netbsd"] = wrapper("proc")
-	fnMap["win"] = wrapper("win")
+	//fnMap["win"] = wrapper("win")
 }
 func formatStdOut(stdout []byte, userfulIndex int) []string {
 	infoArr := strings.Split(string(stdout), eol)[userfulIndex]

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"os/exec"
 	"strconv"
@@ -21,14 +22,6 @@ const (
 	StatusRE  = "RE"
 )
 
-func max(a, b int64) int64 {
-	if a < b {
-		return b
-	} else {
-		return a
-	}
-}
-
 func TestOne(
 	testResult *models.TestResult,
 	i, timeLimit, spaceLimit int64,
@@ -36,7 +29,7 @@ func TestOne(
 	execArgs []string) {
 
 	cmd := exec.Command(execCommand, execArgs...)
-	peakMemory := int64(0)
+	peakMemory := float64(0)
 
 	in, err := os.OpenFile(files.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
@@ -98,11 +91,11 @@ func TestOne(
 			default:
 				stat, err := utils.GetStat(pid)
 				if err == nil {
-					peakMemory = max(peakMemory,
-						int64(stat.Memory/1024),
+					peakMemory = math.Max(peakMemory,
+						stat.Memory/1024.0,
 					)
 
-					if peakMemory >= spaceLimit * 1024 {
+					if peakMemory >= float64(spaceLimit) * 1024.0 {
 						memoryMonitorChan <- true
 					}
 				}
@@ -119,7 +112,7 @@ func TestOne(
 	case <-time.After(time.Duration(timeLimit) * time.Millisecond):
 		testResult.Status = StatusTLE
 		testResult.TimeUsed = uint32(timeLimit)
-		testResult.SpaceUsed = uint32(peakMemory)
+		testResult.SpaceUsed = peakMemory
 		_ = cmd.Process.Kill()
 	case err := <-errChan:
 		usedTime := time.Since(startTime)
@@ -132,7 +125,7 @@ func TestOne(
 		}
 
 		testResult.TimeUsed = uint32(usedTime.Milliseconds())
-		testResult.SpaceUsed = uint32(peakMemory)
+		testResult.SpaceUsed = peakMemory
 	}
 }
 
@@ -192,7 +185,6 @@ func Tester() {
 	if err != nil {
 		panic(err)
 	}
-
 	if _, err := file.Write(result); err != nil {
 		panic(err)
 	}
