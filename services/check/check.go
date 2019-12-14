@@ -32,7 +32,7 @@ func StopCheck() {
 func checkRoutine(interval int, ctx context.Context) {
 	for {
 		select {
-		case <-time.After(time.Duration(interval) * time.Second):
+		case <-time.After(time.Duration(interval) * time.Minute):
 			handleCheck()
 		case <-ctx.Done():
 			break

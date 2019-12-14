@@ -2,7 +2,6 @@ package judger
 
 import (
 	"Rabbit-OJ-Backend/services/config"
-	"fmt"
 	"github.com/streadway/amqp"
 )
 
@@ -16,9 +15,6 @@ func JudgeHandler(deliveries <-chan amqp.Delivery) {
 	for delivery := range deliveries {
 		queueChan <- &delivery
 		// block until one machine receive the request body, then ACK
-		if err := delivery.Ack(false); err != nil {
-			fmt.Println(err)
-		}
 	}
 }
 

@@ -78,6 +78,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
 			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
 			callbackAllError("CE", sid, storage)
+			return true, err
 		}
 		fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
 
@@ -85,6 +86,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		if err != nil || fileStat.Size() == 0 {
 			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
 			callbackAllError("CE", sid, storage)
+			return true, err
 		}
 	}
 
@@ -103,6 +105,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 
 		fmt.Printf("(%s) [Scheduler] RE %+v \n", sid, err)
 		callbackAllError("RE", sid, storage)
+		return true, err
 	}
 	fmt.Printf("(%s) [Scheduler] Runner OK \n", sid)
 
@@ -110,11 +113,13 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	jsonFileByte, err := ioutil.ReadFile(codePath + ".result")
 	if err != nil {
 		callbackAllError("RE", sid, storage)
+		return true, err
 	}
 
 	var testResultArr []models.TestResult
 	if err := json.Unmarshal(jsonFileByte, &testResultArr); err != nil || testResultArr == nil {
 		callbackAllError("RE", sid, storage)
+		return true, err
 	}
 
 	// collect std::out
