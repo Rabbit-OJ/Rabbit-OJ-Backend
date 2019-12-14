@@ -8,7 +8,12 @@
   },
   "extensions": {
     "dind": false,
-    "auto_pull": true
+    "auto_pull": true,
+    "check_judge": {
+      "enabled": true,
+      "interval": 10,
+      "requeue": false
+    }
   },
   "concurrent": {
     "judge": 2
@@ -28,6 +33,7 @@
           "/home/code.cpp",
           "-Wall",
           "-lm",
+          "-fno-asm",
           "--static",
           "-O2",
           "-o",
@@ -55,6 +61,7 @@
           "/home/code.cpp",
           "-Wall",
           "-lm",
+          "-fno-asm",
           "--static",
           "-O2",
           "-o",
@@ -82,6 +89,7 @@
           "/home/code.cpp",
           "-Wall",
           "-lm",
+          "-fno-asm",
           "--static",
           "-O2",
           "-o",
@@ -109,6 +117,7 @@
           "/home/code.cpp",
           "-Wall",
           "-lm",
+          "-fno-asm",
           "--static",
           "-O2",
           "-o",
@@ -165,6 +174,62 @@
         ],
         "build_timeout": 120,
         "run_image": "python_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "c99",
+      "name": "C/99",
+      "args": {
+        "build_args": [
+          "gcc",
+          "-std=c99",
+          "/home/code.c",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:9.2.0",
+        "no_build": false,
+        "source": "/home/code.c",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "build_timeout": 120,
+        "run_image": "alpine_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "c11",
+      "name": "C/11",
+      "args": {
+        "build_args": [
+          "gcc",
+          "-std=c11",
+          "/home/code.c",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:9.2.0",
+        "no_build": false,
+        "source": "/home/code.c",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "build_timeout": 120,
+        "run_image": "alpine_tester:latest",
         "run_timeout": 120
       }
     }

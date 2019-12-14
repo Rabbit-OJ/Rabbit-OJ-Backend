@@ -8,18 +8,29 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func JudgeRequestBridge(body []byte, okChan chan bool) {
+func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
 	defer func() {
 		okChan <- true
 	}()
 
+	body := delivery.Body
 	judgeRequest := &protobuf.JudgeRequest{}
 	if err := proto.Unmarshal(body, judgeRequest); err != nil {
 		fmt.Println(err)
+
+		if err := delivery.Nack(false, true); err != nil {
+			fmt.Println(err)
+		}
 		return
 	}
 
-	if err := Scheduler(judgeRequest); err != nil {
+	if alreadyAcked, err := Scheduler(delivery, judgeRequest); err != nil {
+		if !alreadyAcked {
+			if err := delivery.Nack(false, true); err != nil {
+				fmt.Println(err)
+			}
+		}
+
 		fmt.Println(err)
 		return
 	}
@@ -38,4 +49,8 @@ func JudgeResponseBridge(delivery *amqp.Delivery) {
 	}
 
 	go callbackWebSocket(judgeResult.Sid)
+
+	if err := delivery.Ack(false); err != nil {
+		fmt.Println(err)
+	}
 }

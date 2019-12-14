@@ -1,11 +1,12 @@
 package initialize
 
 import (
-	"Rabbit-OJ-Backend/services/docker"
+	"fmt"
 	"testing"
 )
 
 func TestDocker(t *testing.T) {
-	Docker()
-	docker.BuildImage("alpine_tester:latest")
+	var toBeRejected []string
+	fmt.Println(len(toBeRejected))
+	fmt.Println(toBeRejected)
 }

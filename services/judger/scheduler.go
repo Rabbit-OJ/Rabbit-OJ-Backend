@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/streadway/amqp"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -19,7 +20,7 @@ type CollectedStdout struct {
 	RightStdout string
 }
 
-func Scheduler(request *protobuf.JudgeRequest) error {
+func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, error) {
 	sid := request.Sid
 
 	fmt.Printf("========START JUDGE(%s)======== \n", sid)
@@ -33,7 +34,7 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	// initialize files
 	currentPath, err := files.SubmissionGenerateDirWithMkdir(sid)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	defer func() {
@@ -45,18 +46,18 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 
 	outputPath, err := files.JudgeGenerateOutputDirWithMkdir(currentPath)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	codePath := fmt.Sprintf("%s/%s.code", currentPath, sid)
 	casePath, err := files.JudgeCaseDir(request.Tid, request.Version)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	compileInfo, ok := config.CompileObject[request.Language]
 	if !ok {
-		return errors.New("language doesn't support")
+		return false, errors.New("language doesn't support")
 	}
 
 	fmt.Printf("(%s) [Scheduler] Init test cases \n", sid)
@@ -64,7 +65,11 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	storage, err := InitTestCase(request.Tid, request.Version)
 	if err != nil {
 		fmt.Printf("(%s) [Scheduler] Case Error %+v \n", sid, err)
-		return err
+		return false, err
+	}
+
+	if err := delivery.Ack(false); err != nil {
+		fmt.Println(err)
 	}
 
 	if !compileInfo.NoBuild {
@@ -124,12 +129,12 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 			"out")
 
 		if err != nil {
-			return err
+			return true, err
 		}
 
 		stdoutByte, err := ioutil.ReadFile(path)
 		if err != nil {
-			return err
+			return true, err
 		}
 
 		allStdin[i-1].RightStdout = string(stdoutByte)
@@ -163,5 +168,5 @@ func Scheduler(request *protobuf.JudgeRequest) error {
 	callbackSuccess(sid, resultList)
 
 	fmt.Printf("(%s) [Scheduler] Finish \n", sid)
-	return nil
+	return true, nil
 }

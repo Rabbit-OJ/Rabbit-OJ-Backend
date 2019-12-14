@@ -6,6 +6,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/middlewares"
+	"Rabbit-OJ-Backend/services/check"
 	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/rpc"
@@ -29,6 +30,8 @@ func main() {
 
 	if Role == "Server" {
 		initialize.Config()
+
+		check.StartCheck()
 		initialize.DB(exitChan)
 		initialize.MQ(exitChan)
 

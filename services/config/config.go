@@ -22,8 +22,14 @@ type GlobalConfigType struct {
 }
 
 type extensions struct {
-	Dind     bool `json:"dind"`
-	AutoPull bool `json:"auto_pull"`
+	Dind       bool       `json:"dind"`
+	AutoPull   bool       `json:"auto_pull"`
+	CheckJudge checkJudge `json:"check_judge"`
+}
+type checkJudge struct {
+	Enabled  bool `json:"enabled"`
+	Interval int  `json:"interval"` // interval: seconds
+	Requeue  bool `json:"requeue"`
 }
 type language struct {
 	ID   string      `json:"id"`
