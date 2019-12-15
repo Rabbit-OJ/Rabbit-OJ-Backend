@@ -24,16 +24,16 @@ We will discuss the actions after the user submit a piece of code.
     - Re-queue action will guarantee the message will be consumed correctly
 6. The judger will check if it have the right version of test case, if not, dial to server and require the latest test case with credential
     - We tag each set of test cases with “version”, if the administrator update the test cases set, it will guarantee that the judger will always use the latest test case
-7. If the language requires the code to compile first (for example: C / C++ / Java), a compiler container will be started and try to compile the code. If an error occurred, then the submission is considered to be CE
-    - If the language doesn’t require a compile procedure (like python, node.js), this step will be jumped
-8. Then we will start a special container built by ourselves called “tester”, It will run the code or binary file with special arguments
-    - 🤔Time Limit: We will start a go-routine, the routine will kill the process if time limit the restriction and judge TLE
-    - 🤔Space Limit: We will start a go-routine, parse the file content ‘/proc/{pid}/stat’ every 100ms , If it exceed the restriction, kill the process and judge MLE
-    - 🤔If the process exit unexpectedly or doesn’t return zero, the submission will be considered to be RE
-9. The test inputs are mounted to the tester container ,however, the right outputs are not. The judge process will be executed after the tester container exit. We have 3 modes to test if an output is AC or WA
+7. If the language requires the code to compile first (for example: `C` / `C++` / `Java`), a compiler container will be started and try to compile the code. If an error occurred, then the submission is considered to be `CE`
+    - If the language doesn’t require a compile procedure (like `Python`, `Node.JS`), this step will be jumped
+8. Then we will start a special container built by ourselves called `tester`, It will run the code or binary file with special arguments
+    - 🤔Time Limit: We will start a go-routine, the routine will kill the process if time limit the restriction and judge `TLE`
+    - 🤔Space Limit: We will start a go-routine, parse the file content `/proc/{pid}/stat` every 100ms , If it exceed the restriction, kill the process and judge `MLE`
+    - 🤔If the process exit unexpectedly or doesn’t return zero, the submission will be considered to be `RE`
+9. The test inputs are mounted to the tester container ,however, the right outputs are not. The judge process will be executed after the tester container exit. We have 3 modes to test if an output is `AC` or `WA`
     - Text Compare: Simply compare if the right output and the code’s output are equal
-    - Stdout Compare: Split the output with separate chars like ‘\n’, ‘\r’, ‘ ’, ‘\t’. Then compare two arrays
-    - Float Compare: this mode is similar with mode2. The only difference is that if abs(rightArr[i] - outputArr[i]) <= 1e-6 , the answer will be accepted.
+    - Stdout Compare: Split the output with separate chars like `\n`, `\r`, ` `, `\t`. Then compare two arrays
+    - Float Compare: this mode is similar with mode2. The only difference is that if `abs(rightArr[i] - outputArr[i]) <= 1e-6` , the answer will be accepted.
 10. The judger will serial a result protobuf object and send it to the Message Queue
 11. The Server will consume the message, storage the status into the database, notify the client with the web socket
 12. The client received the result and re-render the page
