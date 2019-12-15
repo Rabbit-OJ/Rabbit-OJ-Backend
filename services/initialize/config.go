@@ -15,7 +15,12 @@ func Config() {
 }
 
 func Language() {
-	languageCount := len(config.Global.Languages)
+	languageCount := 0
+	for _, item := range config.Global.Languages {
+		if item.Enabled {
+			languageCount++
+		}
+	}
 
 	config.LocalImages = map[string]bool{}
 	config.CompileObject = map[string]config.CompileInfo{}

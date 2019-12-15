@@ -11,8 +11,13 @@ func DockerImages() {
 	needImages := make(map[string]bool)
 
 	for _, item := range config.CompileObject {
-		needImages[item.RunImage] = true
-		needImages[item.RunImage] = true
+		if item.BuildImage != "-" {
+			needImages[item.BuildImage] = true
+		}
+
+		if item.RunImage != "-" {
+			needImages[item.RunImage] = true
+		}
 	}
 
 	fmt.Println("[Docker] fetching image list")

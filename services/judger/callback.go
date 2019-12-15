@@ -7,10 +7,18 @@ import (
 	"Rabbit-OJ-Backend/services/mq"
 	"fmt"
 	"github.com/golang/protobuf/proto"
+	"sync"
+)
+
+var (
+	CallbackWaitGroup sync.WaitGroup
 )
 
 func callbackAllError(status, sid string, storage *Storage) {
 	go func() {
+		CallbackWaitGroup.Add(1)
+		defer CallbackWaitGroup.Done()
+
 		fmt.Printf("(%s) Callback judge error with status: %s \n", sid, status)
 
 		ceResult := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
@@ -44,6 +52,9 @@ func callbackAllError(status, sid string, storage *Storage) {
 
 func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) {
 	go func() {
+		CallbackWaitGroup.Add(1)
+		defer CallbackWaitGroup.Done()
+
 		fmt.Printf("(%s) Callback judge success \n", sid)
 
 		response := &protobuf.JudgeResponse{

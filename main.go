@@ -6,9 +6,9 @@ import (
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/middlewares"
-	"Rabbit-OJ-Backend/services/check"
 	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/judger"
+	"Rabbit-OJ-Backend/services/routine"
 	"Rabbit-OJ-Backend/services/rpc"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -31,7 +31,7 @@ func main() {
 	if Role == "Server" {
 		initialize.Config()
 
-		check.StartCheck()
+		routine.StartCheck()
 		initialize.DB(exitChan)
 		initialize.MQ(exitChan)
 
@@ -56,6 +56,7 @@ func main() {
 		initialize.CheckTestCase()
 
 		initialize.MQ(exitChan)
+		routine.RegisterSignal()
 
 		exitChan := make(chan bool)
 

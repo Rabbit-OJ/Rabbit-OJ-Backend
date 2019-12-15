@@ -146,7 +146,7 @@ func Tester() {
 		panic(err)
 	}
 
-	// todo: optimistic ? can we believe the scheduler and do less check ???
+	// todo: optimistic ? can we believe the scheduler and do less routine ???
 	if testCaseCount <= 0 {
 		panic(errors.New("invalid test case"))
 	}
