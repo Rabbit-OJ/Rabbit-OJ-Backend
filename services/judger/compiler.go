@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"os"
 	"path"
 	"time"
 )
@@ -75,16 +76,33 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 		return err
 	}
 
+	docker.ContainerErrToStdErr(resp.ID)
 	statusCh, errCh := docker.Client.ContainerWait(docker.Context, resp.ID, container.WaitConditionNotRunning)
 	fmt.Printf("(%s) [Compile] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
+		if err := checkBuildResult(codePath+".o"); err != nil {
+			return err
+		}
 		fmt.Printf("(%s) %+v \n", sid, status)
 	case <-time.After(time.Duration(compileInfo.BuildTimeout) * time.Second):
 		go docker.ForceContainerRemove(resp.ID)
 		return errors.New("compile timeout")
+	}
+
+	return nil
+}
+
+func checkBuildResult(path string) error {
+	file, err := os.Stat(path)
+	if err != nil {
+		return err
+	}
+
+	if file.Size() <= int64(len(files.MagicBytes)) {
+		return errors.New("compile file invalid")
 	}
 
 	return nil

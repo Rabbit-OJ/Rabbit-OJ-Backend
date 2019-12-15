@@ -102,6 +102,7 @@ func Runner(
 		return err
 	}
 
+	docker.ContainerErrToStdErr(resp.ID)
 	statusCh, errCh := docker.Client.ContainerWait(docker.Context, resp.ID, container.WaitConditionNotRunning)
 	fmt.Printf("(%s) [Runner] Waiting for status \n", sid)
 	select {

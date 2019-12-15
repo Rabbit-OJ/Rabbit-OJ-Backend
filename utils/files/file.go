@@ -6,6 +6,10 @@ import (
 	"path/filepath"
 )
 
+var (
+	MagicBytes = []byte{'\x7F', 'E', 'L', 'F'}
+)
+
 func Exists(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {
@@ -41,7 +45,7 @@ func TouchFileWithMagic(path string) error {
 		_ = f.Close()
 	}()
 
-	_, err = f.Write([]byte{'\x7F', 'E', 'L', 'F'})
+	_, err = f.Write(MagicBytes)
 	return err
 }
 

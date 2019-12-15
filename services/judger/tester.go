@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"os/exec"
@@ -33,7 +34,7 @@ func TestOne(
 
 	in, err := os.OpenFile(files.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		testResult.Status = StatusRE
 		return
 	}
@@ -43,7 +44,7 @@ func TestOne(
 
 	out, err := os.OpenFile(files.DockerOutputPath(i), os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	defer func() {
@@ -62,7 +63,7 @@ func TestOne(
 	cmd.Stdin, cmd.Stdout = in, out
 
 	if err := cmd.Start(); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		testResult.Status = StatusRE
 		return
 	}
@@ -120,7 +121,7 @@ func TestOne(
 		usedTime := time.Since(startTime)
 
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			testResult.Status = StatusRE
 		} else {
 			testResult.Status = StatusOK
@@ -169,7 +170,7 @@ func Tester() {
 
 	if len(execCommandArr) == 1 {
 		if err := os.Chmod(execCommandArr[0], 0755); err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	}
 
