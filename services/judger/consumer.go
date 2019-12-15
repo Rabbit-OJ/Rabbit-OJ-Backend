@@ -19,9 +19,13 @@ func JudgeHandler(deliveries <-chan amqp.Delivery) {
 		go StartMachine(MachineContext, i, queueChan)
 	}
 
-	for delivery := range deliveries {
-		queueChan <- &delivery
-		// block until one machine receive the request body, then ACK
+	for {
+		select {
+		case delivery := <-deliveries:
+			queueChan <- &delivery
+		case <-MachineContext.Done():
+			return
+		}
 	}
 }
 

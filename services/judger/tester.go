@@ -98,7 +98,7 @@ func TestOne(
 						stat.Memory/1024.0,
 					)
 
-					if peakMemory >= float64(spaceLimit) * 1024.0 {
+					if peakMemory >= float64(spaceLimit)*1024.0 {
 						memoryMonitorChan <- true
 					}
 				}
