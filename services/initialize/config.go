@@ -25,6 +25,10 @@ func Language() {
 		config.LocalImages[item] = true
 	}
 	for index, item := range config.Global.Languages {
+		if !item.Enabled {
+			continue
+		}
+
 		config.SupportLanguage[index] = models.SupportLanguage{
 			Name:  item.Name,
 			Value: item.ID,

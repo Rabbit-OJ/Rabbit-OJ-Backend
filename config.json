@@ -20,12 +20,14 @@
   },
   "local_images": [
     "alpine_tester:latest",
-    "python_tester:latest"
+    "python_tester:latest",
+    "java_tester:latest"
   ],
   "languages": [
     {
       "id": "cpp11",
       "name": "C++/11",
+      "enabled": true,
       "args": {
         "build_args": [
           "g++",
@@ -54,6 +56,7 @@
     {
       "id": "cpp14",
       "name": "C++/14",
+      "enabled": true,
       "args": {
         "build_args": [
           "g++",
@@ -82,6 +85,7 @@
     {
       "id": "cpp17",
       "name": "C++/17",
+      "enabled": true,
       "args": {
         "build_args": [
           "g++",
@@ -109,7 +113,8 @@
     },
     {
       "id": "cpp20",
-      "name": "C++/20",
+      "name": "C++/2a",
+      "enabled": true,
       "args": {
         "build_args": [
           "g++",
@@ -138,6 +143,7 @@
     {
       "id": "python2",
       "name": "Python/2",
+      "enabled": true,
       "args": {
         "build_args": [
           "python",
@@ -159,6 +165,7 @@
     {
       "id": "python3",
       "name": "Python/3",
+      "enabled": true,
       "args": {
         "build_args": [
           "python",
@@ -180,6 +187,7 @@
     {
       "id": "c99",
       "name": "C/99",
+      "enabled": true,
       "args": {
         "build_args": [
           "gcc",
@@ -208,6 +216,7 @@
     {
       "id": "c11",
       "name": "C/11",
+      "enabled": true,
       "args": {
         "build_args": [
           "gcc",
@@ -227,6 +236,77 @@
         "build_target": "/home/code.o",
         "run_args": [
           "/home/code.o"
+        ],
+        "build_timeout": 120,
+        "run_image": "alpine_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "go113",
+      "name": "Go/1.13",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "go",
+          "build",
+          "-o",
+          "/home/code.o",
+          "/home/code.go"
+        ],
+        "build_image": "golang:1.13-alpine",
+        "no_build": false,
+        "source": "/home/code.go",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "build_timeout": 120,
+        "run_image": "alpine_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "java11",
+      "name": "Java/11",
+      "enabled": false,
+      "args": {
+        "build_args": [
+          "javac",
+          "/home/Main.java"
+        ],
+        "build_image": "openjdk:11",
+        "no_build": false,
+        "source": "/home/Main.java",
+        "build_target": "/home/Main.class",
+        "run_args": [
+          "java",
+          "-cp",
+          "/home",
+          "Main"
+        ],
+        "build_timeout": 120,
+        "run_image": "java_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "haskell88",
+      "name": "Haskell/8.8",
+      "enabled": false,
+      "args": {
+        "build_args": [
+          "ghc",
+          "-optl-static",
+          "-O",
+          "/home/code.hs"
+        ],
+        "build_image": "haskell:8.8",
+        "no_build": false,
+        "source": "/home/code.hs",
+        "build_target": "/home/code",
+        "run_args": [
+          "/home/code"
         ],
         "build_timeout": 120,
         "run_image": "alpine_tester:latest",

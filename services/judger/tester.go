@@ -33,6 +33,7 @@ func TestOne(
 
 	in, err := os.OpenFile(files.DockerCasePath(i), os.O_RDONLY, 0644)
 	if err != nil {
+		fmt.Println(err)
 		testResult.Status = StatusRE
 		return
 	}
@@ -61,6 +62,7 @@ func TestOne(
 	cmd.Stdin, cmd.Stdout = in, out
 
 	if err := cmd.Start(); err != nil {
+		fmt.Println(err)
 		testResult.Status = StatusRE
 		return
 	}
@@ -144,7 +146,7 @@ func Tester() {
 		panic(err)
 	}
 
-	// todo: optimistic ? can we should believe the scheduler and do less check ???
+	// todo: optimistic ? can we believe the scheduler and do less check ???
 	if testCaseCount <= 0 {
 		panic(errors.New("invalid test case"))
 	}
@@ -164,6 +166,12 @@ func Tester() {
 		panic(err)
 	}
 	execCommand, execArgs := execCommandArr[0], execCommandArr[1:]
+
+	if len(execCommandArr) == 1 {
+		if err := os.Chmod(execCommandArr[0], 0755); err != nil {
+			fmt.Println(err)
+		}
+	}
 
 	file, err := os.Create(files.DockerResultFile())
 	if err != nil {

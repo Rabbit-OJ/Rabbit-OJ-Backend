@@ -32,9 +32,10 @@ type checkJudge struct {
 	Requeue  bool `json:"requeue"`
 }
 type language struct {
-	ID   string      `json:"id"`
-	Name string      `json:"name"`
-	Args CompileInfo `json:"args"`
+	ID      string      `json:"id"`
+	Name    string      `json:"name"`
+	Enabled bool        `json:"enabled"`
+	Args    CompileInfo `json:"args"`
 }
 type concurrent struct {
 	Judge uint `json:"judge"`

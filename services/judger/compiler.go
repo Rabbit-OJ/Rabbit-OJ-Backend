@@ -15,7 +15,7 @@ import (
 func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo) error {
 	fmt.Printf("(%s) [Compile] Start %s \n", sid, codePath)
 
-	err := files.TouchFile(codePath + ".o")
+	err := files.TouchFileWithMagic(codePath + ".o")
 	if err != nil {
 		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
