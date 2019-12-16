@@ -11,5 +11,7 @@
 /files/submission/**/*.in
 /files/submission/**/*.out
 /files/storage.json
+/certs/*.key
+/certs/*.pem
 config.json
 **/.DS_Store

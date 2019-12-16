@@ -44,8 +44,8 @@ We will discuss the actions after the user submit a piece of code.
 - If the judger received #15 interrupt (Maybe Control-C ?), The idle machine go-routines and consumer will stop immediately (This will guarantee that no more messages will be consumed), the process will exit until all the running go-routines finish.☕️
 
 ## 🤔Should we be optimistic or pessimistic?
-- If we are optimistic, some “unnecessary” check producers will be ignored, the performance will be higher, but maybe we will meet some unexpected errors in some special & extreme situations.
-- If we are pessimistic, some “unnecessary” check producers will be performed, the performance will be lower, but when we face some special & extreme situations, we can handle these errors confidently.
+- If we are optimistic, some “unnecessary” check procedures will be ignored, the performance will be higher, but maybe we will meet some unexpected errors in some special & extreme situations.
+- If we are pessimistic, some “unnecessary” check procedures will be performed, the performance will be lower, but when we face some special & extreme situations, we can handle these errors confidently.
 
 - For example:
     - Check if required test cases are valid is performed in the scheduler, should we check them again in the tester?
