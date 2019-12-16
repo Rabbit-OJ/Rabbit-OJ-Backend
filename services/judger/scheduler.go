@@ -49,7 +49,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		return false, err
 	}
 
-	codePath := fmt.Sprintf("%s/%s.code", currentPath, sid)
+	codePath := fmt.Sprintf("%s/", currentPath)
 	casePath, err := files.JudgeCaseDir(request.Tid, request.Version)
 	if err != nil {
 		return false, err
@@ -81,13 +81,6 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 			return true, err
 		}
 		fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
-
-		fileStat, err := os.Stat(codePath + ".o")
-		if err != nil || fileStat.Size() == 0 {
-			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
-			callbackAllError("CE", sid, storage)
-			return true, err
-		}
 	}
 
 	// run
@@ -110,7 +103,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	fmt.Printf("(%s) [Scheduler] Runner OK \n", sid)
 
 	fmt.Printf("(%s) [Scheduler] Reading result \n", sid)
-	jsonFileByte, err := ioutil.ReadFile(codePath + ".result")
+	jsonFileByte, err := ioutil.ReadFile(codePath + "result.json")
 	if err != nil {
 		callbackAllError("RE", sid, storage)
 		return true, err

@@ -269,7 +269,7 @@
     {
       "id": "java11",
       "name": "Java/11",
-      "enabled": false,
+      "enabled": true,
       "args": {
         "build_args": [
           "javac",

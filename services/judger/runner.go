@@ -19,9 +19,10 @@ func Runner(
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 	code []byte,
 ) error {
-	fmt.Printf("(%s) [Runner] Compile OK, start run container %s \n", sid, codePath)
+	vmPath := codePath + "vm/"
+	fmt.Printf("(%s) [Runner] Compile OK, start run container \n", sid)
 
-	err := files.TouchFile(codePath + ".result")
+	err := files.TouchFile(codePath + "result.json")
 	if err != nil {
 		fmt.Printf("(%s) %+v \n", sid, err)
 		return err
@@ -50,7 +51,7 @@ func Runner(
 			},
 		},
 		Binds: []string{
-			files.DockerHostConfigBinds(codePath+".result", "/result/info.json"),
+			files.DockerHostConfigBinds(codePath+"result.json", "/result/info.json"),
 			files.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
@@ -58,7 +59,7 @@ func Runner(
 
 	if !compileInfo.NoBuild {
 		containerHostConfig.Binds = append(containerHostConfig.Binds,
-			files.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget))
+			files.DockerHostConfigBinds(vmPath, path.Dir(compileInfo.BuildTarget)))
 	}
 
 	if config.Global.AutoRemove.Containers {

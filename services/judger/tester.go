@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -61,6 +62,7 @@ func TestOne(
 	}()
 
 	cmd.Stdin, cmd.Stdout = in, out
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid:true}
 
 	if err := cmd.Start(); err != nil {
 		log.Println(err)
@@ -111,12 +113,16 @@ func TestOne(
 	case <-memoryMonitorChan:
 		testResult.Status = StatusMLE
 		testResult.TimeUsed = uint32(timeLimit)
-		_ = cmd.Process.Kill()
+		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL); err != nil {
+			log.Println(err)
+		}
 	case <-time.After(time.Duration(timeLimit) * time.Millisecond):
 		testResult.Status = StatusTLE
 		testResult.TimeUsed = uint32(timeLimit)
 		testResult.SpaceUsed = peakMemory
-		_ = cmd.Process.Kill()
+		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL); err != nil {
+			log.Println(err)
+		}
 	case err := <-errChan:
 		usedTime := time.Since(startTime)
 

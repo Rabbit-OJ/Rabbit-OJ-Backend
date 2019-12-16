@@ -14,13 +14,8 @@ import (
 )
 
 func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo) error {
+	vmPath := codePath + "vm/"
 	fmt.Printf("(%s) [Compile] Start %s \n", sid, codePath)
-
-	err := files.TouchFileWithMagic(codePath + ".o")
-	if err != nil {
-		fmt.Printf("(%s) %+v \n", sid, err)
-		return err
-	}
 
 	fmt.Printf("(%s) [Compile] Touched empty output file for build \n", sid)
 	containerConfig := &container.Config{
@@ -33,7 +28,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 
 	containerHostConfig := &container.HostConfig{
 		Binds: []string{
-			files.DockerHostConfigBinds(codePath+".o", compileInfo.BuildTarget),
+			files.DockerHostConfigBinds(vmPath, path.Dir(compileInfo.BuildTarget)),
 		},
 	}
 
@@ -83,7 +78,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
-		if err := checkBuildResult(codePath+".o"); err != nil {
+		if err := checkBuildResult(vmPath+path.Base(compileInfo.BuildTarget)); err != nil {
 			return err
 		}
 		fmt.Printf("(%s) %+v \n", sid, status)
