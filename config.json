@@ -21,7 +21,9 @@
   "local_images": [
     "alpine_tester:latest",
     "python_tester:latest",
-    "java_tester:latest"
+    "java_tester:latest",
+    "node_tester:latest",
+    "swift_tester:latest"
   ],
   "languages": [
     {
@@ -145,10 +147,7 @@
       "name": "Python/2",
       "enabled": true,
       "args": {
-        "build_args": [
-          "python",
-          "/home/code.py"
-        ],
+        "build_args": [],
         "build_image": "-",
         "no_build": true,
         "source": "/home/code.py",
@@ -167,10 +166,7 @@
       "name": "Python/3",
       "enabled": true,
       "args": {
-        "build_args": [
-          "python",
-          "/home/code.py"
-        ],
+        "build_args": [],
         "build_image": "-",
         "no_build": true,
         "source": "/home/code.py",
@@ -310,6 +306,44 @@
         ],
         "build_timeout": 120,
         "run_image": "alpine_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "nodejs13",
+      "name": "Node.js/13.3.0",
+      "enabled": false,
+      "args": {
+        "build_args": [],
+        "build_image": "-",
+        "no_build": true,
+        "source": "/home/code.js",
+        "build_target": "-",
+        "run_args": [
+          "node",
+          "/home/code.js"
+        ],
+        "build_timeout": 120,
+        "run_image": "node_tester:latest",
+        "run_timeout": 120
+      }
+    },
+    {
+      "id": "swift5",
+      "name": "Swift/5.1",
+      "enabled": false,
+      "args": {
+        "build_args": [],
+        "build_image": "-",
+        "no_build": true,
+        "source": "/home/code.swift",
+        "build_target": "-",
+        "run_args": [
+          "swift",
+          "/home/code.swift"
+        ],
+        "build_timeout": 120,
+        "run_image": "swift_tester:latest",
         "run_timeout": 120
       }
     }
