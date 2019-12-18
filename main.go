@@ -32,6 +32,7 @@ func main() {
 		initialize.Config()
 
 		routine.StartCheck()
+		initialize.Cert("server")
 		initialize.DB(exitChan)
 		initialize.MQ(exitChan)
 
@@ -51,6 +52,7 @@ func main() {
 	} else if Role == "Judge" {
 		initialize.Config()
 
+		initialize.Cert("client")
 		initialize.DindScript()
 		initialize.Docker()
 		initialize.CheckTestCase()
