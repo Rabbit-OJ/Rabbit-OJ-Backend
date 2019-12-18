@@ -68,9 +68,11 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		return false, err
 	}
 
-	if err := delivery.Ack(false); err != nil {
-		fmt.Println(err)
-	}
+	defer func() {
+		if err := delivery.Ack(false); err != nil {
+			fmt.Println(err)
+		}
+	}()
 
 	if !compileInfo.NoBuild {
 		// compile

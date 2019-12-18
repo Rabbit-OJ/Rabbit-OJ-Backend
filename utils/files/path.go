@@ -118,3 +118,7 @@ func JudgeFilePath(tid, version, caseId, caseType string) (string, error) {
 func DockerHostConfigBinds(source, target string) string {
 	return fmt.Sprintf("%s:%s", source, target)
 }
+
+func CertFilePath(fileName string) (string, error) {
+	return filepath.Abs(fmt.Sprintf("./certs/%s", fileName))
+}
