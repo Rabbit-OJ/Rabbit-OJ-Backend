@@ -50,9 +50,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -79,9 +83,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -108,9 +116,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -137,9 +149,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -156,9 +172,13 @@
           "python2",
           "/home/code.py"
         ],
-        "build_timeout": 120,
         "run_image": "python_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -175,9 +195,13 @@
           "python",
           "/home/code.py"
         ],
-        "build_timeout": 120,
         "run_image": "python_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -204,9 +228,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -233,9 +261,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -257,9 +289,13 @@
         "run_args": [
           "/home/code.o"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -281,9 +317,13 @@
           "/home",
           "Main"
         ],
-        "build_timeout": 120,
         "run_image": "java_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -304,9 +344,13 @@
         "run_args": [
           "/home/code"
         ],
-        "build_timeout": 120,
         "run_image": "alpine_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -323,9 +367,13 @@
           "node",
           "/home/code.js"
         ],
-        "build_timeout": 120,
         "run_image": "node_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     },
     {
@@ -342,9 +390,13 @@
           "swift",
           "/home/code.swift"
         ],
-        "build_timeout": 120,
         "run_image": "swift_tester:latest",
-        "run_timeout": 120
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
       }
     }
   ]

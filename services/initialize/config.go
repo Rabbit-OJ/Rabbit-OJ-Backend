@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/config"
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -48,4 +49,6 @@ func Language() {
 		currentCompileObject.RunArgsJSON = string(runArgsJson)
 		config.CompileObject[item.ID] = currentCompileObject
 	}
+
+	fmt.Println(1)
 }

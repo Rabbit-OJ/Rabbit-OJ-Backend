@@ -111,7 +111,7 @@ func Runner(
 		return err
 	case status := <-statusCh:
 		fmt.Printf("(%s) %+v \n", sid, status)
-	case <-time.After(time.Duration(compileInfo.RunTimeout) * time.Second):
+	case <-time.After(time.Duration(compileInfo.Constraints.RunTimeout) * time.Second):
 		docker.ForceContainerRemove(resp.ID)
 		return errors.New("run timeout")
 	}

@@ -30,6 +30,10 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 		Binds: []string{
 			files.DockerHostConfigBinds(vmPath, path.Dir(compileInfo.BuildTarget)),
 		},
+		Resources: container.Resources{
+			NanoCPUs: compileInfo.Constraints.CPU,
+			Memory:   compileInfo.Constraints.Memory,
+		},
 	}
 
 	if config.Global.AutoRemove.Containers {
@@ -78,11 +82,12 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
-		if err := checkBuildResult(vmPath+path.Base(compileInfo.BuildTarget)); err != nil {
+		if err := checkBuildResult(vmPath + path.Base(compileInfo.BuildTarget)); err != nil {
 			return err
 		}
 		fmt.Printf("(%s) %+v \n", sid, status)
-	case <-time.After(time.Duration(compileInfo.BuildTimeout) * time.Second):
+		break
+	case <-time.After(time.Duration(compileInfo.Constraints.BuildTimeout) * time.Second):
 		go docker.ForceContainerRemove(resp.ID)
 		return errors.New("compile timeout")
 	}
