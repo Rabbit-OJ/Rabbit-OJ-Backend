@@ -41,11 +41,21 @@ func Submit(c *gin.Context) {
 
 		return
 	}
+
 	questionDetail, err := question.Detail(tid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
 			"message": err.Error(),
+		})
+
+		return
+	}
+
+	if questionDetail.Hide && !authObject.IsAdmin {
+		c.JSON(403, gin.H{
+			"code":    403,
+			"message": "Permission Denied",
 		})
 
 		return

@@ -10,9 +10,9 @@ func Router(baseRouter *gin.Engine) {
 
 	userRouter.GET("/info/:username", Info)
 	userRouter.GET("/avatar/:uid", Avatar)
-	userRouter.GET("/my", middlewares.AuthJWT(), My)
-	userRouter.GET("/token", middlewares.AuthJWT(), Token)
-	userRouter.POST("/my/avatar", middlewares.AuthJWT(), UploadAvatar)
+	userRouter.GET("/my", middlewares.AuthJWT(true), My)
+	userRouter.GET("/token", middlewares.AuthJWT(true), Token)
+	userRouter.POST("/my/avatar", middlewares.AuthJWT(true), UploadAvatar)
 	userRouter.POST("/login", Login)
 	userRouter.POST("/register", Register)
 }

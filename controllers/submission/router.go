@@ -1,6 +1,7 @@
 package submission
 
 import (
+	"Rabbit-OJ-Backend/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,6 @@ func Router(baseRouter *gin.Engine) {
 
 	submissionRouter.GET("/list/:uid/:page", List)
 	submissionRouter.GET("/detail/:sid", Detail)
-	submissionRouter.GET("/code/:sid", Code)
+	submissionRouter.POST("/code/:sid", middlewares.AuthJWT(false), Code)
 	submissionRouter.GET("/language", Language)
 }

@@ -6,6 +6,7 @@ type Question struct {
 	Tid        string    `json:"tid"`
 	Uid        string    `json:"uid"`
 	Subject    string    `json:"subject"`
+	Hide       bool      `json:"hide"`
 	Attempt    uint32    `json:"attempt"`
 	Accept     uint32    `json:"accept"`
 	Difficulty uint8     `json:"difficulty"`

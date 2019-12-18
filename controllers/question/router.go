@@ -21,11 +21,11 @@ func Router(baseRouter *gin.Engine) {
 		}
 	}
 
-	questionRouter.GET("/list/:page", List)
-	questionRouter.GET("/record/:tid/:page", middlewares.AuthJWT(), Record)
-	questionRouter.GET("/item/:tid", Detail)
-	questionRouter.POST("/item", middlewares.AuthJWT(), Create)
-	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(), Edit)
-	questionRouter.DELETE("/item/:tid", middlewares.AuthJWT(), Delete)
-	questionRouter.POST("/submit/:tid", middlewares.AuthJWT(), Submit)
+	questionRouter.GET("/list/:page", middlewares.TryAuthJWT(), List)
+	questionRouter.GET("/record/:tid/:page", middlewares.AuthJWT(true), Record)
+	questionRouter.GET("/item/:tid", middlewares.TryAuthJWT(), Detail)
+	questionRouter.POST("/item", middlewares.AuthJWT(true), Create)
+	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(true), Edit)
+	questionRouter.DELETE("/item/:tid", middlewares.AuthJWT(true), Delete)
+	questionRouter.POST("/submit/:tid", middlewares.AuthJWT(true), Submit)
 }

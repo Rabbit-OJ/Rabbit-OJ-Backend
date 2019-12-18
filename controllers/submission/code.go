@@ -1,6 +1,7 @@
 package submission
 
 import (
+	"Rabbit-OJ-Backend/controllers/auth"
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
 	"Rabbit-OJ-Backend/utils/files"
 	"github.com/gin-gonic/gin"
@@ -10,11 +11,30 @@ import (
 func Code(c *gin.Context) {
 	sid := c.Param("sid")
 
+	authObject, err := auth.GetAuthObjRequireAdmin(c)
+	if err != nil {
+		c.JSON(403, gin.H{
+			"code":    403,
+			"message": err.Error(),
+		})
+
+		return
+	}
+
 	submission, err := SubmissionService.Detail(sid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,
 			"message": err.Error(),
+		})
+
+		return
+	}
+
+	if authObject.Uid != submission.Uid && !authObject.IsAdmin {
+		c.JSON(403, gin.H{
+			"code":    403,
+			"message": "Permission Denied",
 		})
 
 		return

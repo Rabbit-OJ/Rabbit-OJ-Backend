@@ -31,6 +31,25 @@ func Record(c *gin.Context) {
 
 	tid, uid := c.Param("tid"), authObject.Uid
 
+	detail, err := QuestionService.Detail(tid)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	if detail.Hide && !authObject.IsAdmin {
+		c.JSON(403, gin.H{
+			"code":    403,
+			"message": "Permission Denied",
+		})
+
+		return
+	}
+
 	list, err := QuestionService.Record(uid, tid, uint32(page))
 	if err != nil {
 		c.JSON(400, gin.H{

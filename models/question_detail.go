@@ -6,6 +6,7 @@ type QuestionDetail struct {
 	Tid        string    `json:"tid"`
 	Content    string    `json:"content"`
 	Subject    string    `json:"subject"`
+	Hide       bool      `json:"hide"`
 	Attempt    uint32    `json:"attempt"`
 	Accept     uint32    `json:"accept"`
 	Difficulty uint8     `json:"difficulty"`

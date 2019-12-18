@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 06, 2019 at 11:14 AM
+-- Generation Time: Dec 18, 2019 at 04:04 AM
 -- Server version: 8.0.18
--- PHP Version: 7.2.22
+-- PHP Version: 7.2.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -32,6 +32,7 @@ CREATE TABLE `question` (
   `tid` int(10) UNSIGNED NOT NULL,
   `uid` int(10) UNSIGNED NOT NULL,
   `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `hide` tinyint(1) NOT NULL DEFAULT '0',
   `attempt` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `accept` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `difficulty` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
