@@ -5,7 +5,6 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 	"Rabbit-OJ-Backend/services/question"
 	"encoding/json"
-	"fmt"
 )
 
 func Create(tid, uid, language, fileName string) (*models.Submission, error) {
@@ -37,6 +36,5 @@ func Create(tid, uid, language, fileName string) (*models.Submission, error) {
 	if err := db.DB.Create(&submission).Error; err != nil {
 		return nil, err
 	}
-	fmt.Println(submission)
 	return &submission, nil
 }
