@@ -118,7 +118,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	}
 
 	// collect std::out
-	fmt.Printf("(%s) [Schedule] Collecting stdout \n", sid)
+	fmt.Printf("(%s) [Scheduler] Collecting stdout \n", sid)
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(1); i <= storage.DatasetCount; i++ {
 

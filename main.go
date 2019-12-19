@@ -27,7 +27,7 @@ func main() {
 	}()
 
 	Role = os.Getenv("Role")
-	fmt.Printf("[Role] %s", Role)
+	fmt.Printf("[Role] %s \n", Role)
 
 	if Role == "Server" {
 		initialize.Config()

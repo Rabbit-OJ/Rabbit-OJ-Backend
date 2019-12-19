@@ -3,6 +3,7 @@ package submission
 import (
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/question"
+	"Rabbit-OJ-Backend/services/user"
 	"encoding/json"
 )
 
@@ -42,6 +43,7 @@ func Result(judgeResult *protobuf.JudgeResponse) error {
 
 	if status == "AC" {
 		go question.UpdateAcceptedCount(submissionDetail.Tid)
+		go user.UpdateAcceptedCount(submissionDetail.Uid)
 	}
 
 	return nil

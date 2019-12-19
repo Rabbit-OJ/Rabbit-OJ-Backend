@@ -1,1 +1,1 @@
-docker run -it -p 8090:8090 -p 8888:8888 -v ~/server/files:/app/files -v ~/server/config.json:/app/config.json --link a2502a0e9004:mysql --link d9e80930276a:rabbitmq -e Role=Server -e Secret=hzytql -d registry.cn-hangzhou.aliyuncs.com/6rabbit/rabbit-oj-backend
+docker run -it -p 8090:8090 -p 8888:8888 -v ~/certs:/app/certs -v ~/server/files:/app/files -v ~/server/config.json:/app/config.json --link a2502a0e9004:mysql --link d9e80930276a:rabbitmq -e Role=Server -e Secret=hzytql -d registry.cn-hangzhou.aliyuncs.com/6rabbit/rabbit-oj-backend

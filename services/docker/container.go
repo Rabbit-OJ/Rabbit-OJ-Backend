@@ -26,7 +26,8 @@ func ContainerErrToStdErr(ID string) {
 			Follow:     true,
 		})
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			return
 		}
 		defer func() { _ = out.Close() }()
 

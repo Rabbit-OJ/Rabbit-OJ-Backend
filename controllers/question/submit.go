@@ -5,6 +5,7 @@ import (
 	"Rabbit-OJ-Backend/models/forms"
 	"Rabbit-OJ-Backend/services/question"
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
+	"Rabbit-OJ-Backend/services/user"
 	"Rabbit-OJ-Backend/utils/files"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
@@ -102,6 +103,7 @@ func Submit(c *gin.Context) {
 
 	go func() { _ = SubmissionService.Starter([]byte(submitForm.Code), submission, questionJudge, questionDetail) }()
 	go question.UpdateAttemptCount(tid)
+	go user.UpdateAttemptCount(authObject.Uid)
 
 	c.JSON(200, gin.H{
 		"code":    200,
