@@ -5,6 +5,7 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 	"Rabbit-OJ-Backend/services/question"
 	"encoding/json"
+	"fmt"
 )
 
 func Create(tid, uid, language, fileName string) (*models.Submission, error) {
@@ -24,7 +25,7 @@ func Create(tid, uid, language, fileName string) (*models.Submission, error) {
 		return nil, err
 	}
 
-	submission := &models.Submission{
+	submission := models.Submission{
 		Tid:      tid,
 		Uid:      uid,
 		Language: language,
@@ -33,9 +34,9 @@ func Create(tid, uid, language, fileName string) (*models.Submission, error) {
 		Status:   "ING",
 	}
 
-	if err := db.DB.Create(submission).Error; err != nil {
+	if err := db.DB.Create(&submission).Error; err != nil {
 		return nil, err
 	}
-
-	return submission, nil
+	fmt.Println(submission)
+	return &submission, nil
 }
