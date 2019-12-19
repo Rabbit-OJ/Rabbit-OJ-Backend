@@ -52,7 +52,7 @@ type JudgeResult struct {
 	SpaceUsed float64 `json:"space_used"`
 }
 
-func (s *SubmissionExtended) AfterFind(scope *gorm.Scope) (err error) {
+func (s *SubmissionExtended) AfterFind(_ *gorm.Scope) (err error) {
 	s.JudgeObj = make([]JudgeResult, 0)
 	if err := json.Unmarshal(s.Judge, &s.JudgeObj); err != nil {
 		return err
@@ -60,7 +60,7 @@ func (s *SubmissionExtended) AfterFind(scope *gorm.Scope) (err error) {
 	return nil
 }
 
-func (s *SubmissionExtended) BeforeSave(scope *gorm.Scope) (err error) {
+func (s *SubmissionExtended) BeforeSave(_ *gorm.Scope) (err error) {
 	judgeJSON, err := json.Marshal(s.JudgeObj)
 	if err != nil {
 		return err
