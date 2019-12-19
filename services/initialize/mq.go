@@ -4,16 +4,17 @@ import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/mq"
+	"context"
 	"fmt"
 	"github.com/streadway/amqp"
 	"os"
 )
 
-func MQ(exitChan chan bool) {
+func MQ(globalContext context.Context) {
 	connect()
 
 	go func() {
-		<-exitChan
+		<-globalContext.Done()
 		if err := mq.Connection.Close(); err != nil {
 			fmt.Println(err)
 		}

@@ -10,6 +10,7 @@ import (
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/routine"
 	"Rabbit-OJ-Backend/services/rpc"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -20,21 +21,21 @@ var (
 )
 
 func main() {
-	exitChan := make(chan bool)
+	globalContext, cancelGlobalContext := context.WithCancel(context.Background())
 	defer func() {
-		exitChan <- true
-		close(exitChan)
+		cancelGlobalContext()
 	}()
 
 	Role = os.Getenv("Role")
+	fmt.Printf("[Role] %s", Role)
 
 	if Role == "Server" {
 		initialize.Config()
 
 		routine.StartCheck()
 		initialize.Cert("server")
-		initialize.DB(exitChan)
-		initialize.MQ(exitChan)
+		initialize.DB(globalContext)
+		initialize.MQ(globalContext)
 
 		go rpc.Register()
 		server := gin.Default()
@@ -57,7 +58,7 @@ func main() {
 		initialize.Docker()
 		initialize.CheckTestCase()
 
-		initialize.MQ(exitChan)
+		initialize.MQ(globalContext)
 		routine.RegisterSignal()
 
 		exitChan := make(chan bool)

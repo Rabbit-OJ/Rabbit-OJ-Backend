@@ -11,7 +11,7 @@ import (
 func Code(c *gin.Context) {
 	sid := c.Param("sid")
 
-	authObject, err := auth.GetAuthObjRequireAdmin(c)
+	authObject, err := auth.GetAuthObj(c)
 	if err != nil {
 		c.JSON(403, gin.H{
 			"code":    403,

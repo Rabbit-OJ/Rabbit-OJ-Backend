@@ -15,3 +15,4 @@
 /certs/*.pem
 config.json
 **/.DS_Store
+./run_args.txt
