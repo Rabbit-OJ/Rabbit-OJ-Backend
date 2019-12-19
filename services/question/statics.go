@@ -8,8 +8,9 @@ import (
 
 func UpdateAttemptCount(tid string) {
 	if err := db.DB.Table("question").
+		Where("tid = ?", tid).
 		Update("attempt", gorm.Expr("attempt + 1")).
-		Where("tid = ?", tid).Error;
+		Error;
 		err != nil {
 
 		fmt.Println(err)
@@ -18,8 +19,9 @@ func UpdateAttemptCount(tid string) {
 
 func UpdateAcceptedCount(tid string) {
 	if err := db.DB.Table("question").
+		Where("tid = ?", tid).
 		Update("accept", gorm.Expr("accept + 1")).
-		Where("tid = ?", tid).Error;
+		Error;
 		err != nil {
 
 		fmt.Println(err)
