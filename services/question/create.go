@@ -10,7 +10,7 @@ const InvalidTid = ""
 func Create(uid, subject, content string, difficulty uint8, timeLimit, spaceLimit uint32) (string, error) {
 	tx := db.DB.Begin()
 
-	questionOverview := &models.Question{
+	questionOverview := models.Question{
 		Uid:        uid,
 		Subject:    subject,
 		Difficulty: difficulty,
@@ -23,7 +23,7 @@ func Create(uid, subject, content string, difficulty uint8, timeLimit, spaceLimi
 		return InvalidTid, err
 	}
 
-	questionContent := &models.QuestionContent{
+	questionContent := models.QuestionContent{
 		Tid:     questionOverview.Tid,
 		Content: content,
 	}

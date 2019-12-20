@@ -8,7 +8,7 @@ import (
 func Edit(tid, subject, content string, difficulty uint8, timeLimit, spaceLimit uint32) error {
 	tx := db.DB.Begin()
 
-	questionOverview := &models.Question{
+	questionOverview := models.Question{
 		Subject:    subject,
 		Difficulty: difficulty,
 		TimeLimit:  timeLimit,
@@ -20,7 +20,7 @@ func Edit(tid, subject, content string, difficulty uint8, timeLimit, spaceLimit 
 		return err
 	}
 
-	questionContent := &models.QuestionContent{
+	questionContent := models.QuestionContent{
 		Content: content,
 	}
 

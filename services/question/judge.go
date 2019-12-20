@@ -6,11 +6,11 @@ import (
 )
 
 func JudgeInfo(tid string) (*models.QuestionJudge, error) {
-	judge := &models.QuestionJudge{}
+	judge := models.QuestionJudge{}
 
 	if err := db.DB.Where("tid = ?", tid).First(&judge).Error; err != nil {
 		return nil, err
 	}
 
-	return judge, nil
+	return &judge, nil
 }

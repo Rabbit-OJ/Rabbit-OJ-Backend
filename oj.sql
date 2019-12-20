@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 19, 2019 at 05:20 AM
+-- Generation Time: Dec 20, 2019 at 01:46 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -21,6 +21,70 @@ SET time_zone = "+00:00";
 --
 -- Database: `oj`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contest`
+--
+
+CREATE TABLE `contest` (
+  `cid` int(10) UNSIGNED NOT NULL,
+  `name` varchar(144) NOT NULL,
+  `uid` int(10) UNSIGNED NOT NULL,
+  `count` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `block_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `participants` int(10) UNSIGNED NOT NULL,
+  `penalty` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contest_clarify`
+--
+
+CREATE TABLE `contest_clarify` (
+  `ccid` int(10) UNSIGNED NOT NULL,
+  `cid` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `message` mediumtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contest_submission`
+--
+
+CREATE TABLE `contest_submission` (
+  `sid` int(10) UNSIGNED NOT NULL,
+  `cid` int(10) UNSIGNED NOT NULL,
+  `uid` int(10) UNSIGNED NOT NULL,
+  `tid` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `total_time` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contest_user`
+--
+
+CREATE TABLE `contest_user` (
+  `cuid` int(10) UNSIGNED NOT NULL,
+  `cid` int(10) UNSIGNED NOT NULL,
+  `uid` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `rank` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `score` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `total_time` int(10) UNSIGNED NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -108,6 +172,36 @@ CREATE TABLE `user` (
 --
 
 --
+-- Indexes for table `contest`
+--
+ALTER TABLE `contest`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `uid` (`uid`);
+
+--
+-- Indexes for table `contest_clarify`
+--
+ALTER TABLE `contest_clarify`
+  ADD PRIMARY KEY (`ccid`),
+  ADD KEY `cid` (`cid`);
+
+--
+-- Indexes for table `contest_submission`
+--
+ALTER TABLE `contest_submission`
+  ADD PRIMARY KEY (`sid`),
+  ADD KEY `uid` (`uid`,`tid`,`status`);
+
+--
+-- Indexes for table `contest_user`
+--
+ALTER TABLE `contest_user`
+  ADD PRIMARY KEY (`cuid`),
+  ADD UNIQUE KEY `cid` (`cid`,`uid`),
+  ADD KEY `uid` (`uid`),
+  ADD KEY `cid_2` (`cid`,`score`,`total_time`);
+
+--
 -- Indexes for table `question`
 --
 ALTER TABLE `question`
@@ -143,6 +237,24 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `contest`
+--
+ALTER TABLE `contest`
+  MODIFY `cid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contest_clarify`
+--
+ALTER TABLE `contest_clarify`
+  MODIFY `ccid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contest_user`
+--
+ALTER TABLE `contest_user`
+  MODIFY `cuid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `question`

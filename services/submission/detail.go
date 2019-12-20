@@ -6,7 +6,7 @@ import (
 )
 
 func Detail (sid string) (*models.SubmissionExtended, error) {
-	submission := &models.SubmissionExtended{}
+	submission := models.SubmissionExtended{}
 
 	if err := db.DB.
 		Select("`submission`.*, `question`.`subject` AS question_title").
@@ -16,6 +16,6 @@ func Detail (sid string) (*models.SubmissionExtended, error) {
 		First(&submission).Error; err != nil {
 		return nil, err
 	} else {
-		return submission, nil
+		return &submission, nil
 	}
 }
