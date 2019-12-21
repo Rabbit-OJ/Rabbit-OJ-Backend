@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 20, 2019 at 01:46 PM
+-- Generation Time: Dec 21, 2019 at 02:28 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -57,6 +57,20 @@ CREATE TABLE `contest_clarify` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `contest_question`
+--
+
+CREATE TABLE `contest_question` (
+  `cid` int(10) UNSIGNED NOT NULL,
+  `tid` int(10) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `score` int(10) UNSIGNED NOT NULL DEFAULT '1',
+  `status` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `contest_submission`
 --
 
@@ -65,7 +79,7 @@ CREATE TABLE `contest_submission` (
   `cid` int(10) UNSIGNED NOT NULL,
   `uid` int(10) UNSIGNED NOT NULL,
   `tid` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `total_time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -81,7 +95,6 @@ CREATE TABLE `contest_user` (
   `cid` int(10) UNSIGNED NOT NULL,
   `uid` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `rank` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `score` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `total_time` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -183,6 +196,14 @@ ALTER TABLE `contest`
 --
 ALTER TABLE `contest_clarify`
   ADD PRIMARY KEY (`ccid`),
+  ADD KEY `cid` (`cid`);
+
+--
+-- Indexes for table `contest_question`
+--
+ALTER TABLE `contest_question`
+  ADD PRIMARY KEY (`tid`),
+  ADD UNIQUE KEY `cid_2` (`cid`,`tid`,`id`),
   ADD KEY `cid` (`cid`);
 
 --
