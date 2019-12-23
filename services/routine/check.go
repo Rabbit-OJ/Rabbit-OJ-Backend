@@ -29,7 +29,7 @@ func StopCheck() {
 	CancelContext()
 }
 
-func checkRoutine(interval int, ctx context.Context) {
+func checkRoutine(interval int64, ctx context.Context) {
 	for {
 		select {
 		case <-time.After(time.Duration(interval) * time.Minute):

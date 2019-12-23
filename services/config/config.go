@@ -25,11 +25,16 @@ type extensions struct {
 	Dind       bool       `json:"dind"`
 	AutoPull   bool       `json:"auto_pull"`
 	CheckJudge checkJudge `json:"check_judge"`
+	Expire     expire     `json:"expire"`
+}
+type expire struct {
+	Enabled  bool  `json:"enabled"`
+	Interval int64 `json:"interval"` // interval: minutes
 }
 type checkJudge struct {
-	Enabled  bool `json:"enabled"`
-	Interval int  `json:"interval"` // interval: seconds
-	Requeue  bool `json:"requeue"`
+	Enabled  bool  `json:"enabled"`
+	Interval int64 `json:"interval"` // interval: minutes
+	Requeue  bool  `json:"requeue"`
 }
 type language struct {
 	ID      string      `json:"id"`

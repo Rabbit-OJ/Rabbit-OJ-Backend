@@ -2,10 +2,12 @@ package judger
 
 import (
 	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/submission"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/streadway/amqp"
+	"time"
 )
 
 func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
@@ -19,6 +21,16 @@ func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
 		fmt.Println(err)
 
 		if err := delivery.Nack(false, true); err != nil {
+			fmt.Println(err)
+		}
+		return
+	}
+
+	if config.Global.Extensions.Expire.Enabled &&
+		judgeRequest.Time-time.Now().Unix() > config.Global.Extensions.CheckJudge.Interval*int64(time.Minute) {
+		fmt.Printf("[Bridge] Received expired judge %s , will ignore this\n", judgeRequest.Sid)
+
+		if err := delivery.Ack(false); err != nil {
 			fmt.Println(err)
 		}
 		return

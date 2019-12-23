@@ -24,64 +24,74 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-type Client struct {
+type JudgeClient struct {
 	conn *websocket.Conn
 	send chan []byte
 	sid  string
 }
 
-func (c *Client) readPump() {
-	//defer func() {
-	//	c.hub.unregister <- c
-	//	_ = c.conn.Close()
-	//}()
-
+func (c *JudgeClient) readPump() {
 	c.conn.SetReadLimit(maxMessageSize)
-	_ = c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err := c.conn.SetReadDeadline(time.Now().Add(pongWait)); err != nil {
+		fmt.Println(err)
+	}
 	c.conn.SetPongHandler(func(string) error { _ = c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 }
 
-func (c *Client) writePump() {
+func (c *JudgeClient) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		//_ = c.conn.Close()
 	}()
 
 	for {
 		select {
 		case message, ok := <-c.send:
-			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
+				fmt.Println(err)
+			}
+
 			if !ok {
-				_ = c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				if err := c.conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+					fmt.Println(err)
+				}
 				return
 			}
 
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				fmt.Println(err)
 				return
 			}
 
-			_, _ = w.Write(message)
+			if _, err := w.Write(message); err != nil {
+				fmt.Println(err)
+			}
 
 			n := len(c.send)
 			for i := 0; i < n; i++ {
-				_, _ = w.Write(<-c.send)
+				if _, err := w.Write(<-c.send); err != nil {
+					fmt.Println(err)
+				}
 			}
 
 			if err := w.Close(); err != nil {
 				return
 			}
 		case <-ticker.C:
-			_ = c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
+				fmt.Println(err)
+				return
+			}
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				fmt.Println(err)
 				return
 			}
 		}
 	}
 }
 
-func serveWs(c *gin.Context) {
+func serveJudgeWs(c *gin.Context) {
 	sid := c.Param("sid")
 
 	submission, err := SubmissionService.Detail(sid)
@@ -95,8 +105,8 @@ func serveWs(c *gin.Context) {
 		return
 	}
 
-	client := &Client{conn: conn, send: make(chan []byte, 256), sid: sid}
-	SocketHub.register <- client
+	client := &JudgeClient{conn: conn, send: make(chan []byte, 256), sid: sid}
+	SocketHub.JudgeHub.register <- client
 
 	go client.writePump()
 	go client.readPump()

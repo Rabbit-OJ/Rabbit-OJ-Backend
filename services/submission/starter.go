@@ -7,6 +7,7 @@ import (
 	"Rabbit-OJ-Backend/services/mq"
 	"github.com/golang/protobuf/proto"
 	"strconv"
+	"time"
 )
 
 func Starter(
@@ -24,6 +25,7 @@ func Starter(
 		SpaceLimit: question.SpaceLimit,
 		CompMode:   questionJudge.Mode,
 		Code:       code,
+		Time:       time.Now().Unix(),
 	}
 
 	pro, err := proto.Marshal(request)

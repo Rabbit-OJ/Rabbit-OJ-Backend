@@ -65,7 +65,11 @@ func ScoreBoard(cid string, page uint32) ([]responses.ScoreBoard, error) {
 			continue
 		} else if item.Status == StatusAC {
 			scoreBoard[mapUidToIndex[item.Uid]].Progress[questionId].Status = StatusAC
-			scoreBoard[mapUidToIndex[item.Uid]].Progress[questionId].TotalTime = item.TotalTime
+
+			totalTime := &scoreBoard[mapUidToIndex[item.Uid]].Progress[questionId].TotalTime
+			if *totalTime == 0 || *totalTime > item.TotalTime {
+				*totalTime = item.TotalTime
+			}
 		} else if item.Status == StatusERR {
 			scoreBoard[mapUidToIndex[item.Uid]].Progress[questionId].Bug++
 		}

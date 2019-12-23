@@ -79,5 +79,5 @@ func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) {
 }
 
 func callbackWebSocket(sid string) {
-	websocket.SocketHub.Broadcast <- sid
+	websocket.SocketHub.JudgeHub.Broadcast <- sid
 }

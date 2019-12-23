@@ -21,7 +21,7 @@ func Register(uid, cid string) error {
 	return nil
 }
 
-func RegisterState(uid, cid string) (bool, error) {
+func IsRegistered(uid, cid string) (bool, error) {
 	count := 0
 
 	if err := db.DB.Table("contest_user").

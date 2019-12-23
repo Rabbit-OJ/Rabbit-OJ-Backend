@@ -13,6 +13,10 @@
       "enabled": true,
       "interval": 10,
       "requeue": false
+    },
+    "expire": {
+      "enabled": false,
+      "interval": 10
     }
   },
   "concurrent": {
