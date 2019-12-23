@@ -11,6 +11,7 @@ func Question(cid string) ([]models.ContestQuestion, error) {
 	if err := db.DB.
 		Table("contest_question").
 		Where("cid = ?", cid).
+		Order("id asc").
 		Scan(&contestQuestion).Error; err != nil {
 		return nil, err
 	}
@@ -24,6 +25,7 @@ func QuestionMapTidToId(cid string) (map[string]int, []models.ContestQuestion, e
 	if err := db.DB.
 		Table("contest_question").
 		Where("cid = ?", cid).
+		Order("id asc").
 		Scan(&contestQuestion).Error; err != nil {
 		return nil, nil, err
 	}

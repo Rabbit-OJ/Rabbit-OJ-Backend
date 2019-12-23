@@ -1,6 +1,8 @@
 package websocket
 
 import (
+	"Rabbit-OJ-Backend/services/contest"
+	"Rabbit-OJ-Backend/services/judger"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,9 +13,9 @@ var (
 func WebSocket(baseRouter *gin.Engine) {
 	SocketHub = newHub()
 
-	go SocketHub.JudgeHub.run()
-	go SocketHub.ContestHub.run()
+	go SocketHub.JudgeHub.Run()
+	go SocketHub.ContestHub.Run()
 
-	baseRouter.GET("/ws/:sid", serveJudgeWs)
-	baseRouter.GET("/contest/ws/:cid/:uid", serveContestWs)
+	baseRouter.GET("/ws/:sid", judger.ServeJudgeWs(SocketHub.JudgeHub))
+	baseRouter.GET("/contest/ws/:cid/:uid", contest.ServeContestWs(SocketHub.ContestHub))
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 21, 2019 at 02:28 PM
+-- Generation Time: Dec 23, 2019 at 05:27 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -64,8 +64,7 @@ CREATE TABLE `contest_question` (
   `cid` int(10) UNSIGNED NOT NULL,
   `tid` int(10) UNSIGNED NOT NULL,
   `id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `score` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `status` tinyint(1) NOT NULL DEFAULT '0'
+  `score` int(10) UNSIGNED NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

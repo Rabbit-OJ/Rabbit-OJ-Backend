@@ -1,7 +1,6 @@
 package judger
 
 import (
-	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/mq"
@@ -79,5 +78,5 @@ func callbackSuccess(sid string, resultList []*protobuf.JudgeCaseResult) {
 }
 
 func callbackWebSocket(sid string) {
-	websocket.SocketHub.JudgeHub.Broadcast <- sid
+	judgeHub.Broadcast <- sid
 }

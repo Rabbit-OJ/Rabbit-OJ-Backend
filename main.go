@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Rabbit-OJ-Backend/controllers/contest"
 	"Rabbit-OJ-Backend/controllers/question"
 	"Rabbit-OJ-Backend/controllers/submission"
 	"Rabbit-OJ-Backend/controllers/user"
@@ -44,6 +45,7 @@ func main() {
 		user.Router(server)
 		submission.Router(server)
 		question.Router(server)
+		contest.Router(server)
 		websocket.WebSocket(server)
 
 		err := server.Run(":8888")

@@ -1,7 +1,6 @@
 package contest
 
 import (
-	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/services/db"
 	"errors"
 	"fmt"
@@ -69,7 +68,7 @@ func Finish(cid string) error {
 	FinishLock.Lock()
 	defer FinishLock.Unlock()
 
-	websocket.SocketHub.ContestHub.RemoveContestHubAllContest(cid)
+	contestHub.RemoveContestHubAllContest(cid)
 	for {
 		have, err := HavePendingSubmission(cid)
 
