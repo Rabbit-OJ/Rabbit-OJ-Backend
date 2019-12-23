@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 23, 2019 at 05:27 AM
+-- Generation Time: Dec 23, 2019 at 06:22 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -37,8 +37,8 @@ CREATE TABLE `contest` (
   `end_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `block_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `participants` int(10) UNSIGNED NOT NULL,
-  `penalty` int(10) UNSIGNED NOT NULL
+  `participants` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `penalty` int(10) UNSIGNED NOT NULL DEFAULT '300'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

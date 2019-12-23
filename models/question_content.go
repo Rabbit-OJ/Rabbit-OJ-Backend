@@ -9,16 +9,16 @@ type QuestionContent struct {
 	Tid        string   `json:"tid"`
 	Content    string   `json:"content"`
 	Sample     []byte   `json:"-"`
-	SampleJSON []sample `json:"sample",gorm:"-"`
+	SampleJSON []Sample `json:"Sample",gorm:"-"`
 }
 
-type sample struct {
+type Sample struct {
 	In  string `json:"in"`
 	Out string `json:"out"`
 }
 
 func (s *QuestionContent) AfterFind(_ *gorm.Scope) (err error) {
-	s.SampleJSON = make([]sample, 0)
+	s.SampleJSON = make([]Sample, 0)
 	if err := json.Unmarshal(s.Sample, &s.SampleJSON); err != nil {
 		return err
 	}
