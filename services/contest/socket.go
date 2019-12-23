@@ -93,7 +93,7 @@ func ServeContestWs(contestHub *Hub) func(*gin.Context) {
 			fmt.Println(err)
 			return
 		}
-		if state != StatusPending {
+		if state != RoundStarting {
 			return
 		}
 
