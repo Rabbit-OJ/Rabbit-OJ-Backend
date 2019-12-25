@@ -15,7 +15,7 @@ func InBlockTime(cid string) (bool, error) {
 	}
 
 	now := time.Now().Unix()
-	return contest.BlockTime.Unix() <= now && now <= contest.EndTime.Unix(), nil
+	return time.Time(contest.BlockTime).Unix() <= now && now <= time.Time(contest.EndTime).Unix(), nil
 }
 
 func ScoreBoard(cid string, page uint32) ([]responses.ScoreBoard, error) {
@@ -31,18 +31,19 @@ func ScoreBoard(cid string, page uint32) ([]responses.ScoreBoard, error) {
 		return nil, err
 	}
 
-	if err := db.DB.Raw("SELECT `user`.username, `user`.uid, `rank`, score, total_time "+
-		"FROM (SELECT cid, uid, score, total_time, RANK() OVER (ORDER BY score DESC, total_time ASC) `rank` "+
-		"FROM contest_user) AS temp "+
-		"INNER JOIN `user` ON `temp`.`uid`=`user`.`uid` "+
-		"WHERE cid = ? LIMIT ?, ?",
+	if err := db.DB.Raw("SELECT `user`.username, `user`.uid, `rank`, score, total_time FROM ( "+
+		"SELECT cid, uid, score, total_time, RANK() OVER (ORDER BY score DESC, total_time ASC) `rank` FROM ( "+
+		"SELECT cid, uid, score, total_time FROM contest_user WHERE cid = ? "+
+		") AS temp1 "+
+		") AS temp2 "+
+		"INNER JOIN `user` ON `temp2`.`uid`=`user`.`uid` "+
+		"LIMIT ?, ? ",
 		cid, (page-1)*config.PageSize, page*config.PageSize).
 		Scan(&scoreBoard).Error; err != nil {
 		return nil, err
 	}
 
 	uidList, mapUidToIndex := make([]string, len(scoreBoard)), make(map[string]int)
-
 	for i, item := range scoreBoard {
 		scoreBoard[i].Progress = make([]responses.ScoreBoardProgress, contest.Count)
 		uidList[i] = item.Uid

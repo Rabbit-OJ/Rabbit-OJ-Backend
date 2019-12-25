@@ -11,5 +11,7 @@ func Router(baseRouter *gin.Engine) {
 	contestRouter.GET("/list/:page", List)
 	contestRouter.GET("/info/:cid", Info)
 	contestRouter.GET("/question/:cid", middlewares.TryAuthJWT(), Question)
-	contestRouter.GET("/register/:cid/:operation", middlewares.AuthJWT(false), Register)
+	contestRouter.POST("/register/:cid/:operation", middlewares.AuthJWT(true), Register)
+	contestRouter.GET("/my/info/:cid", middlewares.AuthJWT(true), MyInfo)
+	contestRouter.GET("/scoreboard/:cid/:page", ScoreBoard)
 }
