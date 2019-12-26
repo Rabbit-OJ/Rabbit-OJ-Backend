@@ -10,7 +10,7 @@ type QuestionDetail struct {
 	Tid        string    `json:"tid"`
 	Content    string    `json:"content"`
 	Sample     []byte    `json:"-"`
-	SampleJSON []Sample  `json:"Sample",gorm:"-"`
+	SampleJSON []Sample  `json:"sample",gorm:"-"`
 	Subject    string    `json:"subject"`
 	Hide       bool      `json:"hide"`
 	Attempt    uint32    `json:"attempt"`
