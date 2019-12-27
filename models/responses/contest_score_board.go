@@ -14,3 +14,8 @@ type ScoreBoardProgress struct {
 	Bug       uint32 `json:"bug"`
 	TotalTime uint32 `json:"total_time"`
 }
+
+type ScoreBoardResponse struct {
+	List  []ScoreBoard `json:"list"`
+	Count uint32       `json:"count"`
+}

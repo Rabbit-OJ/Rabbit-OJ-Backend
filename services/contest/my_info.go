@@ -35,11 +35,12 @@ func QueryUserRank(uid, cid string) (uint32, error) {
 	return rank.Rank, nil
 }
 
-func MyInfo(uid, cid string) (*responses.ContestMyInfo, error) {
+func MyInfo(uid, cid string, contest *models.Contest) (*responses.ContestMyInfo, error) {
 	contestMyInfo := responses.ContestMyInfo{
 		Rank:      0,
 		TotalTime: 0,
 		Score:     0,
+		Progress:  make([]responses.ScoreBoardProgress, contest.Count),
 	}
 
 	contestUser, err := User(uid, cid)
@@ -60,5 +61,44 @@ func MyInfo(uid, cid string) (*responses.ContestMyInfo, error) {
 		}
 		contestMyInfo.Rank = rank
 	}
+
+	questionMapTidToId, _, err := QuestionMapTidToId(cid)
+	if err != nil {
+		return nil, err
+	}
+
+	var contestSubmissionList []models.ContestSubmission
+	if err := db.DB.Table("contest_submission").
+		Where("cid = ? AND uid = ?", cid, uid).
+		Find(&contestSubmissionList).
+		Error; err != nil {
+		return nil, err
+	}
+
+	// calc Number
+	for _, item := range contestSubmissionList {
+		questionId := questionMapTidToId[item.Tid]
+
+		if item.Status == StatusPending {
+			continue
+		} else if item.Status == StatusAC {
+			contestMyInfo.Progress[questionId].Status = StatusAC
+
+			totalTime := &contestMyInfo.Progress[questionId].TotalTime
+			if *totalTime == 0 || *totalTime > item.TotalTime {
+				*totalTime = item.TotalTime
+			}
+		} else if item.Status == StatusERR {
+			contestMyInfo.Progress[questionId].Bug++
+		}
+	}
+
+	// calc penalty
+	for j := range contestMyInfo.Progress {
+		if contestMyInfo.Progress[j].Status == StatusAC {
+			contestMyInfo.Progress[j].TotalTime += contestMyInfo.Progress[j].Bug * contest.Penalty
+		}
+	}
+
 	return &contestMyInfo, nil
 }

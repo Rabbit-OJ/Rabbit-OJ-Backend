@@ -40,4 +40,6 @@ func CheckContest(c *gin.Context) {
 		c.Abort()
 		return
 	}
+
+	c.Set("contest", info)
 }

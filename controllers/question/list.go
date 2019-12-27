@@ -51,7 +51,7 @@ func List(c *gin.Context) {
 		return
 	}
 
-	response := &responses.QuestionList{
+	response := &responses.QuestionListResponse{
 		List:  list,
 		Count: count,
 	}

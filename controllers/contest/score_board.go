@@ -1,6 +1,7 @@
 package contest
 
 import (
+	"Rabbit-OJ-Backend/models/responses"
 	"Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -49,7 +50,10 @@ func ScoreBoard(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"code":    200,
-		"message": scoreBoard,
+		"code": 200,
+		"message": responses.ScoreBoardResponse{
+			List:  scoreBoard,
+			Count: contestInfo.Participants,
+		},
 	})
 }

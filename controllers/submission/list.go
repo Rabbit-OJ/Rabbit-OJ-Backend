@@ -40,7 +40,7 @@ func List(c *gin.Context) {
 		return
 	}
 
-	response := &responses.SubmissionList{
+	response := &responses.SubmissionListResponse{
 		List:  list,
 		Count: count,
 	}
