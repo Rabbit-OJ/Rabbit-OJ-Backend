@@ -3,7 +3,7 @@ package models
 import "time"
 
 type ContestSubmission struct {
-	Sid       string    `json:"csid"`
+	Sid       string    `json:"sid"`
 	Cid       string    `json:"cid"`
 	Uid       string    `json:"uid"`
 	Tid       string    `json:"tid"`

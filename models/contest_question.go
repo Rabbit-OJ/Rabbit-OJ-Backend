@@ -24,5 +24,5 @@ type ContestQuestionExtended struct {
 	CreatedAt  time.Time `json:"created_at"`
 	Content    string    `json:"content"`
 	Sample     []byte    `json:"-"`
-	SampleJSON []Sample  `json:"Sample",gorm:"-"`
+	SampleJSON []Sample  `json:"sample",gorm:"-"`
 }
