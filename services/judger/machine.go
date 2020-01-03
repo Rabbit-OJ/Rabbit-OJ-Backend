@@ -28,6 +28,7 @@ func StartMachine(ctx context.Context, index uint, queueChan chan *amqp.Delivery
 			}
 			fmt.Printf("[Machine] #%d machine FINISH \n", index)
 		case <-ctx.Done():
+			fmt.Printf("[Machine] #%d machine Exited \n", index)
 			return
 		}
 	}
