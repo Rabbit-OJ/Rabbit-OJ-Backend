@@ -6,9 +6,10 @@ import (
 )
 
 const (
-	RoundWaiting  = 0
-	RoundStarting = 1
-	RoundEnd      = 2
+	RoundWaiting     = 0
+	RoundStarting    = 1
+	RoundEnd         = 2
+	RoundCalculating = 3
 )
 
 func Info(cid string) (*models.Contest, error) {

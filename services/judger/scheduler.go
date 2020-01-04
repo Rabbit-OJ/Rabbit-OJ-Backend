@@ -79,7 +79,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
 		if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
 			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
-			callbackAllError("CE", sid, storage)
+			callbackAllError("CE", sid, request.IsContest, storage)
 			return true, err
 		}
 		fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
@@ -99,7 +99,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		request.Code); err != nil {
 
 		fmt.Printf("(%s) [Scheduler] RE %+v \n", sid, err)
-		callbackAllError("RE", sid, storage)
+		callbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
 	fmt.Printf("(%s) [Scheduler] Runner OK \n", sid)
@@ -107,13 +107,13 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	fmt.Printf("(%s) [Scheduler] Reading result \n", sid)
 	jsonFileByte, err := ioutil.ReadFile(codePath + "result.json")
 	if err != nil {
-		callbackAllError("RE", sid, storage)
+		callbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
 
 	var testResultArr []models.TestResult
 	if err := json.Unmarshal(jsonFileByte, &testResultArr); err != nil || testResultArr == nil {
-		callbackAllError("RE", sid, storage)
+		callbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
 
@@ -165,7 +165,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	}
 	// mq return result
 	fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
-	callbackSuccess(sid, resultList)
+	callbackSuccess(sid, request.IsContest, resultList)
 
 	fmt.Printf("(%s) [Scheduler] Finish \n", sid)
 	return true, nil

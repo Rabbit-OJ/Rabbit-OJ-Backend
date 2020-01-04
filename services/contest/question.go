@@ -20,6 +20,19 @@ func Question(cid string) ([]models.ContestQuestion, error) {
 	return contestQuestion, nil
 }
 
+func QuestionOne(cid, id string) (*models.ContestQuestion, error) {
+	var contestQuestion *models.ContestQuestion
+
+	if err := db.DB.
+		Table("contest_question").
+		Where("cid = ? AND id = ?", cid, id).
+		First(contestQuestion).Error; err != nil {
+		return nil, err
+	}
+
+	return contestQuestion, nil
+}
+
 func QuestionExtended(cid string) ([]models.ContestQuestionExtended, error) {
 	var contestQuestionExtended []models.ContestQuestionExtended
 

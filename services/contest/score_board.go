@@ -5,6 +5,7 @@ import (
 	"Rabbit-OJ-Backend/models/responses"
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/db"
+	"errors"
 	"time"
 )
 
@@ -18,12 +19,17 @@ func InBlockTime(cid string) (bool, error) {
 	return time.Time(contest.BlockTime).Unix() <= now && now <= time.Time(contest.EndTime).Unix(), nil
 }
 
-func ScoreBoard(cid string, page uint32) ([]responses.ScoreBoard, error) {
+func ScoreBoard(contest *models.Contest, page uint32) ([]responses.ScoreBoard, error) {
 	var scoreBoard []responses.ScoreBoard
+	cid := contest.Cid
 
-	contest, err := Info(cid)
+	inBlockTime, err := InBlockTime(cid)
 	if err != nil {
 		return nil, err
+	}
+
+	if inBlockTime {
+		return nil, errors.New("rank blocked")
 	}
 
 	questionMapTidToId, _, err := QuestionMapTidToId(cid)
@@ -80,7 +86,7 @@ func ScoreBoard(cid string, page uint32) ([]responses.ScoreBoard, error) {
 	for i := range scoreBoard {
 		for j := range scoreBoard[i].Progress {
 			if scoreBoard[i].Progress[j].Status == StatusAC {
-				scoreBoard[i].Progress[j].TotalTime += scoreBoard[i].Progress[j].Bug * contest.Penalty
+				scoreBoard[i].Progress[j].TotalTime += int64(scoreBoard[i].Progress[j].Bug) * contest.Penalty
 			}
 		}
 	}

@@ -2,12 +2,12 @@ package submission
 
 import (
 	"Rabbit-OJ-Backend/models"
-	"Rabbit-OJ-Backend/services/db"
 	"Rabbit-OJ-Backend/services/question"
 	"encoding/json"
+	"github.com/jinzhu/gorm"
 )
 
-func Create(tid, uid, language, fileName string) (*models.Submission, error) {
+func Create(tx *gorm.DB, tid, uid, language, fileName string) (*models.Submission, error) {
 	questionJudge, err := question.JudgeInfo(tid)
 
 	if err != nil {
@@ -33,7 +33,7 @@ func Create(tid, uid, language, fileName string) (*models.Submission, error) {
 		Status:   "ING",
 	}
 
-	if err := db.DB.Create(&submission).Error; err != nil {
+	if err := tx.Create(&submission).Error; err != nil {
 		return nil, err
 	}
 	return &submission, nil

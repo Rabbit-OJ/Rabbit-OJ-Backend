@@ -9,5 +9,5 @@ type ContestSubmission struct {
 	Tid       string    `json:"tid"`
 	Status    int32     `json:"status"`
 	CreatedAt time.Time `json:"created_at"`
-	TotalTime uint32    `json:"total_time"`
+	TotalTime int64     `json:"total_time"`
 }

@@ -7,14 +7,14 @@ import (
 	"encoding/json"
 )
 
-func Result(judgeResult *protobuf.JudgeResponse) error {
+func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 	submissionDetail, err := Detail(judgeResult.Sid)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if submissionDetail.Status != "ING" {
-		return err
+		return "", err
 	}
 
 	status, spaceUsed, timeUsed := "AC", float64(0), uint32(0)
@@ -34,11 +34,11 @@ func Result(judgeResult *protobuf.JudgeResponse) error {
 
 	caseJson, err := json.Marshal(judgeResult.Result)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if err := Update(judgeResult.Sid, timeUsed, spaceUsed, status, caseJson); err != nil {
-		return err
+		return "", err
 	}
 
 	if status == "AC" {
@@ -46,5 +46,5 @@ func Result(judgeResult *protobuf.JudgeResponse) error {
 		go user.UpdateAcceptedCount(submissionDetail.Uid)
 	}
 
-	return nil
+	return status, nil
 }

@@ -8,16 +8,16 @@ import (
 type JSONTime time.Time
 
 type Contest struct {
-	Cid          string    `gorm:"auto_increment" json:"cid"`
-	Name         string    `json:"name"`
-	Uid          string    `json:"uid"`
-	Count        uint32    `json:"count"`
+	Cid          string   `gorm:"auto_increment" json:"cid"`
+	Name         string   `json:"name"`
+	Uid          string   `json:"uid"`
+	Count        uint32   `json:"count"`
 	StartTime    JSONTime `json:"start_time"`
 	EndTime      JSONTime `json:"end_time"`
 	BlockTime    JSONTime `json:"block_time"`
-	Status       int32     `json:"status"`
-	Participants uint32    `json:"participants"`
-	Penalty      uint32    `json:"penalty"`
+	Status       int32    `json:"status"`
+	Participants uint32   `json:"participants"`
+	Penalty      int64    `json:"penalty"`
 }
 
 func (j *JSONTime) MarshalJSON() ([]byte, error) {

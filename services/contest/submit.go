@@ -2,7 +2,7 @@ package contest
 
 import (
 	"Rabbit-OJ-Backend/models"
-	"Rabbit-OJ-Backend/services/db"
+	"github.com/jinzhu/gorm"
 )
 
 const (
@@ -11,7 +11,7 @@ const (
 	StatusERR     = -1
 )
 
-func Submit(sid, cid, uid, tid string, totalTime uint32) error {
+func Submit(tx *gorm.DB, sid, cid, uid, tid string, totalTime int64) error {
 	contestSubmission := models.ContestSubmission{
 		Sid:       sid,
 		Cid:       cid,
@@ -21,11 +21,11 @@ func Submit(sid, cid, uid, tid string, totalTime uint32) error {
 		TotalTime: totalTime,
 	}
 
-	return db.DB.Create(&contestSubmission).Error
+	return tx.Create(&contestSubmission).Error
 }
 
-func ChangeSubmitState(sid string, status int) error {
-	return db.DB.
+func ChangeSubmitState(tx *gorm.DB, sid string, status int) error {
+	return tx.
 		Table("contest_submission").
 		Where("sid = ?", sid).
 		Update("status", status).Error

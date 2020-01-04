@@ -3,6 +3,7 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"github.com/jinzhu/gorm"
 )
 
 func SubmissionList(uid, cid string) ([]models.ContestSubmission, error) {
@@ -18,4 +19,17 @@ func SubmissionList(uid, cid string) ([]models.ContestSubmission, error) {
 	}
 
 	return contestSubmissionList, nil
+}
+
+func SubmissionInfo(tx *gorm.DB, sid string) (*models.ContestSubmission, error) {
+	var contestSubmission models.ContestSubmission
+	if err := tx.
+		Table("contest_submission").
+		Where("sid = ?", sid).
+		First(&contestSubmission).
+		Error; err != nil {
+		return nil, err
+	}
+
+	return &contestSubmission, nil
 }

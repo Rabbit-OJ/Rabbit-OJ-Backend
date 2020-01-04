@@ -12,6 +12,7 @@ message JudgeRequest {
     string comp_mode = 7;
     bytes code = 8;
     int64 time = 9;
+    bool is_contest = 10;
 }
 
 message JudgeCaseResult {
@@ -22,7 +23,8 @@ message JudgeCaseResult {
 
 message JudgeResponse {
     string sid = 1;
-    repeated JudgeCaseResult result = 2;
+    bool is_contest = 2;
+    repeated JudgeCaseResult result = 3;
 }
 
 service Judge {

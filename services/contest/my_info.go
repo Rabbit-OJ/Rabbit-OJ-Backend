@@ -96,7 +96,7 @@ func MyInfo(uid, cid string, contest *models.Contest) (*responses.ContestMyInfo,
 	// calc penalty
 	for j := range contestMyInfo.Progress {
 		if contestMyInfo.Progress[j].Status == StatusAC {
-			contestMyInfo.Progress[j].TotalTime += contestMyInfo.Progress[j].Bug * contest.Penalty
+			contestMyInfo.Progress[j].TotalTime += int64(contestMyInfo.Progress[j].Bug) * contest.Penalty
 		}
 	}
 

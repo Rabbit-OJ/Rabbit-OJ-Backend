@@ -1,5 +1,11 @@
 package contest
 
-func CalculateRelativeTotalTime(baseTime int64, absoluteTime int64) int64 {
-	return absoluteTime - baseTime
+import (
+	"Rabbit-OJ-Backend/models"
+	"time"
+)
+
+func CalculateTime(info *models.Contest) int64 {
+	start, curr := time.Time(info.StartTime).Unix(), time.Now().Unix()
+	return (curr - start) / int64(time.Second)
 }

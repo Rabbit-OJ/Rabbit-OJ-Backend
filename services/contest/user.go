@@ -3,10 +3,10 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/responses"
-	"Rabbit-OJ-Backend/services/db"
+	"github.com/jinzhu/gorm"
 )
 
-func RegenerateUserScore(cid, uid string) error {
+func RegenerateUserScore(tx *gorm.DB, cid, uid string) error {
 	contestInfo, err := Info(cid)
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func RegenerateUserScore(cid, uid string) error {
 	progress := make([]responses.ScoreBoardProgress, len(questionMapTidToId))
 	var contestSubmissionList []models.ContestSubmission
 
-	if err := db.DB.Table("contest_submission").
+	if err := tx.Table("contest_submission").
 		Where("cid = ? AND uid = ？", cid, uid).
 		Find(&contestSubmissionList).
 		Error; err != nil {
@@ -41,20 +41,20 @@ func RegenerateUserScore(cid, uid string) error {
 		}
 	}
 
-	score, totalTime := uint32(0), uint32(0)
+	score, totalTime := uint32(0), int64(0)
 	// calc penalty
 	for i, item := range progress {
 		if item.Status == StatusAC {
 			score += contestQuestion[i].Score
 
-			currentTime := item.TotalTime + contestInfo.Penalty*item.Bug
+			currentTime := item.TotalTime + contestInfo.Penalty*int64(item.Bug)
 			if currentTime > totalTime {
 				totalTime = currentTime
 			}
 		}
 	}
 
-	if err := db.DB.Table("contest_user").
+	if err := tx.Table("contest_user").
 		Where("cid = ? AND uid = ?", cid, uid).
 		Updates(map[string]interface{}{
 			"score":      score,

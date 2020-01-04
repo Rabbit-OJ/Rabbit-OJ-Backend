@@ -30,7 +30,7 @@ func ScoreBoard(c *gin.Context) {
 		return
 	}
 
-	if contestInfo.Status == 0 {
+	if contestInfo.Status == contest.RoundWaiting {
 		c.JSON(400, gin.H{
 			"code":    400,
 			"message": "Contest Not begin",
@@ -39,7 +39,7 @@ func ScoreBoard(c *gin.Context) {
 		return
 	}
 
-	scoreBoard, err := contest.ScoreBoard(cid, uint32(page))
+	scoreBoard, err := contest.ScoreBoard(contestInfo, uint32(page))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

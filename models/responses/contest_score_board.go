@@ -12,7 +12,7 @@ type ScoreBoard struct {
 type ScoreBoardProgress struct {
 	Status    int    `json:"status"`
 	Bug       uint32 `json:"bug"`
-	TotalTime uint32 `json:"total_time"`
+	TotalTime int64  `json:"total_time"`
 }
 
 type ScoreBoardResponse struct {
