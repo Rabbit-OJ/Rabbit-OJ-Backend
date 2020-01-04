@@ -20,12 +20,12 @@ func Question(cid string) ([]models.ContestQuestion, error) {
 	return contestQuestion, nil
 }
 
-func QuestionOne(cid, id string) (*models.ContestQuestion, error) {
+func QuestionOne(cid, tid string) (*models.ContestQuestion, error) {
 	var contestQuestion *models.ContestQuestion
 
 	if err := db.DB.
 		Table("contest_question").
-		Where("cid = ? AND id = ?", cid, id).
+		Where("cid = ? AND tid = ?", cid, tid).
 		First(contestQuestion).Error; err != nil {
 		return nil, err
 	}

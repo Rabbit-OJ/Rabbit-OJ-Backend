@@ -11,7 +11,7 @@ import (
 )
 
 func Submit(c *gin.Context) {
-	cid, id := c.Param("cid"), c.Param("id")
+	cid, tid := c.Param("cid"), c.Param("tid")
 
 	authObject, err := auth.GetAuthObj(c)
 	if err != nil {
@@ -43,7 +43,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	question, err := ContestService.QuestionOne(cid, id)
+	question, err := ContestService.QuestionOne(cid, tid)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
