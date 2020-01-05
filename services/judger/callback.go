@@ -81,10 +81,11 @@ func callbackSuccess(sid string, isContest bool, resultList []*protobuf.JudgeCas
 	}()
 }
 
-func callbackWebSocket(sid string, isContest bool) {
+func callbackWebSocket(sid string, isContest, accepted bool) {
 	judgeHub.Broadcast <- sid
+
 	if isContest {
-		callbackContest(sid, true)
+		callbackContest(sid, accepted)
 	}
 }
 

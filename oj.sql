@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Dec 23, 2019 at 06:22 AM
+-- Generation Time: Jan 05, 2020 at 08:23 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -210,7 +210,7 @@ ALTER TABLE `contest_question`
 --
 ALTER TABLE `contest_submission`
   ADD PRIMARY KEY (`sid`),
-  ADD KEY `uid` (`uid`,`tid`,`status`);
+  ADD KEY `cid` (`cid`,`uid`);
 
 --
 -- Indexes for table `contest_user`

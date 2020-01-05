@@ -5,10 +5,10 @@ import (
 )
 
 type User struct {
-	Uid       string `gorm:"auto_increment" json:"uid"`
-	Username  string `json:"username"`
-	IsAdmin   bool   `json:"isAdmin"`
-	Password  string
+	Uid       string    `gorm:"AUTO_INCREMENT" json:"uid"`
+	Username  string    `json:"username"`
+	IsAdmin   bool      `json:"isAdmin"`
+	Password  string    `json:"-"`
 	Email     string    `json:"email"`
 	Attempt   uint32    `gorm:"default:0'" json:"attempt"`
 	Accept    uint32    `gorm:"default:0'" json:"accept"`

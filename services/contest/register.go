@@ -3,6 +3,7 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
 )
@@ -35,6 +36,15 @@ func IsRegistered(uid, cid string) (bool, error) {
 }
 
 func Unregister(uid, cid string) error {
+	info, err := Info(cid)
+	if err != nil {
+		return err
+	}
+
+	if info.Status != RoundWaiting {
+		return errors.New("cannot unregister after the start time of the contest")
+	}
+
 	if err := db.DB.
 		Where("uid = ? AND cid = ?", uid, cid).
 		Delete(&models.ContestUser{}).

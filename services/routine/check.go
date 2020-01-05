@@ -101,6 +101,7 @@ func handleCheck() {
 				&item,
 				questionMemo[item.Tid].judge,
 				questionMemo[item.Tid].detail,
+				false,// todo: test if it is a contest submission
 			); err != nil {
 				fmt.Println(err)
 				toBeRejected = append(toBeRejected, item.Sid)

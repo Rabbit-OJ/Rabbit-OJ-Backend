@@ -21,7 +21,7 @@ func RegenerateUserScore(tx *gorm.DB, cid, uid string) error {
 	var contestSubmissionList []models.ContestSubmission
 
 	if err := tx.Table("contest_submission").
-		Where("cid = ? AND uid = ？", cid, uid).
+		Where("cid = ? AND uid = ?", cid, uid).
 		Find(&contestSubmissionList).
 		Error; err != nil {
 		return err
@@ -35,7 +35,11 @@ func RegenerateUserScore(tx *gorm.DB, cid, uid string) error {
 			continue
 		} else if item.Status == StatusAC {
 			progress[questionId].Status = StatusAC
-			progress[questionId].TotalTime = item.TotalTime
+
+			totalTime := &progress[questionId].TotalTime
+			if *totalTime == 0 || *totalTime > item.TotalTime {
+				*totalTime = item.TotalTime
+			}
 		} else if item.Status == StatusERR {
 			progress[questionId].Bug++
 		}

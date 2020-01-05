@@ -4,7 +4,6 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/controllers/common"
 	"Rabbit-OJ-Backend/models/forms"
-	"Rabbit-OJ-Backend/services/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,11 +29,9 @@ func Submit(c *gin.Context) {
 	}
 
 	tid := c.Param("tid")
-	tx := db.DB.Begin()
 
-	sid, err := common.CodeSubmit(tx, tid, submitForm, authObject)
+	sid, err := common.CodeSubmit(tid, submitForm, authObject, false)
 	if err != nil {
-		tx.Rollback()
 		c.JSON(400, gin.H{
 			"code":    400,
 			"message": err.Error(),
@@ -43,7 +40,6 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	tx.Commit()
 	c.JSON(200, gin.H{
 		"code":    200,
 		"message": sid,

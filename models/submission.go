@@ -7,7 +7,7 @@ import (
 )
 
 type Submission struct {
-	Sid       string    `gorm:"auto_increment" json:"sid"`
+	Sid       string    `gorm:"AUTO_INCREMENT" json:"sid"`
 	Tid       string    `json:"tid"`
 	Uid       string    `json:"uid"`
 	Status    string    `json:"status"`

@@ -28,6 +28,5 @@ func JudgeOneCase(testResult *models.TestResult, stdout, rightStdout, compMode s
 	}
 
 	result.TimeUsed, result.SpaceUsed = testResult.TimeUsed, testResult.SpaceUsed
-
 	return result
 }

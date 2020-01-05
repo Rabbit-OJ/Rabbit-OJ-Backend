@@ -6,7 +6,6 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/forms"
 	ContestService "Rabbit-OJ-Backend/services/contest"
-	"Rabbit-OJ-Backend/services/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -72,11 +71,8 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	tx := db.DB.Begin()
-	sid, err := common.CodeSubmit(tx, question.Tid, submitForm, authObject)
+	sid, err := common.CodeSubmit(question.Tid, submitForm, authObject, true)
 	if err != nil {
-
-		tx.Rollback()
 		c.JSON(400, gin.H{
 			"code":    400,
 			"message": err.Error(),
@@ -85,12 +81,11 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	if err := ContestService.Submit(tx,
+	if err := ContestService.Submit(
 		sid, cid, authObject.Uid,
 		question.Tid,
 		ContestService.CalculateTime(contest)); err != nil {
 
-		tx.Rollback()
 		c.JSON(400, gin.H{
 			"code":    400,
 			"message": err.Error(),
@@ -99,7 +94,6 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	tx.Commit()
 	c.JSON(200, gin.H{
 		"code":    200,
 		"message": sid,

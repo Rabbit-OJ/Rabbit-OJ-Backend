@@ -9,11 +9,10 @@ import (
 	"Rabbit-OJ-Backend/utils/files"
 	"errors"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"io/ioutil"
 )
 
-func CodeSubmit(tx *gorm.DB, tid string, submitForm *forms.SubmitForm, authObject *auth.Claims) (string, error) {
+func CodeSubmit(tid string, submitForm *forms.SubmitForm, authObject *auth.Claims, isContest bool) (string, error) {
 	questionJudge, err := question.JudgeInfo(tid)
 	if err != nil {
 		return "", err
@@ -42,13 +41,16 @@ func CodeSubmit(tx *gorm.DB, tid string, submitForm *forms.SubmitForm, authObjec
 		return "", err
 	}
 
-	submission, err := SubmissionService.Create(tx, tid, authObject.Uid, submitForm.Language, fileName)
+	submission, err := SubmissionService.Create(tid, authObject.Uid, submitForm.Language, fileName)
 	if err != nil {
 		return "", err
 	}
 
 	go func() {
-		if err := SubmissionService.Starter([]byte(submitForm.Code), submission, questionJudge, questionDetail); err != nil {
+		if err := SubmissionService.Starter(
+			[]byte(submitForm.Code), submission, questionJudge,
+			questionDetail,
+			isContest); err != nil {
 			fmt.Print(err)
 		}
 		question.UpdateAttemptCount(tid)

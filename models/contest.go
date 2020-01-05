@@ -8,7 +8,7 @@ import (
 type JSONTime time.Time
 
 type Contest struct {
-	Cid          string   `gorm:"auto_increment" json:"cid"`
+	Cid          string   `gorm:"AUTO_INCREMENT" json:"cid"`
 	Name         string   `json:"name"`
 	Uid          string   `json:"uid"`
 	Count        uint32   `json:"count"`

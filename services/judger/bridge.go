@@ -61,7 +61,7 @@ func JudgeResponseBridge(delivery *amqp.Delivery) {
 		return
 	}
 
-	go callbackWebSocket(judgeResult.Sid, status == "AC")
+	go callbackWebSocket(judgeResult.Sid, judgeResult.IsContest, status == "AC")
 	if err := delivery.Ack(false); err != nil {
 		fmt.Println(err)
 	}

@@ -3,7 +3,7 @@ package models
 import "time"
 
 type ContestUser struct {
-	Cuid      string    `gorm:"auto_increment" json:"cuid"`
+	Cuid      string    `gorm:"AUTO_INCREMENT" json:"cuid"`
 	Cid       string    `json:"cid"`
 	Uid       string    `json:"uid"`
 	CreatedAt time.Time `json:"created_at"`

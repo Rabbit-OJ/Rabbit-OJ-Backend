@@ -15,6 +15,7 @@ func Starter(
 	submission *models.Submission,
 	questionJudge *models.QuestionJudge,
 	question *models.QuestionDetail,
+	isContest bool,
 ) error {
 	request := &protobuf.JudgeRequest{
 		Sid:        submission.Sid,
@@ -26,6 +27,7 @@ func Starter(
 		CompMode:   questionJudge.Mode,
 		Code:       code,
 		Time:       time.Now().Unix(),
+		IsContest:  isContest,
 	}
 
 	pro, err := proto.Marshal(request)
