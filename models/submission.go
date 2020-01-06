@@ -1,8 +1,6 @@
 package models
 
 import (
-	"encoding/json"
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -50,21 +48,4 @@ type JudgeResult struct {
 	Status    string `json:"status"`
 	TimeUsed  uint32 `json:"time_used"`
 	SpaceUsed uint32 `json:"space_used"`
-}
-
-func (s *SubmissionExtended) AfterFind(_ *gorm.Scope) (err error) {
-	s.JudgeObj = make([]JudgeResult, 0)
-	if err := json.Unmarshal(s.Judge, &s.JudgeObj); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *SubmissionExtended) BeforeSave(_ *gorm.Scope) (err error) {
-	judgeJSON, err := json.Marshal(s.JudgeObj)
-	if err != nil {
-		return err
-	}
-	s.Judge = judgeJSON
-	return nil
 }

@@ -17,12 +17,11 @@ require (
 	github.com/golang/protobuf v1.3.2
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/websocket v1.4.1
-	github.com/jinzhu/gorm v1.9.11
-	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/json-iterator/go v1.1.8 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/lib/pq v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
@@ -38,6 +37,5 @@ require (
 	gopkg.in/go-playground/validator.v8 v8.18.2
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
-	xorm.io/core v0.7.2
 	xorm.io/xorm v0.8.1
 )
