@@ -19,7 +19,7 @@ func My(c *gin.Context) {
 
 	uid := authObject.Uid
 	user, err := UserService.MyInfoByUid(uid)
-	
+
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,

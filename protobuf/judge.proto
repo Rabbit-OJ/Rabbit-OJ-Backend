@@ -3,8 +3,8 @@ syntax = "proto3";
 package protobuf;
 
 message JudgeRequest {
-    string sid = 1;
-    string tid = 2;
+    uint32 sid = 1;
+    uint32 tid = 2;
     string version = 3;
     string language = 4;
     uint32 time_limit = 5;
@@ -17,12 +17,12 @@ message JudgeRequest {
 
 message JudgeCaseResult {
     string status = 1;
-    double space_used = 2;
+    uint32 space_used = 2;
     uint32 time_used = 3;
 }
 
 message JudgeResponse {
-    string sid = 1;
+    uint32 sid = 1;
     bool is_contest = 2;
     repeated JudgeCaseResult result = 3;
 }
@@ -37,11 +37,11 @@ message Case {
 }
 
 message TestCaseRequest {
-    string tid = 1;
+    uint32 tid = 1;
 }
 
 message TestCaseResponse {
-    string tid = 1;
+    uint32 tid = 1;
     string version = 3;
     repeated Case case = 2;
 }

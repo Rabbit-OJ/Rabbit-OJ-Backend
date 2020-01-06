@@ -6,27 +6,25 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 )
 
-func List(page uint32) ([]models.Contest, error) {
+func List(page int) ([]models.Contest, error) {
 	var list []models.Contest
 
 	if err := db.DB.Table("contest").
-		Order("cid asc").
-		Limit(config.PageSize).
-		Offset((page - 1) * config.PageSize).
-		Scan(&list).Error; err != nil {
+		Asc("cid").
+		Limit(config.PageSize, (page-1)*config.PageSize).
+		Find(&list); err != nil {
+
 		return nil, err
 	}
 
 	return list, nil
 }
 
-func ListCount() (uint32, error) {
-	count := uint32(0)
+func ListCount() (int64, error) {
+	count, err := db.DB.Table("contest").Count()
 
-	if err := db.DB.Table("contest").
-		Count(&count).Error; err != nil {
+	if err != nil {
 		return 0, err
 	}
-
 	return count, nil
 }

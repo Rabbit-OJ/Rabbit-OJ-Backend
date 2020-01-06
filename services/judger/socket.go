@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"strconv"
 	"time"
 )
 
@@ -16,7 +17,7 @@ var (
 type Client struct {
 	conn *websocket.Conn
 	send chan []byte
-	sid  string
+	sid  uint32
 }
 
 func (c *Client) readPump() {
@@ -85,9 +86,15 @@ func (c *Client) writePump() {
 
 func ServeJudgeWs(JudgeHub *Hub) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
-		sid := c.Param("sid")
+		_sid := c.Param("sid")
+		sid, err := strconv.ParseUint(_sid, 10, 32)
 
-		submission, err := SubmissionService.Detail(sid)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		submission, err := SubmissionService.Detail(uint32(sid))
 		if err != nil || submission.Status != "ING" {
 			return
 		}
@@ -98,7 +105,7 @@ func ServeJudgeWs(JudgeHub *Hub) func(ctx *gin.Context) {
 			return
 		}
 
-		client := &Client{conn: conn, send: make(chan []byte, 256), sid: sid}
+		client := &Client{conn: conn, send: make(chan []byte, 256), sid: uint32(sid)}
 		JudgeHub.Register <- client
 
 		go client.writePump()
@@ -107,16 +114,16 @@ func ServeJudgeWs(JudgeHub *Hub) func(ctx *gin.Context) {
 }
 
 type Hub struct {
-	clients    map[string]*Client
-	Broadcast  chan string
+	clients    map[uint32]*Client
+	Broadcast  chan uint32
 	Register   chan *Client
 	unregister chan *Client
 }
 
 func NewJudgeHub() *Hub {
 	judgeHub = &Hub{
-		clients:    make(map[string]*Client),
-		Broadcast:  make(chan string),
+		clients:    make(map[uint32]*Client),
+		Broadcast:  make(chan uint32),
 		Register:   make(chan *Client),
 		unregister: make(chan *Client),
 	}
@@ -124,7 +131,7 @@ func NewJudgeHub() *Hub {
 	return judgeHub
 }
 
-func (h *Hub) removeJudgeHubClient(sid string) {
+func (h *Hub) removeJudgeHubClient(sid uint32) {
 	if client, ok := h.clients[sid]; ok {
 		close(client.send)
 		delete(h.clients, sid)

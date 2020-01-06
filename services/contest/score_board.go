@@ -6,10 +6,11 @@ import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/db"
 	"errors"
+	"strconv"
 	"time"
 )
 
-func InBlockTime(cid string) (bool, error) {
+func InBlockTime(cid uint32) (bool, error) {
 	contest, err := Info(cid)
 	if err != nil {
 		return false, err
@@ -19,8 +20,8 @@ func InBlockTime(cid string) (bool, error) {
 	return time.Time(contest.BlockTime).Unix() <= now && now <= time.Time(contest.EndTime).Unix(), nil
 }
 
-func ScoreBoard(contest *models.Contest, page uint32) ([]responses.ScoreBoard, error) {
-	var scoreBoard []responses.ScoreBoard
+func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, error) {
+	scoreBoard := make([]*responses.ScoreBoard, 0)
 	cid := contest.Cid
 
 	inBlockTime, err := InBlockTime(cid)
@@ -37,19 +38,36 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]responses.ScoreBoard, e
 		return nil, err
 	}
 
-	if err := db.DB.Raw("SELECT `user`.username, `user`.uid, `rank`, score, total_time FROM ( "+
+	results, err := db.DB.QueryString("SELECT `user`.username, `user`.uid, `rank`, score, total_time FROM ( "+
 		"SELECT cid, uid, score, total_time, RANK() OVER (ORDER BY score DESC, total_time ASC) `rank` FROM ( "+
 		"SELECT cid, uid, score, total_time FROM contest_user WHERE cid = ? "+
 		") AS temp1 "+
 		") AS temp2 "+
 		"INNER JOIN `user` ON `temp2`.`uid`=`user`.`uid` "+
 		"LIMIT ?, ? ",
-		cid, (page-1)*config.PageSize, page*config.PageSize).
-		Scan(&scoreBoard).Error; err != nil {
+		cid, (page-1)*config.PageSize, page*config.PageSize)
+
+	for _, item := range results {
+		_score, _ := strconv.ParseUint(item["score"], 10, 32)
+		_totalTime, _ := strconv.ParseUint(item["total_time"], 10, 32)
+		_rank, _ := strconv.ParseUint(item["rank"], 10, 32)
+		_uid, _ := strconv.ParseUint(item["uid"], 10, 32)
+
+		scoreBoard = append(scoreBoard, &responses.ScoreBoard{
+			Uid:       uint32(_uid),
+			Username:  item["username"],
+			Score:     uint32(_score),
+			TotalTime: uint32(_totalTime),
+			Rank:      uint32(_rank),
+			Progress:  nil,
+		})
+	}
+
+	if err != nil {
 		return nil, err
 	}
 
-	uidList, mapUidToIndex := make([]string, len(scoreBoard)), make(map[string]int)
+	uidList, mapUidToIndex := make([]uint32, len(scoreBoard)), make(map[uint32]int)
 	for i, item := range scoreBoard {
 		scoreBoard[i].Progress = make([]responses.ScoreBoardProgress, contest.Count)
 		uidList[i] = item.Uid
@@ -59,8 +77,7 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]responses.ScoreBoard, e
 	var contestSubmissionList []models.ContestSubmission
 	if err := db.DB.Table("contest_submission").
 		Where("cid = ? AND uid IN (?)", cid, uidList).
-		Find(&contestSubmissionList).
-		Error; err != nil {
+		Find(&contestSubmissionList); err != nil {
 		return nil, err
 	}
 
@@ -86,7 +103,7 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]responses.ScoreBoard, e
 	for i := range scoreBoard {
 		for j := range scoreBoard[i].Progress {
 			if scoreBoard[i].Progress[j].Status == StatusAC {
-				scoreBoard[i].Progress[j].TotalTime += int64(scoreBoard[i].Progress[j].Bug) * contest.Penalty
+				scoreBoard[i].Progress[j].TotalTime += scoreBoard[i].Progress[j].Bug * contest.Penalty
 			}
 		}
 	}

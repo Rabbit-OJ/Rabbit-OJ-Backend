@@ -8,7 +8,7 @@ import (
 type JSONTime time.Time
 
 type Contest struct {
-	Cid          string   `gorm:"AUTO_INCREMENT" json:"cid"`
+	Cid          uint32   `xorm:"autoincr" json:"cid"`
 	Name         string   `json:"name"`
 	Uid          string   `json:"uid"`
 	Count        uint32   `json:"count"`
@@ -17,7 +17,7 @@ type Contest struct {
 	BlockTime    JSONTime `json:"block_time"`
 	Status       int32    `json:"status"`
 	Participants uint32   `json:"participants"`
-	Penalty      int64    `json:"penalty"`
+	Penalty      uint32   `json:"penalty"`
 }
 
 func (j *JSONTime) MarshalJSON() ([]byte, error) {

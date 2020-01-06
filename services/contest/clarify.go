@@ -10,27 +10,31 @@ func ClarifyList(cid string) ([]models.ContestClarify, error) {
 
 	if err := db.DB.Table("contest_clarify").
 		Where("cid = ?", cid).
-		Order("ccid desc").
-		Scan(&list).Error; err != nil {
+		Desc("ccid").Find(&list); err != nil {
 		return nil, err
 	}
 
 	return list, nil
 }
 
-func ClarifyCreate(cid, message string) (string, error) {
+func ClarifyCreate(cid, message string) (uint32, error) {
 	clarify := models.ContestClarify{
 		Cid:     cid,
 		Message: message,
 	}
 
-	if err := db.DB.Create(&clarify).Error; err != nil {
-		return "", err
+	if _, err := db.DB.Table("contest_clarify").
+		Insert(&clarify); err != nil {
+		return 0, err
 	}
 
 	return clarify.Ccid, nil
 }
 
 func ClarifyDelete(ccid string) error {
-	return db.DB.Where("ccid = ?", ccid).Delete(&models.ContestClarify{}).Error
+	_, err := db.DB.Table("contest_clarify").
+		Where("ccid = ?", ccid).
+		Delete(&models.ContestClarify{})
+
+	return err
 }

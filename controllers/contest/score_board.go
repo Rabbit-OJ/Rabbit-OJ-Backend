@@ -8,7 +8,16 @@ import (
 )
 
 func ScoreBoard(c *gin.Context) {
-	cid := c.Param("cid")
+	_cid := c.Param("cid")
+	cid, err := strconv.ParseUint(_cid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
 
 	page, err := strconv.ParseUint(c.Param("page"), 10, 32)
 	if err != nil {
@@ -20,7 +29,7 @@ func ScoreBoard(c *gin.Context) {
 		return
 	}
 
-	contestInfo, err := contest.Info(cid)
+	contestInfo, err := contest.Info(uint32(cid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

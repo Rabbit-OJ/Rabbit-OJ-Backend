@@ -5,6 +5,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/common"
 	"Rabbit-OJ-Backend/models/forms"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func Submit(c *gin.Context) {
@@ -28,9 +29,18 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	tid := c.Param("tid")
+	_tid := c.Param("tid")
+	tid, err := strconv.ParseUint(_tid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
 
-	sid, err := common.CodeSubmit(tid, submitForm, authObject, false)
+		return
+	}
+
+	sid, err := common.CodeSubmit(uint32(tid), submitForm, authObject, false)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

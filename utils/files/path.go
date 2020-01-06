@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func AvatarPath(uid string) (string, error) {
-	return filepath.Abs(fmt.Sprintf("./files/avatar/%s.avatar", uid))
+func AvatarPath(uid uint32) (string, error) {
+	return filepath.Abs(fmt.Sprintf("./files/avatar/%d.avatar", uid))
 }
 
 func DefaultAvatarPath() (string, error) {
@@ -23,7 +23,7 @@ func CodePath(uuid string) (string, error) {
 	return filepath.Abs(fmt.Sprintf("./files/submission/%s.code", uuid))
 }
 
-func CodeGenerateFileNameWithMkdir(uid string) (string, error) {
+func CodeGenerateFileNameWithMkdir(uid uint32) (string, error) {
 	t := time.Now()
 	path := CodeDir() + t.Format("2006/01/02")
 
@@ -33,21 +33,21 @@ func CodeGenerateFileNameWithMkdir(uid string) (string, error) {
 		}
 	}
 
-	return fmt.Sprintf("%s/%s_%d", t.Format("2006/01/02"), uid, t.UnixNano()), nil
+	return fmt.Sprintf("%s/%d_%d", t.Format("2006/01/02"), uid, t.UnixNano()), nil
 }
 
 func SubmissionBaseDir() (string, error) {
 	return filepath.Abs("./files/submission/")
 }
 
-func SubmissionGenerateDirWithMkdir(sid string) (string, error) {
+func SubmissionGenerateDirWithMkdir(sid uint32) (string, error) {
 	t := time.Now()
 
 	path, err := SubmissionBaseDir()
 	if err != nil {
 		return "", err
 	}
-	path, err = filepath.Abs(path + "/" + t.Format("2006/01/02") + "/" + sid)
+	path, err = filepath.Abs(fmt.Sprintf("%s/%s/%d", path, t.Format("2006/01/02"), sid))
 	if err != nil {
 		return "", err
 	}
@@ -93,8 +93,8 @@ func ConfigFilePath() (string, error) {
 	return filepath.Abs("./config.json")
 }
 
-func JudgeDirPathWithMkdir(tid, version string) (string, error) {
-	path, err := filepath.Abs(fmt.Sprintf("./files/judge/%s/%s", tid, version))
+func JudgeDirPathWithMkdir(tid uint32, version string) (string, error) {
+	path, err := filepath.Abs(fmt.Sprintf("./files/judge/%d/%s", tid, version))
 	if err != nil {
 		return "", err
 	}
@@ -107,12 +107,12 @@ func JudgeDirPathWithMkdir(tid, version string) (string, error) {
 	return path, nil
 }
 
-func JudgeCaseDir(tid, version string) (string, error) {
-	return filepath.Abs(fmt.Sprintf("./files/judge/%s/%s", tid, version))
+func JudgeCaseDir(tid uint32, version string) (string, error) {
+	return filepath.Abs(fmt.Sprintf("./files/judge/%d/%s", tid, version))
 }
 
-func JudgeFilePath(tid, version, caseId, caseType string) (string, error) {
-	return filepath.Abs(fmt.Sprintf("./files/judge/%s/%s/%s.%s", tid, version, caseId, caseType))
+func JudgeFilePath(tid uint32, version, caseId, caseType string) (string, error) {
+	return filepath.Abs(fmt.Sprintf("./files/judge/%d/%s/%s.%s", tid, version, caseId, caseType))
 }
 
 func DockerHostConfigBinds(source, target string) string {

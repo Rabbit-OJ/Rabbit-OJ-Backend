@@ -3,8 +3,8 @@ package models
 import "time"
 
 type Question struct {
-	Tid        string    `json:"tid"`
-	Uid        string    `json:"uid"`
+	Tid        uint32    `json:"tid"`
+	Uid        uint32    `json:"uid"`
 	Subject    string    `json:"subject"`
 	Hide       bool      `json:"hide"`
 	Attempt    uint32    `json:"attempt"`

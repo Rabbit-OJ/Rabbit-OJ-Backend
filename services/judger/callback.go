@@ -9,18 +9,19 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"sync"
+	"xorm.io/xorm"
 )
 
 var (
 	CallbackWaitGroup sync.WaitGroup
 )
 
-func callbackAllError(status, sid string, isContest bool, storage *Storage) {
+func callbackAllError(status string, sid uint32, isContest bool, storage *Storage) {
 	go func() {
 		CallbackWaitGroup.Add(1)
 		defer CallbackWaitGroup.Done()
 
-		fmt.Printf("(%s) Callback judge error with status: %s \n", sid, status)
+		fmt.Printf("(%d) Callback judge error with status: %s \n", sid, status)
 
 		ceResult := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 		for i := range ceResult {
@@ -52,12 +53,12 @@ func callbackAllError(status, sid string, isContest bool, storage *Storage) {
 	}()
 }
 
-func callbackSuccess(sid string, isContest bool, resultList []*protobuf.JudgeCaseResult) {
+func callbackSuccess(sid uint32, isContest bool, resultList []*protobuf.JudgeCaseResult) {
 	go func() {
 		CallbackWaitGroup.Add(1)
 		defer CallbackWaitGroup.Done()
 
-		fmt.Printf("(%s) Callback judge success \n", sid)
+		fmt.Printf("(%d) Callback judge success \n", sid)
 
 		response := &protobuf.JudgeResponse{
 			Sid:       sid,
@@ -81,7 +82,7 @@ func callbackSuccess(sid string, isContest bool, resultList []*protobuf.JudgeCas
 	}()
 }
 
-func callbackWebSocket(sid string, isContest, accepted bool) {
+func callbackWebSocket(sid uint32, isContest, accepted bool) {
 	judgeHub.Broadcast <- sid
 
 	if isContest {
@@ -89,38 +90,32 @@ func callbackWebSocket(sid string, isContest, accepted bool) {
 	}
 }
 
-func callbackContest(sid string, isAccepted bool) {
-	tx := db.DB.Begin()
+func callbackContest(sid uint32, isAccepted bool) {
+	_, err := db.DB.Transaction(func(session *xorm.Session) (interface{}, error) {
+		status := contest.StatusPending
+		if isAccepted {
+			status = contest.StatusAC
+		} else {
+			status = contest.StatusERR
+		}
 
-	status := contest.StatusPending
-	if isAccepted {
-		status = contest.StatusAC
-	} else {
-		status = contest.StatusERR
-	}
+		if err := contest.ChangeSubmitState(session, sid, status); err != nil {
+			return nil, err
+		}
 
-	if err := contest.ChangeSubmitState(tx, sid, status);
-		err != nil {
+		submissionInfo, err := contest.SubmissionInfo(session, sid)
+		if err != nil {
+			return nil, err
+		}
 
-		fmt.Println(err)
-		tx.Rollback()
-		return
-	}
+		if err := contest.RegenerateUserScore(session, submissionInfo.Cid, submissionInfo.Uid); err != nil {
+			return nil, err
+		}
 
-	submissionInfo, err := contest.SubmissionInfo(tx, sid)
+		return nil, nil
+	})
+
 	if err != nil {
 		fmt.Println(err)
-		tx.Rollback()
-		return
 	}
-
-	if err := contest.RegenerateUserScore(tx, submissionInfo.Cid, submissionInfo.Uid);
-		err != nil {
-
-		fmt.Println(err)
-		tx.Rollback()
-		return
-	}
-
-	tx.Commit()
 }

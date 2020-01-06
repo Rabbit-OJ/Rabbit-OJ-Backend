@@ -14,20 +14,20 @@ import (
 )
 
 func Runner(
-	sid, codePath string,
+	sid uint32, codePath string,
 	compileInfo *config.CompileInfo,
 	caseCount, timeLimit, spaceLimit, casePath, outputPath string,
 	code []byte,
 ) error {
 	vmPath := codePath + "vm/"
-	fmt.Printf("(%s) [Runner] Compile OK, start run container \n", sid)
+	fmt.Printf("(%d) [Runner] Compile OK, start run container \n", sid)
 
 	err := files.TouchFile(codePath + "result.json")
 	if err != nil {
-		fmt.Printf("(%s) %+v \n", sid, err)
+		fmt.Printf("(%d) %+v \n", sid, err)
 		return err
 	}
-	fmt.Printf("(%s) [Runner] Touched empty result file for build \n", sid)
+	fmt.Printf("(%d) [Runner] Touched empty result file for build \n", sid)
 
 	containerConfig := &container.Config{
 		Image:           compileInfo.RunImage,
@@ -66,7 +66,7 @@ func Runner(
 		containerHostConfig.AutoRemove = true
 	}
 
-	fmt.Printf("(%s) [Runner] Creating container \n", sid)
+	fmt.Printf("(%d) [Runner] Creating container \n", sid)
 	resp, err := docker.Client.ContainerCreate(docker.Context,
 		containerConfig,
 		containerHostConfig,
@@ -78,7 +78,7 @@ func Runner(
 	}
 
 	if compileInfo.NoBuild {
-		fmt.Printf("(%s) [Runner] Copying files to container \n", sid)
+		fmt.Printf("(%d) [Runner] Copying files to container \n", sid)
 		io, err := files.ConvertToTar([]files.TarFileBasicInfo{{path.Base(compileInfo.Source), code}})
 		if err != nil {
 			return err
@@ -97,20 +97,20 @@ func Runner(
 		}
 	}
 
-	fmt.Printf("(%s) [Runner] Running container \n", sid)
+	fmt.Printf("(%d) [Runner] Running container \n", sid)
 	if err := docker.Client.ContainerStart(docker.Context, resp.ID, types.ContainerStartOptions{}); err != nil {
-		fmt.Printf("(%s) [Runner] %+v \n", sid, err)
+		fmt.Printf("(%d) [Runner] %+v \n", sid, err)
 		return err
 	}
 
 	docker.ContainerErrToStdErr(resp.ID)
 	statusCh, errCh := docker.Client.ContainerWait(docker.Context, resp.ID, container.WaitConditionNotRunning)
-	fmt.Printf("(%s) [Runner] Waiting for status \n", sid)
+	fmt.Printf("(%d) [Runner] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:
 		return err
 	case status := <-statusCh:
-		fmt.Printf("(%s) %+v \n", sid, status)
+		fmt.Printf("(%d) %+v \n", sid, status)
 	case <-time.After(time.Duration(compileInfo.Constraints.RunTimeout) * time.Second):
 		docker.ForceContainerRemove(resp.ID)
 		return errors.New("run timeout")

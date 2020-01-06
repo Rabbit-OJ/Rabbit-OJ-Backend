@@ -4,38 +4,50 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/responses"
 	"Rabbit-OJ-Backend/services/db"
+	"errors"
+	"strconv"
 )
 
-func User(uid, cid string) (*models.ContestUser, error) {
+func User(uid, cid uint32) (*models.ContestUser, error) {
 	contestUser := models.ContestUser{}
 
-	if err := db.DB.Table("contest_user").
+	found, err := db.DB.Table("contest_user").
 		Where("uid = ? AND cid = ?", uid, cid).
-		First(&contestUser).Error; err != nil {
+		Get(&contestUser)
+
+	if err != nil {
 		return nil, err
+	}
+	if !found {
+		return nil, errors.New("user not registered")
 	}
 
 	return &contestUser, nil
 }
 
-func QueryUserRank(uid, cid string) (uint32, error) {
-	var rank struct {
-		Rank uint32 `gorm:"rank"`
-	}
-
-	if err := db.DB.
-		Raw("SELECT `rank` FROM (SELECT uid, RANK() OVER "+
+func QueryUserRank(uid, cid uint32) (uint32, error) {
+	results, err := db.DB.
+		QueryString("SELECT `rank` FROM (SELECT uid, RANK() OVER "+
 			"(ORDER BY score DESC, total_time ASC) "+
 			"`rank` FROM contest_user WHERE cid = ?) AS temp "+
-			"WHERE uid = ?", cid, uid).
-		Scan(&rank).Error; err != nil {
+			"WHERE uid = ?", cid, uid)
+
+	if err != nil {
+		return 0, err
+	}
+	if len(results) <= 0 {
+		return 0, errors.New("user doesn't exist")
+	}
+
+	rankNumber, err := strconv.ParseUint(results[0]["rank"], 10, 32)
+	if err != nil {
 		return 0, err
 	}
 
-	return rank.Rank, nil
+	return uint32(rankNumber), nil
 }
 
-func MyInfo(uid, cid string, contest *models.Contest) (*responses.ContestMyInfo, error) {
+func MyInfo(uid, cid uint32, contest *models.Contest) (*responses.ContestMyInfo, error) {
 	contestMyInfo := responses.ContestMyInfo{
 		Rank:      0,
 		TotalTime: 0,
@@ -70,8 +82,7 @@ func MyInfo(uid, cid string, contest *models.Contest) (*responses.ContestMyInfo,
 	var contestSubmissionList []models.ContestSubmission
 	if err := db.DB.Table("contest_submission").
 		Where("cid = ? AND uid = ?", cid, uid).
-		Find(&contestSubmissionList).
-		Error; err != nil {
+		Find(&contestSubmissionList); err != nil {
 		return nil, err
 	}
 
@@ -96,7 +107,7 @@ func MyInfo(uid, cid string, contest *models.Contest) (*responses.ContestMyInfo,
 	// calc penalty
 	for j := range contestMyInfo.Progress {
 		if contestMyInfo.Progress[j].Status == StatusAC {
-			contestMyInfo.Progress[j].TotalTime += int64(contestMyInfo.Progress[j].Bug) * contest.Penalty
+			contestMyInfo.Progress[j].TotalTime += contestMyInfo.Progress[j].Bug * contest.Penalty
 		}
 	}
 

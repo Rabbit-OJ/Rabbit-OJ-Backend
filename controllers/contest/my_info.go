@@ -5,10 +5,20 @@ import (
 	"Rabbit-OJ-Backend/models"
 	ContestService "Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func MyInfo(c *gin.Context) {
-	cid := c.Param("cid")
+	_cid := c.Param("cid")
+	cid, err := strconv.ParseUint(_cid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
 
 	contestRaw, ok := c.Get("contest")
 	if !ok {
@@ -40,7 +50,7 @@ func MyInfo(c *gin.Context) {
 		return
 	}
 
-	contestMyInfo, err := ContestService.MyInfo(authObject.Uid, cid, contest)
+	contestMyInfo, err := ContestService.MyInfo(authObject.Uid, uint32(cid), contest)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

@@ -16,7 +16,7 @@ var (
 )
 
 type Storage struct {
-	Tid          string
+	Tid          uint32
 	Version      string
 	DatasetCount uint32
 }
@@ -70,13 +70,13 @@ func SaveStorageFile(storage []Storage) error {
 	return nil
 }
 
-func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
+func FetchTestCase(tid uint32, storage []Storage) (*Storage, error) {
 	fetchTestCaseMutex.Lock()
 	defer fetchTestCaseMutex.Unlock()
 
 	request, response := &protobuf.TestCaseRequest{Tid: tid}, &protobuf.TestCaseResponse{}
 
-	fmt.Println("[Test Case] Preparing rpc to fetch case " + tid)
+	fmt.Printf("[Test Case] Preparing rpc to fetch case %d \n" , tid)
 	if err := rpc.DialCall("CaseService", "Case", request, response); err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -88,7 +88,7 @@ func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
 	}
 
 	for index, item := range response.Case {
-		inPath, err := files.JudgeFilePath(tid, response.Version, strconv.Itoa(index + 1), "in")
+		inPath, err := files.JudgeFilePath(tid, response.Version, strconv.Itoa(index+1), "in")
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -99,7 +99,7 @@ func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
 			return nil, err
 		}
 
-		outPath, err := files.JudgeFilePath(tid, response.Version, strconv.Itoa(index + 1), "out")
+		outPath, err := files.JudgeFilePath(tid, response.Version, strconv.Itoa(index+1), "out")
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -122,7 +122,7 @@ func FetchTestCase(tid string, storage []Storage) (*Storage, error) {
 	return newStorage, SaveStorageFile(append(storage, *newStorage))
 }
 
-func InitTestCase(tid, version string) (*Storage, error) {
+func InitTestCase(tid uint32, version string) (*Storage, error) {
 	fmt.Println("[Test Case] Reading index")
 	storageFileContent := ReadStorageFile()
 

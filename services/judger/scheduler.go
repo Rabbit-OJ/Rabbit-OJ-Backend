@@ -23,12 +23,12 @@ type CollectedStdout struct {
 func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, error) {
 	sid := request.Sid
 
-	fmt.Printf("========START JUDGE(%s)======== \n", sid)
-	fmt.Printf("(%s) [Scheduler] Received judge request \n", sid)
+	fmt.Printf("========START JUDGE(%d)======== \n", sid)
+	fmt.Printf("(%d) [Scheduler] Received judge request \n", sid)
 
 	startSchedule := time.Now()
 	defer func() {
-		fmt.Printf("(%s) [Scheduler] total cost : %d ms \n", sid, time.Since(startSchedule).Milliseconds())
+		fmt.Printf("(%d) [Scheduler] total cost : %d ms \n", sid, time.Since(startSchedule).Milliseconds())
 	}()
 
 	// initialize files
@@ -38,7 +38,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	}
 
 	defer func() {
-		fmt.Printf("(%s) [Scheduler] Cleaning files \n", sid)
+		fmt.Printf("(%d) [Scheduler] Cleaning files \n", sid)
 		if config.Global.AutoRemove.Files {
 			_ = os.RemoveAll(currentPath)
 		}
@@ -60,11 +60,11 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		return false, errors.New("language doesn't support")
 	}
 
-	fmt.Printf("(%s) [Scheduler] Init test cases \n", sid)
+	fmt.Printf("(%d) [Scheduler] Init test cases \n", sid)
 	// get case
 	storage, err := InitTestCase(request.Tid, request.Version)
 	if err != nil {
-		fmt.Printf("(%s) [Scheduler] Case Error %+v \n", sid, err)
+		fmt.Printf("(%d) [Scheduler] Case Error %+v \n", sid, err)
 		return false, err
 	}
 
@@ -76,17 +76,17 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 
 	if !compileInfo.NoBuild {
 		// compile
-		fmt.Printf("(%s) [Scheduler] Start Compile \n", sid)
+		fmt.Printf("(%d) [Scheduler] Start Compile \n", sid)
 		if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
-			fmt.Printf("(%s) [Scheduler] CE %+v \n", sid, err)
+			fmt.Printf("(%d) [Scheduler] CE %+v \n", sid, err)
 			callbackAllError("CE", sid, request.IsContest, storage)
 			return true, err
 		}
-		fmt.Printf("(%s) [Scheduler] Compile OK \n", sid)
+		fmt.Printf("(%d) [Scheduler] Compile OK \n", sid)
 	}
 
 	// run
-	fmt.Printf("(%s) [Scheduler] Start Runner \n", sid)
+	fmt.Printf("(%d) [Scheduler] Start Runner \n", sid)
 	if err := Runner(
 		sid,
 		codePath,
@@ -98,13 +98,13 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		outputPath,
 		request.Code); err != nil {
 
-		fmt.Printf("(%s) [Scheduler] RE %+v \n", sid, err)
+		fmt.Printf("(%d) [Scheduler] RE %+v \n", sid, err)
 		callbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
-	fmt.Printf("(%s) [Scheduler] Runner OK \n", sid)
+	fmt.Printf("(%d) [Scheduler] Runner OK \n", sid)
 
-	fmt.Printf("(%s) [Scheduler] Reading result \n", sid)
+	fmt.Printf("(%d) [Scheduler] Reading result \n", sid)
 	jsonFileByte, err := ioutil.ReadFile(codePath + "result.json")
 	if err != nil {
 		callbackAllError("RE", sid, request.IsContest, storage)
@@ -118,7 +118,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 	}
 
 	// collect std::out
-	fmt.Printf("(%s) [Scheduler] Collecting stdout \n", sid)
+	fmt.Printf("(%d) [Scheduler] Collecting stdout \n", sid)
 	allStdin := make([]CollectedStdout, storage.DatasetCount)
 	for i := uint32(1); i <= storage.DatasetCount; i++ {
 
@@ -151,7 +151,7 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		}
 	}
 	// judge std::out
-	fmt.Printf("(%s) [Scheduler] Judging stdout \n", sid)
+	fmt.Printf("(%d) [Scheduler] Judging stdout \n", sid)
 	resultList := make([]*protobuf.JudgeCaseResult, storage.DatasetCount)
 
 	for index, item := range allStdin {
@@ -164,9 +164,9 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		resultList[index].TimeUsed = judgeResult.TimeUsed
 	}
 	// mq return result
-	fmt.Printf("(%s) [Scheduler] Calling back results \n", sid)
+	fmt.Printf("(%d) [Scheduler] Calling back results \n", sid)
 	callbackSuccess(sid, request.IsContest, resultList)
 
-	fmt.Printf("(%s) [Scheduler] Finish \n", sid)
+	fmt.Printf("(%d) [Scheduler] Finish \n", sid)
 	return true, nil
 }

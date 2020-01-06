@@ -5,16 +5,16 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 	"errors"
 	"fmt"
-	"github.com/jinzhu/gorm"
 )
 
-func Register(uid, cid string) error {
+func Register(uid, cid uint32) error {
 	contestUser := models.ContestUser{
 		Cid: cid,
 		Uid: uid,
 	}
 
-	if err := db.DB.Create(&contestUser).Error; err != nil {
+	if _, err := db.DB.Table("contest_user").Insert(&contestUser);
+		err != nil {
 		return err
 	}
 
@@ -22,20 +22,21 @@ func Register(uid, cid string) error {
 	return nil
 }
 
-func IsRegistered(uid, cid string) (bool, error) {
-	count := 0
+func IsRegistered(uid, cid uint32) (bool, error) {
+	contestUser := models.ContestUser{}
 
-	if err := db.DB.Table("contest_user").
+	found, err := db.DB.Table("contest_user").
 		Select("1").
 		Where("uid = ? AND cid = ?", uid, cid).
-		Count(&count).Error; err != nil {
+		Get(&contestUser)
+
+	if err != nil {
 		return false, err
 	}
-
-	return count == 1, nil
+	return found, nil
 }
 
-func Unregister(uid, cid string) error {
+func Unregister(uid, cid uint32) error {
 	info, err := Info(cid)
 	if err != nil {
 		return err
@@ -45,10 +46,9 @@ func Unregister(uid, cid string) error {
 		return errors.New("cannot unregister after the start time of the contest")
 	}
 
-	if err := db.DB.
+	if _, err := db.DB.
 		Where("uid = ? AND cid = ?", uid, cid).
-		Delete(&models.ContestUser{}).
-		Error; err != nil {
+		Delete(&models.ContestUser{}); err != nil {
 		return err
 	}
 
@@ -56,12 +56,8 @@ func Unregister(uid, cid string) error {
 	return nil
 }
 
-func UpdateContestParticipant(cid string, delta int) {
-	if err := db.DB.Table("contest").
-		Where("cid = ?", cid).
-		Update("participants", gorm.Expr("participants + ?", delta)).
-		Error;
-		err != nil {
+func UpdateContestParticipant(cid uint32, delta int) {
+	if _, err := db.DB.Exec("UPDATE contest SET participants = participants + ? WHERE cid = ?", delta, cid); err != nil {
 
 		fmt.Println(err)
 	}

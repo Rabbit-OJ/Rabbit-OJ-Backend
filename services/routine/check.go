@@ -56,12 +56,12 @@ func handleCheck() {
 		var timeoutSubmissions []models.Submission
 		if err := db.DB.Table("submission").
 			Where("status = ? AND created_at <= ?", "ING", someMinutesBefore).
-			Find(&timeoutSubmissions).Error; err != nil {
+			Find(&timeoutSubmissions); err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		toBeRejected, questionMemo := make([]string, 0), make(map[string]questionJudgeMemoType)
+		toBeRejected, questionMemo := make([]uint32, 0), make(map[uint32]questionJudgeMemoType)
 		for _, item := range timeoutSubmissions {
 			path, err := files.CodePath(item.FileName)
 			if err != nil {
@@ -101,7 +101,7 @@ func handleCheck() {
 				&item,
 				questionMemo[item.Tid].judge,
 				questionMemo[item.Tid].detail,
-				false,// todo: test if it is a contest submission
+				false, // todo: test if it is a contest submission
 			); err != nil {
 				fmt.Println(err)
 				toBeRejected = append(toBeRejected, item.Sid)
@@ -116,21 +116,26 @@ func handleCheck() {
 			batchRejectSubmission(toBeRejected)
 		}
 	} else {
-		if err := db.DB.Table("submission").
+		if _, err := db.DB.Table("submission").
 			Where("status = ? AND created_at <= ?", "ING", someMinutesBefore).
-			Updates(map[string]string{"status": "NO", "judge": "[]"}).
-			Error; err != nil {
+			Update(&models.Submission{
+				Status: "NO",
+				Judge:  []byte("[]"),
+			}); err != nil {
 
 			fmt.Println(err)
 		}
 	}
 }
 
-func batchRejectSubmission(sidList []string) {
-	if err := db.DB.Table("submission").
+func batchRejectSubmission(sidList []uint32) {
+	if _, err := db.DB.Table("submission").
 		Where("sid in (?)", sidList).
-		Updates(map[string]string{"status": "NO", "judge": "[]"}).
-		Error; err != nil {
+		Update(
+			&models.Submission{
+				Status: "NO",
+				Judge:  []byte("[]"),
+			}); err != nil {
 
 		fmt.Println(err)
 	}

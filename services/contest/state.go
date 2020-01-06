@@ -18,14 +18,12 @@ var (
 	FinishLock sync.Mutex
 )
 
-func ChangeContestState(cid string, status int) error {
-	return db.DB.
-		Table("contest").
-		Where("cid = ?", cid).
-		Update("status", status).Error
+func ChangeContestState(cid uint32, status int) error {
+	_, err := db.DB.Exec("UPDATE contest SET status = ? WHERE cid = ?", status, cid)
+	return err
 }
 
-func CheckContestState(cid string) (int, error) {
+func CheckContestState(cid uint32) (int, error) {
 	contest, err := Info(cid)
 	if err != nil {
 		return -1, err
@@ -42,7 +40,7 @@ func CheckContestState(cid string) (int, error) {
 	return -1, errors.New("contest arguments error")
 }
 
-func Start(cid string) error {
+func Start(cid uint32) error {
 	if err := ChangeContestState(cid, Running); err != nil {
 		return err
 	}
@@ -50,21 +48,20 @@ func Start(cid string) error {
 	return nil
 }
 
-func HavePendingSubmission(cid string) (bool, error) {
-	count := 0
-
-	if err := db.DB.Table("contest_submission").
+func HavePendingSubmission(cid uint32) (bool, error) {
+	count, err := db.DB.Table("contest_submission").
 		Select("1").
 		Where("cid = ? AND status = ?", cid, 0).
-		Count(&count).
-		Error; err != nil {
+		Count()
+
+	if err != nil {
 		return false, err
 	}
 
 	return count > 0, nil
 }
 
-func Finish(cid string) error {
+func Finish(cid uint32) error {
 	FinishLock.Lock()
 	defer FinishLock.Unlock()
 

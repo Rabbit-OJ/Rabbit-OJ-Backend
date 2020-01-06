@@ -3,7 +3,7 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
-	"github.com/jinzhu/gorm"
+	"xorm.io/xorm"
 )
 
 const (
@@ -12,7 +12,7 @@ const (
 	StatusERR     = -1
 )
 
-func Submit(sid, cid, uid, tid string, totalTime int64) error {
+func Submit(sid, cid, uid, tid, totalTime uint32) error {
 	contestSubmission := models.ContestSubmission{
 		Sid:       sid,
 		Cid:       cid,
@@ -22,12 +22,18 @@ func Submit(sid, cid, uid, tid string, totalTime int64) error {
 		TotalTime: totalTime,
 	}
 
-	return db.DB.Create(&contestSubmission).Error
+	_, err := db.DB.Table("contest_submission").Insert(&contestSubmission)
+	return err
 }
 
-func ChangeSubmitState(tx *gorm.DB, sid string, status int) error {
-	return tx.
+func ChangeSubmitState(session *xorm.Session, sid uint32, status int) error {
+	_, err := session.
 		Table("contest_submission").
 		Where("sid = ?", sid).
-		Update("status", status).Error
+		Cols("status").
+		Update(&models.ContestSubmission{
+			Status: status,
+		})
+
+	return err
 }

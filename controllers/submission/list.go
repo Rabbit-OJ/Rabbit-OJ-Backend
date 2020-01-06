@@ -8,7 +8,7 @@ import (
 )
 
 func List(c *gin.Context) {
-	page, err := strconv.ParseUint(c.Param("page"), 10, 32)
+	page, err := strconv.ParseInt(c.Param("page"), 10, 32)
 	uid := c.Param("uid")
 
 	if err != nil {
@@ -20,7 +20,7 @@ func List(c *gin.Context) {
 		return
 	}
 
-	list, err := SubmissionService.List(uid, uint32(page))
+	list, err := SubmissionService.List(uid, int(page))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -46,7 +46,7 @@ func List(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"code": 200,
+		"code":    200,
 		"message": response,
 	})
 }

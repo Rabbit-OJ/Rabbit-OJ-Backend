@@ -4,12 +4,14 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	ContestService "Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func CheckContest(c *gin.Context) {
-	cid := c.Param("cid")
+	_cid := c.Param("cid")
+	cid, err := strconv.ParseUint(_cid, 10, 32)
 
-	info, err := ContestService.Info(cid)
+	info, err := ContestService.Info(uint32(cid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

@@ -3,11 +3,11 @@ package models
 import "time"
 
 type ContestSubmission struct {
-	Sid       string    `json:"sid"`
-	Cid       string    `json:"cid"`
-	Uid       string    `json:"uid"`
-	Tid       string    `json:"tid"`
-	Status    int32     `json:"status"`
+	Sid       uint32    `json:"sid"`
+	Cid       uint32    `json:"cid"`
+	Uid       uint32    `json:"uid"`
+	Tid       uint32    `json:"tid"`
+	Status    int       `json:"status"`
 	CreatedAt time.Time `json:"created_at"`
-	TotalTime int64     `json:"total_time"`
+	TotalTime uint32    `json:"total_time"`
 }

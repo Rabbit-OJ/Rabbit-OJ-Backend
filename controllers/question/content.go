@@ -4,10 +4,20 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	QuestionService "Rabbit-OJ-Backend/services/question"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func Detail(c *gin.Context) {
-	tid := c.Param("tid")
+	_tid := c.Param("tid")
+	tid, err := strconv.ParseUint(_tid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
 
 	authObject, err := auth.GetAuthObj(c)
 	if err != nil {
@@ -18,7 +28,7 @@ func Detail(c *gin.Context) {
 		return
 	}
 
-	detail, err := QuestionService.Detail(tid)
+	detail, err := QuestionService.Detail(uint32(tid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

@@ -5,7 +5,7 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 )
 
-func Update(sid string, timeUsed uint32, spaceUsed float64, status string, judge []byte) error {
+func Update(sid, timeUsed, spaceUsed uint32, status string, judge []byte) error {
 	updateObj := models.Submission{
 		TimeUsed:  timeUsed,
 		SpaceUsed: spaceUsed,
@@ -13,7 +13,9 @@ func Update(sid string, timeUsed uint32, spaceUsed float64, status string, judge
 		Judge:     judge,
 	}
 
-	if err := db.DB.Table("submission").Where("sid = ?", sid).Update(&updateObj).Error; err != nil {
+	if _, err := db.DB.Table("submission").
+		Where("sid = ?", sid).
+		Update(&updateObj); err != nil {
 		return err
 	}
 

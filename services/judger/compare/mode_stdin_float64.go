@@ -28,7 +28,7 @@ func ModeStdinFloat64(src, dest string) (bool, uint32) {
 			continue
 		}
 
-		if math.Abs(srcFloat - destFloat) <= 1e-6 {
+		if math.Abs(srcFloat-destFloat) <= 1e-6 {
 			acceptedCount++
 		} else {
 			accepted = false

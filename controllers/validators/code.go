@@ -11,7 +11,7 @@ func Code(
 	_ reflect.Type, _ reflect.Kind, _ string,
 ) bool {
 	if code, ok := field.Interface().(string); ok {
-		return len(code) <= 100 * 1024
+		return len(code) <= 100*1024
 	}
 	return false
 }

@@ -62,7 +62,7 @@ func TestOne(
 	}()
 
 	cmd.Stdin, cmd.Stdout = in, out
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid:true}
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	if err := cmd.Start(); err != nil {
 		log.Println(err)
@@ -119,7 +119,7 @@ func TestOne(
 	case <-time.After(time.Duration(timeLimit) * time.Millisecond):
 		testResult.Status = StatusTLE
 		testResult.TimeUsed = uint32(timeLimit)
-		testResult.SpaceUsed = peakMemory
+		testResult.SpaceUsed = uint32(peakMemory)
 		if err := syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL); err != nil {
 			log.Println(err)
 		}
@@ -134,7 +134,7 @@ func TestOne(
 		}
 
 		testResult.TimeUsed = uint32(usedTime.Milliseconds())
-		testResult.SpaceUsed = peakMemory
+		testResult.SpaceUsed = uint32(peakMemory)
 	}
 }
 

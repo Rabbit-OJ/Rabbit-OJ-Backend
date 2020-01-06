@@ -3,14 +3,19 @@ package question
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"errors"
 )
 
-func Content (tid string) (*models.QuestionContent, error) {
+func Content(tid string) (*models.QuestionContent, error) {
 	content := models.QuestionContent{}
 
-	if err := db.DB.Where("tid = ?", tid).First(&content).Error; err != nil {
+	found, err := db.DB.Where("tid = ?", tid).Get(&content)
+
+	if err != nil {
 		return nil, err
-	} else {
-		return &content, nil
 	}
+	if !found {
+		return nil, errors.New("question content doesn't exist")
+	}
+	return &content, nil
 }

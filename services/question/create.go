@@ -3,36 +3,39 @@ package question
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"xorm.io/xorm"
 )
 
-const InvalidTid = ""
+const InvalidTid = 0
 
-func Create(uid, subject, content string, difficulty uint8, timeLimit, spaceLimit uint32) (string, error) {
-	tx := db.DB.Begin()
+func Create(uid uint32, subject, content string, difficulty uint8, timeLimit, spaceLimit uint32) (int, error) {
+	tid, err := db.DB.Transaction(func(session *xorm.Session) (interface{}, error) {
+		questionOverview := models.Question{
+			Uid:        uid,
+			Subject:    subject,
+			Difficulty: difficulty,
+			TimeLimit:  timeLimit,
+			SpaceLimit: spaceLimit,
+		}
 
-	questionOverview := models.Question{
-		Uid:        uid,
-		Subject:    subject,
-		Difficulty: difficulty,
-		TimeLimit:  timeLimit,
-		SpaceLimit: spaceLimit,
-	}
+		if _, err := session.Table("question").Insert(&questionOverview); err != nil {
+			return InvalidTid, err
+		}
 
-	if err := tx.Create(&questionOverview).Error; err != nil {
-		tx.Rollback()
+		questionContent := models.QuestionContent{
+			Content: content,
+		}
+
+		if _, err := session.Table("question_content").Insert(&questionContent); err != nil {
+			return InvalidTid, err
+		}
+
+		return questionOverview.Tid, nil
+	})
+
+	if val, ok := tid.(int); ok {
+		return val, err
+	} else {
 		return InvalidTid, err
 	}
-
-	questionContent := models.QuestionContent{
-		Tid:     questionOverview.Tid,
-		Content: content,
-	}
-
-	if err := tx.Create(&questionContent).Error; err != nil {
-		tx.Rollback()
-		return InvalidTid, err
-	}
-
-	tx.Commit()
-	return questionOverview.Tid, nil
 }

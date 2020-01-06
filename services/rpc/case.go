@@ -6,12 +6,12 @@ import (
 	"fmt"
 )
 
-type CaseService struct {}
+type CaseService struct{}
 
 func (s *CaseService) Case(request protobuf.TestCaseRequest, response *protobuf.TestCaseResponse) error {
 	tid := request.Tid
 
-	fmt.Println("[RPC] test case received request " + tid)
+	fmt.Printf("[RPC] test case received request %d \n", tid)
 	err := question.Case(tid, response)
 
 	if err != nil {

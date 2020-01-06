@@ -42,7 +42,7 @@ func TryAuthJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
 		guestJWT := &auth.Claims{
-			Uid:      "",
+			Uid:      0,
 			Username: "",
 			IsAdmin:  false,
 		}

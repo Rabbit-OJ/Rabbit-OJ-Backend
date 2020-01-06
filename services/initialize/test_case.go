@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func CheckTestCase()  {
+func CheckTestCase() {
 	storage := judger.ReadStorageFile()
 	newStorage := make([]judger.Storage, 0)
 

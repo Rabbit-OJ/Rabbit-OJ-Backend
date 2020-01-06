@@ -9,7 +9,7 @@ import (
 )
 
 func List(c *gin.Context) {
-	page, err := strconv.ParseUint(c.Param("page"), 10, 32)
+	page, err := strconv.ParseInt(c.Param("page"), 10, 32)
 
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -31,7 +31,7 @@ func List(c *gin.Context) {
 	}
 
 	showHide := authObject.IsAdmin
-	list, err := QuestionService.List(uint32(page), showHide)
+	list, err := QuestionService.List(int(page), showHide)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

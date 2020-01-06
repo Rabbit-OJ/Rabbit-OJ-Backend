@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func Case(tid string, response *protobuf.TestCaseResponse) error {
+func Case(tid uint32, response *protobuf.TestCaseResponse) error {
 	judgeObj, err := JudgeInfo(tid)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func Case(tid string, response *protobuf.TestCaseResponse) error {
 	return nil
 }
 
-func readCaseFile(tid, version, caseId, caseType string) ([]byte, error) {
+func readCaseFile(tid uint32, version, caseId, caseType string) ([]byte, error) {
 	filePath, err := files.JudgeFilePath(tid, version, caseId, caseType)
 	if err != nil {
 		return nil, err

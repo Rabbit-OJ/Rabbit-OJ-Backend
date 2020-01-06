@@ -3,26 +3,17 @@ package user
 import (
 	"Rabbit-OJ-Backend/services/db"
 	"fmt"
-	"github.com/jinzhu/gorm"
 )
 
-func UpdateAttemptCount(uid string) {
-	if err := db.DB.Table("user").
-		Where("uid = ?", uid).
-		Update("attempt", gorm.Expr("attempt + 1")).
-		Error;
-		err != nil {
+func UpdateAttemptCount(uid uint32) {
+	if _, err := db.DB.Exec("UPDATE user SET attempt = attempt + 1 WHERE uid = ?", uid); err != nil {
 
 		fmt.Println(err)
 	}
 }
 
-func UpdateAcceptedCount(uid string) {
-	if err := db.DB.Table("user").
-		Where("uid = ?", uid).
-		Update("accept", gorm.Expr("accept + 1")).
-		Error;
-		err != nil {
+func UpdateAcceptedCount(uid uint32) {
+	if _, err := db.DB.Exec("UPDATE user SET accept = accept + 1 WHERE uid = ?", uid); err != nil {
 
 		fmt.Println(err)
 	}

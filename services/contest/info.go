@@ -3,6 +3,7 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"errors"
 )
 
 const (
@@ -12,12 +13,17 @@ const (
 	RoundCalculating = 3
 )
 
-func Info(cid string) (*models.Contest, error) {
+func Info(cid uint32) (*models.Contest, error) {
 	contest := models.Contest{}
-	if err := db.DB.Table("contest").
+	found, err := db.DB.Table("contest").
 		Where("cid = ?", cid).
-		First(&contest).Error; err != nil {
+		Get(&contest)
+
+	if err != nil {
 		return nil, err
+	}
+	if !found {
+		return nil, errors.New("contest doesn't exist")
 	}
 
 	return &contest, nil

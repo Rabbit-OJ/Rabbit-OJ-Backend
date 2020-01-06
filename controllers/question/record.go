@@ -9,7 +9,7 @@ import (
 )
 
 func Record(c *gin.Context) {
-	page, err := strconv.ParseUint(c.Param("page"), 10, 32)
+	page, err := strconv.ParseInt(c.Param("page"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -29,9 +29,18 @@ func Record(c *gin.Context) {
 		return
 	}
 
-	tid, uid := c.Param("tid"), authObject.Uid
+	_tid, uid := c.Param("tid"), authObject.Uid
+	tid, err := strconv.ParseUint(_tid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
 
-	detail, err := QuestionService.Detail(tid)
+		return
+	}
+
+	detail, err := QuestionService.Detail(uint32(tid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -50,7 +59,7 @@ func Record(c *gin.Context) {
 		return
 	}
 
-	list, err := QuestionService.Record(uid, tid, uint32(page))
+	list, err := QuestionService.Record(uid, uint32(tid), int(page))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -60,7 +69,7 @@ func Record(c *gin.Context) {
 		return
 	}
 
-	count, err := QuestionService.RecordCount(uid, tid)
+	count, err := QuestionService.RecordCount(uid, uint32(tid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -76,7 +85,7 @@ func Record(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"code": 200,
+		"code":    200,
 		"message": response,
 	})
 }

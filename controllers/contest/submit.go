@@ -7,10 +7,29 @@ import (
 	"Rabbit-OJ-Backend/models/forms"
 	ContestService "Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func Submit(c *gin.Context) {
-	cid, tid := c.Param("cid"), c.Param("tid")
+	_cid, _tid := c.Param("cid"), c.Param("tid")
+	cid, err := strconv.ParseUint(_cid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
+	tid, err := strconv.ParseUint(_tid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
 
 	authObject, err := auth.GetAuthObj(c)
 	if err != nil {
@@ -42,7 +61,7 @@ func Submit(c *gin.Context) {
 		return
 	}
 
-	question, err := ContestService.QuestionOne(cid, tid)
+	question, err := ContestService.QuestionOne(uint32(cid), uint32(tid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -82,7 +101,7 @@ func Submit(c *gin.Context) {
 	}
 
 	if err := ContestService.Submit(
-		sid, cid, authObject.Uid,
+		sid, uint32(cid), authObject.Uid,
 		question.Tid,
 		ContestService.CalculateTime(contest)); err != nil {
 

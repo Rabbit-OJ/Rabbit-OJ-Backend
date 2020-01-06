@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func CalculateTime(info *models.Contest) int64 {
+func CalculateTime(info *models.Contest) uint32 {
 	start, curr := time.Time(info.StartTime).Unix(), time.Now().Unix()
-	return curr - start
+	return uint32(curr - start)
 }

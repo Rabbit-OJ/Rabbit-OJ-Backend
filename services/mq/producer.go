@@ -27,7 +27,7 @@ func Publish(exchangeName, routingKey string, body []byte) error {
 		false,
 		false,
 		amqp.Publishing{
-			Body:         body,
+			Body: body,
 		}); err != nil {
 		return err
 	}

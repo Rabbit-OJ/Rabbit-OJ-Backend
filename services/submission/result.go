@@ -17,7 +17,7 @@ func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 		return "", err
 	}
 
-	status, spaceUsed, timeUsed := "AC", float64(0), uint32(0)
+	status, spaceUsed, timeUsed := "AC", uint32(0), uint32(0)
 	for _, res := range judgeResult.Result {
 		spaceUsed += res.SpaceUsed
 		timeUsed += res.TimeUsed
@@ -29,7 +29,7 @@ func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 
 	if caseLen := len(judgeResult.Result); caseLen >= 1 {
 		timeUsed /= uint32(caseLen)
-		spaceUsed /= float64(caseLen)
+		spaceUsed /= uint32(caseLen)
 	}
 
 	caseJson, err := json.Marshal(judgeResult.Result)

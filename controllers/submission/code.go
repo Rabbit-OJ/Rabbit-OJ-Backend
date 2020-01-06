@@ -6,10 +6,20 @@ import (
 	"Rabbit-OJ-Backend/utils/files"
 	"github.com/gin-gonic/gin"
 	"os"
+	"strconv"
 )
 
 func Code(c *gin.Context) {
-	sid := c.Param("sid")
+	_sid := c.Param("sid")
+	sid, err := strconv.ParseUint(_sid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
 
 	authObject, err := auth.GetAuthObj(c)
 	if err != nil {
@@ -21,7 +31,7 @@ func Code(c *gin.Context) {
 		return
 	}
 
-	submission, err := SubmissionService.Detail(sid)
+	submission, err := SubmissionService.Detail(uint32(sid))
 	if err != nil {
 		c.JSON(404, gin.H{
 			"code":    404,

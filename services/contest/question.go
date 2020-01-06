@@ -4,46 +4,51 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
 	"encoding/json"
+	"errors"
 )
 
-func Question(cid string) ([]models.ContestQuestion, error) {
+func Question(cid uint32) ([]models.ContestQuestion, error) {
 	var contestQuestion []models.ContestQuestion
 
 	if err := db.DB.
 		Table("contest_question").
 		Where("cid = ?", cid).
-		Order("id asc").
-		Scan(&contestQuestion).Error; err != nil {
+		Asc("id").Find(&contestQuestion);
+		err != nil {
 		return nil, err
 	}
 
 	return contestQuestion, nil
 }
 
-func QuestionOne(cid, tid string) (*models.ContestQuestion, error) {
+func QuestionOne(cid, tid uint32) (*models.ContestQuestion, error) {
 	var contestQuestion models.ContestQuestion
 
-	if err := db.DB.
+	found, err := db.DB.
 		Table("contest_question").
 		Where("cid = ? AND tid = ?", cid, tid).
-		First(&contestQuestion).Error; err != nil {
+		Get(&contestQuestion)
+
+	if err != nil {
 		return nil, err
+	}
+	if !found {
+		return nil, errors.New("question doesn't exist")
 	}
 
 	return &contestQuestion, nil
 }
 
-func QuestionExtended(cid string) ([]models.ContestQuestionExtended, error) {
+func QuestionExtended(cid uint32) ([]models.ContestQuestionExtended, error) {
 	var contestQuestionExtended []models.ContestQuestionExtended
 
 	if err := db.DB.
 		Table("contest_question").
 		Select("contest_question.*, question.*, question_content.*").
-		Joins("INNER JOIN question ON `contest_question`.`tid` = `question`.`tid`").
-		Joins("INNER JOIN question_content ON `contest_question`.`tid` = `question_content`.`tid`").
+		Join("INNER", "question", "`contest_question`.`tid` = `question`.`tid`").
+		Join("INNER", "question_content", "`contest_question`.`tid` = `question_content`.`tid`").
 		Where("cid = ?", cid).
-		Order("id asc").
-		Scan(&contestQuestionExtended).Error; err != nil {
+		Asc("id").Find(&contestQuestionExtended); err != nil {
 		return nil, err
 	}
 
@@ -57,18 +62,18 @@ func QuestionExtended(cid string) ([]models.ContestQuestionExtended, error) {
 	return contestQuestionExtended, nil
 }
 
-func QuestionMapTidToId(cid string) (map[string]int, []models.ContestQuestion, error) {
+func QuestionMapTidToId(cid uint32) (map[uint32]int, []models.ContestQuestion, error) {
 	var contestQuestion []models.ContestQuestion
 
 	if err := db.DB.
 		Table("contest_question").
 		Where("cid = ?", cid).
-		Order("id asc").
-		Scan(&contestQuestion).Error; err != nil {
+		Asc("id").
+		Find(&contestQuestion); err != nil {
 		return nil, nil, err
 	}
 
-	questionMap := make(map[string]int)
+	questionMap := make(map[uint32]int)
 	for _, item := range contestQuestion {
 		questionMap[item.Tid] = item.Id
 	}

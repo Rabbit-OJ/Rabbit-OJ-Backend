@@ -5,12 +5,22 @@ import (
 	"Rabbit-OJ-Backend/utils/files"
 	"github.com/gin-gonic/gin"
 	"os"
+	"strconv"
 )
 
 func Avatar(c *gin.Context) {
-	uid := c.Param("uid")
+	_uid := c.Param("uid")
+	uid, err := strconv.ParseUint(_uid, 10, 32)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
 
-	avatarPath, _ := files.AvatarPath(uid)
+		return
+	}
+
+	avatarPath, _ := files.AvatarPath(uint32(uid))
 
 	c.Writer.WriteHeader(200)
 	c.Header("Content-Disposition", "attachment; filename=avatar.png")

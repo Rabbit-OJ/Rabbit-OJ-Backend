@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"strconv"
 	"time"
 )
 
@@ -16,8 +17,8 @@ var (
 type Client struct {
 	conn *websocket.Conn
 	send chan []byte
-	cid  string
-	uid  string
+	cid  uint32
+	uid  uint32
 }
 
 func (c *Client) readPump() {
@@ -86,9 +87,21 @@ func (c *Client) writePump() {
 
 func ServeContestWs(contestHub *Hub) func(*gin.Context) {
 	return func(c *gin.Context) {
-		cid, uid := c.Param("cid"), c.Param("uid")
+		_cid, _uid := c.Param("cid"), c.Param("uid")
 
-		state, err := CheckContestState(cid)
+		cid, err := strconv.ParseUint(_cid, 10, 32)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		uid, err := strconv.ParseUint(_uid, 10, 32)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		state, err := CheckContestState(uint32(cid))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -97,7 +110,7 @@ func ServeContestWs(contestHub *Hub) func(*gin.Context) {
 			return
 		}
 
-		participate, err := User(uid, cid)
+		participate, err := User(uint32(uid), uint32(cid))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -112,7 +125,7 @@ func ServeContestWs(contestHub *Hub) func(*gin.Context) {
 			return
 		}
 
-		client := &Client{conn: conn, send: make(chan []byte, 256), cid: cid}
+		client := &Client{conn: conn, send: make(chan []byte, 256), cid: uint32(cid)}
 		contestHub.register <- client
 
 		go client.writePump()
@@ -121,13 +134,13 @@ func ServeContestWs(contestHub *Hub) func(*gin.Context) {
 }
 
 type HubBroadcast struct {
-	Cid     string `json:"cid"`
+	Cid     uint32 `json:"cid"`
 	Type    string `json:"type"`
 	Message string `json:"message"`
 }
 
 type Hub struct {
-	clients    map[string]*Client
+	clients    map[uint32]*Client
 	Broadcast  chan HubBroadcast
 	register   chan *Client
 	unregister chan *Client
@@ -135,7 +148,7 @@ type Hub struct {
 
 func NewContestHub() *Hub {
 	contestHub = &Hub{
-		clients:    make(map[string]*Client),
+		clients:    make(map[uint32]*Client),
 		Broadcast:  make(chan HubBroadcast),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
@@ -144,14 +157,14 @@ func NewContestHub() *Hub {
 	return contestHub
 }
 
-func (h *Hub) removeContestHubClient(uid string) {
+func (h *Hub) removeContestHubClient(uid uint32) {
 	if client, ok := h.clients[uid]; ok {
 		close(client.send)
 		delete(h.clients, uid)
 	}
 }
 
-func (h *Hub) RemoveContestHubAllContest(cid string) {
+func (h *Hub) RemoveContestHubAllContest(cid uint32) {
 	for _, client := range h.clients {
 		if client.cid == cid {
 			close(client.send)

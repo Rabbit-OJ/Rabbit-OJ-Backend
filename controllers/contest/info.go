@@ -3,12 +3,22 @@ package contest
 import (
 	ContestService "Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func Info(c *gin.Context) {
-	cid := c.Param("cid")
+	_cid := c.Param("cid")
+	cid, err := strconv.ParseUint(_cid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
 
-	info, err := ContestService.Info(cid)
+		return
+	}
+
+	info, err := ContestService.Info(uint32(cid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

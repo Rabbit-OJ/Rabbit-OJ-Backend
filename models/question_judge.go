@@ -1,7 +1,7 @@
 package models
 
 type QuestionJudge struct {
-	Tid          string
+	Tid          uint32
 	Mode         string
 	DatasetCount uint32
 	Version      uint32

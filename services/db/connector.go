@@ -1,10 +1,10 @@
 package db
 
 import (
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"xorm.io/xorm"
 )
 
 var (
-	DB *gorm.DB
+	DB *xorm.Engine
 )

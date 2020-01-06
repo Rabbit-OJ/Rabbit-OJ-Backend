@@ -13,11 +13,11 @@ import (
 	"time"
 )
 
-func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo) error {
+func Compiler(sid uint32, codePath string, code []byte, compileInfo *config.CompileInfo) error {
 	vmPath := codePath + "vm/"
-	fmt.Printf("(%s) [Compile] Start %s \n", sid, codePath)
+	fmt.Printf("(%d) [Compile] Start %s \n", sid, codePath)
 
-	fmt.Printf("(%s) [Compile] Touched empty output file for build \n", sid)
+	fmt.Printf("(%d) [Compile] Touched empty output file for build \n", sid)
 	containerConfig := &container.Config{
 		Entrypoint:      compileInfo.BuildArgs,
 		Tty:             true,
@@ -40,7 +40,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 		containerHostConfig.AutoRemove = true
 	}
 
-	fmt.Printf("(%s) [Compile] Creating container \n", sid)
+	fmt.Printf("(%d) [Compile] Creating container \n", sid)
 	resp, err := docker.Client.ContainerCreate(docker.Context,
 		containerConfig,
 		containerHostConfig,
@@ -51,7 +51,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 		return err
 	}
 
-	fmt.Printf("(%s) [Compile] Copying files to container \n", sid)
+	fmt.Printf("(%d) [Compile] Copying files to container \n", sid)
 	io, err := files.ConvertToTar([]files.TarFileBasicInfo{{path.Base(compileInfo.Source), code}})
 	if err != nil {
 		return err
@@ -69,15 +69,15 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 		return err
 	}
 
-	fmt.Printf("(%s) [Compile] Running container \n", sid)
+	fmt.Printf("(%d) [Compile] Running container \n", sid)
 	if err := docker.Client.ContainerStart(docker.Context, resp.ID, types.ContainerStartOptions{}); err != nil {
-		fmt.Printf("(%s) %+v \n", sid, err)
+		fmt.Printf("(%d) %+v \n", sid, err)
 		return err
 	}
 
 	docker.ContainerErrToStdErr(resp.ID)
 	statusCh, errCh := docker.Client.ContainerWait(docker.Context, resp.ID, container.WaitConditionNotRunning)
-	fmt.Printf("(%s) [Compile] Waiting for status \n", sid)
+	fmt.Printf("(%d) [Compile] Waiting for status \n", sid)
 	select {
 	case err := <-errCh:
 		return err
@@ -85,7 +85,7 @@ func Compiler(sid, codePath string, code []byte, compileInfo *config.CompileInfo
 		if err := checkBuildResult(vmPath + path.Base(compileInfo.BuildTarget)); err != nil {
 			return err
 		}
-		fmt.Printf("(%s) %+v \n", sid, status)
+		fmt.Printf("(%d) %+v \n", sid, status)
 		break
 	case <-time.After(time.Duration(compileInfo.Constraints.BuildTimeout) * time.Second):
 		go docker.ForceContainerRemove(resp.ID)

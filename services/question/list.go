@@ -6,23 +6,19 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 )
 
-func List(page uint32, showHide bool) ([]models.Question, error) {
+func List(page int, showHide bool) ([]models.Question, error) {
 	var list []models.Question
 	var err error
 
 	if showHide {
 		err = db.DB.Table("question").
-			Order("tid asc").
-			Limit(config.PageSize).
-			Offset((page - 1) * config.PageSize).
-			Scan(&list).Error
+			Asc("tid").Limit(config.PageSize, (page-1)*config.PageSize).
+			Find(&list)
 	} else {
 		err = db.DB.Table("question").
 			Where("hide = ?", 0).
-			Order("tid asc").
-			Limit(config.PageSize).
-			Offset((page - 1) * config.PageSize).
-			Scan(&list).Error
+			Asc("tid").Limit(config.PageSize, (page-1)*config.PageSize).
+			Find(&list)
 	}
 
 	if err != nil {
@@ -31,16 +27,16 @@ func List(page uint32, showHide bool) ([]models.Question, error) {
 	return list, nil
 }
 
-func ListCount(showHide bool) (uint32, error) {
-	count := uint32(0)
+func ListCount(showHide bool) (int64, error) {
 	var err error
+	var count int64
 
 	if showHide {
-		err = db.DB.Table("question").Count(&count).Error
+		count, err = db.DB.Table("question").Count()
 	} else {
-		err = db.DB.Table("question").
+		count, err = db.DB.Table("question").
 			Where("hide = ?", 0).
-			Count(&count).Error
+			Count()
 	}
 
 	if err != nil {

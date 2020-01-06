@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	ContestService "Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func SubmissionList(c *gin.Context) {
@@ -17,8 +18,18 @@ func SubmissionList(c *gin.Context) {
 		return
 	}
 
-	cid := c.Param("cid")
-	submissionList, err := ContestService.SubmissionList(authObject.Uid, cid)
+	_cid := c.Param("cid")
+	cid, err := strconv.ParseUint(_cid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	submissionList, err := ContestService.SubmissionList(authObject.Uid, uint32(cid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

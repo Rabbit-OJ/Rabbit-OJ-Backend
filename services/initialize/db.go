@@ -5,18 +5,16 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 	"context"
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"xorm.io/xorm"
 )
 
 func DB(globalContext context.Context) {
 	connStr := config.Global.MySQL
-	conn, err := gorm.Open("mysql", connStr)
-
+	conn, err := xorm.NewEngine("mysql", connStr)
 	if err != nil {
 		panic(err)
 	}
 
-	conn.SingularTable(true)
 	db.DB = conn
 
 	go func() {

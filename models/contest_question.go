@@ -5,18 +5,18 @@ import (
 )
 
 type ContestQuestion struct {
-	Cid   string `json:"cid"`
-	Tid   string `json:"tid"`
+	Cid   uint32 `json:"cid"`
+	Tid   uint32 `json:"tid"`
 	Id    int    `json:"id"`
 	Score uint32 `json:"score"`
 }
 
 type ContestQuestionExtended struct {
-	Cid        string    `json:"cid"`
-	Tid        string    `json:"tid"`
+	Cid        uint32    `json:"cid"`
+	Tid        uint32    `json:"tid"`
 	Id         int       `json:"id"`
 	Score      uint32    `json:"score"`
-	Uid        string    `json:"uid"`
+	Uid        uint32    `json:"uid"`
 	Subject    string    `json:"subject"`
 	Difficulty uint8     `json:"difficulty"`
 	TimeLimit  uint32    `json:"time_limit"`

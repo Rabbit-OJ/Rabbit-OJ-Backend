@@ -4,10 +4,20 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func Register(c *gin.Context) {
-	cid, operation := c.Param("cid"), c.Param("operation")
+	_cid, operation := c.Param("cid"), c.Param("operation")
+	cid, err := strconv.ParseUint(_cid, 32, 10)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
 
 	authObject, err := auth.GetAuthObj(c)
 	if err != nil {
@@ -28,7 +38,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	contestInfo, err := contest.Info(cid)
+	contestInfo, err := contest.Info(uint32(cid))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -48,7 +58,7 @@ func Register(c *gin.Context) {
 	}
 
 	uid := authObject.Uid
-	userIsRegistered, err := contest.IsRegistered(uid, cid)
+	userIsRegistered, err := contest.IsRegistered(uid, uint32(cid))
 	if operation == "cancel" && !userIsRegistered {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -67,7 +77,7 @@ func Register(c *gin.Context) {
 	}
 
 	if operation == "reg" {
-		if err := contest.Register(uid, cid); err != nil {
+		if err := contest.Register(uid, uint32(cid)); err != nil {
 			c.JSON(400, gin.H{
 				"code":    400,
 				"message": err.Error(),
@@ -82,7 +92,7 @@ func Register(c *gin.Context) {
 	}
 
 	if operation == "cancel" {
-		if err := contest.Unregister(uid, cid); err != nil {
+		if err := contest.Unregister(uid, uint32(cid)); err != nil {
 			c.JSON(400, gin.H{
 				"code":    400,
 				"message": err.Error(),
