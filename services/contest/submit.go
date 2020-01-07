@@ -3,6 +3,7 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"time"
 	"xorm.io/xorm"
 )
 
@@ -20,6 +21,7 @@ func Submit(sid, cid, uid, tid, totalTime uint32) error {
 		Tid:       tid,
 		Status:    StatusPending,
 		TotalTime: totalTime,
+		CreatedAt: time.Now(),
 	}
 
 	_, err := db.DB.Table("contest_submission").Insert(&contestSubmission)

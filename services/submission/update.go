@@ -5,7 +5,7 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 )
 
-func Update(sid, timeUsed, spaceUsed uint32, status string, judge []byte) error {
+func Update(sid, timeUsed, spaceUsed uint32, status string, judge []models.JudgeResult) error {
 	updateObj := models.Submission{
 		TimeUsed:  timeUsed,
 		SpaceUsed: spaceUsed,

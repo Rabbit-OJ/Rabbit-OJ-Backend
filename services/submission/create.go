@@ -4,7 +4,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
 	"Rabbit-OJ-Backend/services/question"
-	"encoding/json"
+	"time"
 )
 
 func Create(tid, uid uint32, language, fileName string) (*models.Submission, error) {
@@ -18,20 +18,16 @@ func Create(tid, uid uint32, language, fileName string) (*models.Submission, err
 		judgeArr[i].Status = "ING"
 	}
 
-	judgeJSON, err := json.Marshal(judgeArr)
-	if err != nil {
-		return nil, err
-	}
-
 	submission := models.Submission{
 		Tid:       tid,
 		Uid:       uid,
 		Language:  language,
 		FileName:  fileName,
-		Judge:     judgeJSON,
+		Judge:     judgeArr,
 		Status:    "ING",
 		TimeUsed:  0,
 		SpaceUsed: 0,
+		CreatedAt: time.Now(),
 	}
 
 	_, err = db.DB.Table("submission").Insert(&submission)

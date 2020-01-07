@@ -5,16 +5,16 @@ import (
 )
 
 type Submission struct {
-	Sid       uint32    `xorm:"autoincr" json:"sid"`
-	Tid       uint32    `json:"tid"`
-	Uid       uint32    `json:"uid"`
-	Status    string    `json:"status"`
-	Judge     []byte    `json:"-"`
-	Language  string    `json:"language"`
-	FileName  string    `json:"-"`
-	TimeUsed  uint32    `json:"time_used"`
-	SpaceUsed uint32    `json:"space_used"`
-	CreatedAt time.Time `json:"created_at"`
+	Sid       uint32        `xorm:"autoincr" json:"sid"`
+	Tid       uint32        `json:"tid"`
+	Uid       uint32        `json:"uid"`
+	Status    string        `json:"status"`
+	Judge     []JudgeResult `json:"judge"`
+	Language  string        `json:"language"`
+	FileName  string        `json:"-"`
+	TimeUsed  uint32        `json:"time_used"`
+	SpaceUsed uint32        `json:"space_used"`
+	CreatedAt time.Time     `json:"created_at"`
 }
 
 type SubmissionExtended struct {
@@ -23,8 +23,7 @@ type SubmissionExtended struct {
 	QuestionTitle string        `json:"question_title"`
 	Uid           uint32        `json:"uid"`
 	Status        string        `json:"status"`
-	Judge         []byte        `json:"-"`
-	JudgeObj      []JudgeResult `gorm:"-" json:"judge"`
+	Judge         []JudgeResult `json:"judge"`
 	Language      string        `json:"language"`
 	FileName      string        `json:"-"`
 	TimeUsed      uint32        `json:"time_used"`

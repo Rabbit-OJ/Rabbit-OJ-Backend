@@ -3,6 +3,7 @@ package question
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"time"
 	"xorm.io/xorm"
 )
 
@@ -16,6 +17,7 @@ func Create(uid uint32, subject, content string, difficulty uint8, timeLimit, sp
 			Difficulty: difficulty,
 			TimeLimit:  timeLimit,
 			SpaceLimit: spaceLimit,
+			CreatedAt:  time.Now(),
 		}
 
 		if _, err := session.Table("question").Insert(&questionOverview); err != nil {

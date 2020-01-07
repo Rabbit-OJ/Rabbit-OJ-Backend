@@ -6,7 +6,7 @@ import (
 	"errors"
 )
 
-func Content(tid string) (*models.QuestionContent, error) {
+func Content(tid uint32) (*models.QuestionContent, error) {
 	content := models.QuestionContent{}
 
 	found, err := db.DB.Where("tid = ?", tid).Get(&content)

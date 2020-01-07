@@ -120,7 +120,7 @@ func handleCheck() {
 			Where("status = ? AND created_at <= ?", "ING", someMinutesBefore).
 			Update(&models.Submission{
 				Status: "NO",
-				Judge:  []byte("[]"),
+				Judge:  []models.JudgeResult{},
 			}); err != nil {
 
 			fmt.Println(err)
@@ -134,7 +134,7 @@ func batchRejectSubmission(sidList []uint32) {
 		Update(
 			&models.Submission{
 				Status: "NO",
-				Judge:  []byte("[]"),
+				Judge:  []models.JudgeResult{},
 			}); err != nil {
 
 		fmt.Println(err)

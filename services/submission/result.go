@@ -1,10 +1,10 @@
 package submission
 
 import (
+	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/question"
 	"Rabbit-OJ-Backend/services/user"
-	"encoding/json"
 )
 
 func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
@@ -32,12 +32,16 @@ func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 		spaceUsed /= uint32(caseLen)
 	}
 
-	caseJson, err := json.Marshal(judgeResult.Result)
-	if err != nil {
-		return "", err
+	resultObj := make([]models.JudgeResult, len(judgeResult.Result))
+	for i, item := range judgeResult.Result {
+		resultObj[i] = models.JudgeResult{
+			Status:    item.Status,
+			TimeUsed:  item.TimeUsed,
+			SpaceUsed: item.SpaceUsed,
+		}
 	}
 
-	if err := Update(judgeResult.Sid, timeUsed, spaceUsed, status, caseJson); err != nil {
+	if err := Update(judgeResult.Sid, timeUsed, spaceUsed, status, resultObj); err != nil {
 		return "", err
 	}
 

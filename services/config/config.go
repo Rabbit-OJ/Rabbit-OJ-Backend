@@ -26,6 +26,11 @@ type extensions struct {
 	AutoPull   bool       `json:"auto_pull"`
 	CheckJudge checkJudge `json:"check_judge"`
 	Expire     expire     `json:"expire"`
+	Debug      debug      `json:"debug"`
+}
+type debug struct {
+	Sql bool `json:"sql"`
+	Gin bool `json:"gin"`
 }
 type expire struct {
 	Enabled  bool  `json:"enabled"`

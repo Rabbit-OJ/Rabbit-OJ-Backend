@@ -12,10 +12,10 @@ type ScoreBoard struct {
 type ScoreBoardProgress struct {
 	Status    int    `json:"status"`
 	Bug       uint32 `json:"bug"`
-	TotalTime uint32  `json:"total_time"`
+	TotalTime uint32 `json:"total_time"`
 }
 
 type ScoreBoardResponse struct {
 	List  []*ScoreBoard `json:"list"`
-	Count uint32       `json:"count"`
+	Count uint32        `json:"count"`
 }

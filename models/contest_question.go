@@ -23,6 +23,5 @@ type ContestQuestionExtended struct {
 	SpaceLimit uint32    `json:"space_limit"`
 	CreatedAt  time.Time `json:"created_at"`
 	Content    string    `json:"content"`
-	Sample     []byte    `json:"-"`
-	SampleJSON []Sample  `json:"sample",gorm:"-"`
+	Sample     []Sample  `json:"sample"`
 }

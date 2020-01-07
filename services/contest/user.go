@@ -6,7 +6,7 @@ import (
 	"xorm.io/xorm"
 )
 
-func RegenerateUserScore(session *xorm.Session, cid, uid uint32) error {
+func RegenerateUserScore(session *xorm.Session, cid, uid uint32, isAccepted bool) error {
 	contestInfo, err := Info(cid)
 	if err != nil {
 		return err
@@ -57,13 +57,15 @@ func RegenerateUserScore(session *xorm.Session, cid, uid uint32) error {
 		}
 	}
 
-	if _, err := session.Table("contest_user").
-		Where("cid = ? AND uid = ?", cid, uid).
-		Update(&models.ContestUser{
-			Score:     score,
-			TotalTime: totalTime,
-		}); err != nil {
-		return err
+	if isAccepted {
+		if _, err := session.Table("contest_user").
+			Where("cid = ? AND uid = ?", cid, uid).
+			Update(&models.ContestUser{
+				Score:     score,
+				TotalTime: totalTime,
+			}); err != nil {
+			return err
+		}
 	}
 
 	return nil

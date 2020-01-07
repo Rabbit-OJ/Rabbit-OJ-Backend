@@ -17,6 +17,10 @@
     "expire": {
       "enabled": false,
       "interval": 10
+    },
+    "debug": {
+      "sql": false,
+      "gin": false
     }
   },
   "concurrent": {

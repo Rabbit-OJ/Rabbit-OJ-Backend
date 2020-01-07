@@ -76,7 +76,8 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 
 	var contestSubmissionList []models.ContestSubmission
 	if err := db.DB.Table("contest_submission").
-		Where("cid = ? AND uid IN (?)", cid, uidList).
+		Where("cid = ?", cid).
+		In("uid", uidList).
 		Find(&contestSubmissionList); err != nil {
 		return nil, err
 	}

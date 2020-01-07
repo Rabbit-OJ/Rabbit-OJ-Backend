@@ -76,7 +76,7 @@ func FetchTestCase(tid uint32, storage []Storage) (*Storage, error) {
 
 	request, response := &protobuf.TestCaseRequest{Tid: tid}, &protobuf.TestCaseResponse{}
 
-	fmt.Printf("[Test Case] Preparing rpc to fetch case %d \n" , tid)
+	fmt.Printf("[Test Case] Preparing rpc to fetch case %d \n", tid)
 	if err := rpc.DialCall("CaseService", "Case", request, response); err != nil {
 		fmt.Println(err)
 		return nil, err

@@ -82,12 +82,8 @@ func callbackSuccess(sid uint32, isContest bool, resultList []*protobuf.JudgeCas
 	}()
 }
 
-func callbackWebSocket(sid uint32, isContest, accepted bool) {
+func callbackWebSocket(sid uint32) {
 	judgeHub.Broadcast <- sid
-
-	if isContest {
-		callbackContest(sid, accepted)
-	}
 }
 
 func callbackContest(sid uint32, isAccepted bool) {
@@ -108,7 +104,9 @@ func callbackContest(sid uint32, isAccepted bool) {
 			return nil, err
 		}
 
-		if err := contest.RegenerateUserScore(session, submissionInfo.Cid, submissionInfo.Uid); err != nil {
+		if err := contest.RegenerateUserScore(session,
+			submissionInfo.Cid, submissionInfo.Uid,
+			isAccepted); err != nil {
 			return nil, err
 		}
 
