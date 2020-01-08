@@ -13,6 +13,7 @@ func Router(baseRouter *gin.Engine) {
 	contestRouter.POST("/submit/:cid/:tid", middlewares.AuthJWT(true), middlewares.CheckContest, Submit)
 	contestRouter.GET("/submission/list/:cid", middlewares.TryAuthJWT(), SubmissionList)
 	contestRouter.GET("/clarify/:cid", middlewares.TryAuthJWT(), middlewares.CheckContest, Clarify)
+	contestRouter.POST("/clarify/add", middlewares.AuthJWT(true), ClarifyAdd)
 	contestRouter.GET("/question/:cid", middlewares.TryAuthJWT(), middlewares.CheckContest, Question)
 	contestRouter.POST("/register/:cid/:operation", middlewares.AuthJWT(true), Register)
 	contestRouter.GET("/my/info/:cid", middlewares.AuthJWT(true), middlewares.CheckContest, MyInfo)

@@ -51,13 +51,6 @@ func QuestionExtended(cid uint32) ([]models.ContestQuestionExtended, error) {
 		return nil, err
 	}
 
-	//for i := range contestQuestionExtended {
-	//	samplePtr := &contestQuestionExtended[i].SampleJSON
-	//	if err := json.Unmarshal(contestQuestionExtended[i].Sample, samplePtr); err != nil {
-	//		return nil, err
-	//	}
-	//}
-
 	return contestQuestionExtended, nil
 }
 

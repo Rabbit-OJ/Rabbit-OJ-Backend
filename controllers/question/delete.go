@@ -18,7 +18,7 @@ func Delete(c *gin.Context) {
 	}
 
 	_tid := c.Param("tid")
-	tid, err := strconv.ParseUint(_tid, 32, 10)
+	tid, err := strconv.ParseUint(_tid, 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

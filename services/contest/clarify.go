@@ -3,6 +3,7 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
+	"time"
 )
 
 func ClarifyList(cid string) ([]models.ContestClarify, error) {
@@ -17,10 +18,11 @@ func ClarifyList(cid string) ([]models.ContestClarify, error) {
 	return list, nil
 }
 
-func ClarifyCreate(cid, message string) (uint32, error) {
+func ClarifyCreate(cid uint32, message string) (uint32, error) {
 	clarify := models.ContestClarify{
-		Cid:     cid,
-		Message: message,
+		Cid:       cid,
+		Message:   message,
+		CreatedAt: time.Now(),
 	}
 
 	if _, err := db.DB.Table("contest_clarify").

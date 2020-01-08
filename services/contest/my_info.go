@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func User(uid, cid uint32) (*models.ContestUser, error) {
+func User(uid, cid uint32) (*models.ContestUser, bool, error) {
 	contestUser := models.ContestUser{}
 
 	found, err := db.DB.Table("contest_user").
@@ -16,13 +16,13 @@ func User(uid, cid uint32) (*models.ContestUser, error) {
 		Get(&contestUser)
 
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if !found {
-		return nil, errors.New("user not registered")
+		return nil, false, nil
 	}
 
-	return &contestUser, nil
+	return &contestUser, true, nil
 }
 
 func QueryUserRank(uid, cid uint32) (uint32, error) {
@@ -49,15 +49,20 @@ func QueryUserRank(uid, cid uint32) (uint32, error) {
 
 func MyInfo(uid, cid uint32, contest *models.Contest) (*responses.ContestMyInfo, error) {
 	contestMyInfo := responses.ContestMyInfo{
-		Rank:      0,
-		TotalTime: 0,
-		Score:     0,
-		Progress:  make([]responses.ScoreBoardProgress, contest.Count),
+		Rank:       0,
+		TotalTime:  0,
+		Score:      0,
+		Progress:   make([]responses.ScoreBoardProgress, contest.Count),
+		Registered: true,
 	}
 
-	contestUser, err := User(uid, cid)
+	contestUser, found, err := User(uid, cid)
 	if err != nil {
 		return nil, err
+	}
+	if !found {
+		contestMyInfo.Registered = false
+		return &contestMyInfo, nil
 	}
 
 	contestMyInfo.TotalTime, contestMyInfo.Score = contestUser.TotalTime, contestUser.Score

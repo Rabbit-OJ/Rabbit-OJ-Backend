@@ -110,7 +110,7 @@ func ServeContestWs(contestHub *Hub) func(*gin.Context) {
 			return
 		}
 
-		participate, err := User(uint32(uid), uint32(cid))
+		participate, _, err := User(uint32(uid), uint32(cid))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -141,7 +141,8 @@ type HubBroadcast struct {
 
 type Hub struct {
 	clients    map[uint32]*Client
-	Broadcast  chan HubBroadcast
+	EndContest chan uint32
+	Broadcast  chan *HubBroadcast
 	register   chan *Client
 	unregister chan *Client
 }
@@ -149,7 +150,8 @@ type Hub struct {
 func NewContestHub() *Hub {
 	contestHub = &Hub{
 		clients:    make(map[uint32]*Client),
-		Broadcast:  make(chan HubBroadcast),
+		Broadcast:  make(chan *HubBroadcast),
+		EndContest: make(chan uint32),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 	}
@@ -195,6 +197,12 @@ func (h *Hub) Run() {
 			for _, item := range h.clients {
 				if item.cid == broadcast.Cid {
 					item.send <- jsonByte
+				}
+			}
+		case cid := <-h.EndContest:
+			for _, item := range h.clients {
+				if item.cid == cid {
+					h.removeContestHubClient(item.uid	)
 				}
 			}
 		}

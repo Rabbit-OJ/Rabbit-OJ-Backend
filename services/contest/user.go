@@ -3,6 +3,8 @@ package contest
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/responses"
+	"Rabbit-OJ-Backend/services/db"
+	"fmt"
 	"xorm.io/xorm"
 )
 
@@ -58,13 +60,13 @@ func RegenerateUserScore(session *xorm.Session, cid, uid uint32, isAccepted bool
 	}
 
 	if isAccepted {
-		if _, err := session.Table("contest_user").
+		if _, err := db.DB.Table("contest_user").
 			Where("cid = ? AND uid = ?", cid, uid).
 			Update(&models.ContestUser{
 				Score:     score,
 				TotalTime: totalTime,
 			}); err != nil {
-			return err
+			fmt.Println(err)
 		}
 	}
 

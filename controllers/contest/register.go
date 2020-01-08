@@ -9,7 +9,7 @@ import (
 
 func Register(c *gin.Context) {
 	_cid, operation := c.Param("cid"), c.Param("operation")
-	cid, err := strconv.ParseUint(_cid, 32, 10)
+	cid, err := strconv.ParseUint(_cid, 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -48,10 +48,10 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if contestInfo.Status != contest.RoundWaiting {
+	if contestInfo.Status != contest.RoundWaiting && contestInfo.Status != contest.RoundStarting {
 		c.JSON(400, gin.H{
 			"code":    400,
-			"message": "Contest NOT Pending!",
+			"message": "Contest already ended!",
 		})
 
 		return

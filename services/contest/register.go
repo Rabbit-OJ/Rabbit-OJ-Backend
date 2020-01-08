@@ -5,12 +5,14 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 	"errors"
 	"fmt"
+	"time"
 )
 
 func Register(uid, cid uint32) error {
 	contestUser := models.ContestUser{
-		Cid: cid,
-		Uid: uid,
+		Cid:       cid,
+		Uid:       uid,
+		CreatedAt: time.Now(),
 	}
 
 	if _, err := db.DB.Table("contest_user").Insert(&contestUser);

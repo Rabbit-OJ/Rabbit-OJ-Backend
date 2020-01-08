@@ -19,7 +19,7 @@ func SubmissionList(c *gin.Context) {
 	}
 
 	_cid := c.Param("cid")
-	cid, err := strconv.ParseUint(_cid, 32, 10)
+	cid, err := strconv.ParseUint(_cid, 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

@@ -8,7 +8,7 @@ import (
 
 func Detail(c *gin.Context) {
 	_sid := c.Param("sid")
-	sid, err := strconv.ParseUint(_sid, 32, 10)
+	sid, err := strconv.ParseUint(_sid, 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
