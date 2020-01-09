@@ -5,7 +5,6 @@ import (
 	"Rabbit-OJ-Backend/models/responses"
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/db"
-	"errors"
 	"strconv"
 	"time"
 )
@@ -20,22 +19,22 @@ func InBlockTime(cid uint32) (bool, error) {
 	return time.Time(contest.BlockTime).Unix() <= now && now <= time.Time(contest.EndTime).Unix(), nil
 }
 
-func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, error) {
+func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, bool, error) {
 	scoreBoard := make([]*responses.ScoreBoard, 0)
 	cid := contest.Cid
 
 	inBlockTime, err := InBlockTime(cid)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	if inBlockTime {
-		return nil, errors.New("rank blocked")
+		return nil, true, nil
 	}
 
 	questionMapTidToId, _, err := QuestionMapTidToId(cid)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	results, err := db.DB.QueryString("SELECT `user`.username, `user`.uid, `rank`, score, total_time FROM ( "+
@@ -64,7 +63,7 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 	}
 
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	uidList, mapUidToIndex := make([]uint32, len(scoreBoard)), make(map[uint32]int)
@@ -79,7 +78,7 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 		Where("cid = ?", cid).
 		In("uid", uidList).
 		Find(&contestSubmissionList); err != nil {
-		return nil, err
+		return nil,false,  err
 	}
 
 	// calc Number
@@ -109,5 +108,5 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 		}
 	}
 
-	return scoreBoard, nil
+	return scoreBoard,false,  nil
 }

@@ -48,7 +48,7 @@ func ScoreBoard(c *gin.Context) {
 		return
 	}
 
-	scoreBoard, err := contest.ScoreBoard(contestInfo, uint32(page))
+	scoreBoard, blocked, err := contest.ScoreBoard(contestInfo, uint32(page))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -57,12 +57,25 @@ func ScoreBoard(c *gin.Context) {
 
 		return
 	}
+	if blocked {
+		c.JSON(200, gin.H{
+			"code": 200,
+			"message": responses.ScoreBoardResponse{
+				List:    make([]*responses.ScoreBoard, 0),
+				Count:   contestInfo.Participants,
+				Blocked: true,
+			},
+		})
+
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"code": 200,
 		"message": responses.ScoreBoardResponse{
-			List:  scoreBoard,
-			Count: contestInfo.Participants,
+			List:    scoreBoard,
+			Count:   contestInfo.Participants,
+			Blocked: false,
 		},
 	})
 }

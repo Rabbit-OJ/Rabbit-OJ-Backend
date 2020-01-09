@@ -38,3 +38,10 @@ func SubmissionInfo(session *xorm.Session, sid uint32) (*models.ContestSubmissio
 
 	return &contestSubmission, nil
 }
+
+func SubmissionOne(sid uint32) (*models.ContestSubmission, error) {
+	session := db.DB.NewSession()
+	defer session.Close()
+
+	return SubmissionInfo(session, sid)
+}

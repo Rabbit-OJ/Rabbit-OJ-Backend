@@ -16,6 +16,7 @@ type ScoreBoardProgress struct {
 }
 
 type ScoreBoardResponse struct {
-	List  []*ScoreBoard `json:"list"`
-	Count uint32        `json:"count"`
+	List    []*ScoreBoard `json:"list"`
+	Count   uint32        `json:"count"`
+	Blocked bool          `json:"blocked"`
 }
