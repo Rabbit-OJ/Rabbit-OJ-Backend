@@ -109,12 +109,12 @@ func MyInfo(uid, cid uint32, contest *models.Contest) (*responses.ContestMyInfo,
 		}
 	}
 
-	// calc penalty
-	for j := range contestMyInfo.Progress {
-		if contestMyInfo.Progress[j].Status == StatusAC {
-			contestMyInfo.Progress[j].TotalTime += contestMyInfo.Progress[j].Bug * contest.Penalty
-		}
-	}
+	//// calc penalty
+	//for j := range contestMyInfo.Progress {
+	//	if contestMyInfo.Progress[j].Status == StatusAC {
+	//		contestMyInfo.Progress[j].TotalTime += contestMyInfo.Progress[j].Bug * contest.Penalty
+	//	}
+	//}
 
 	return &contestMyInfo, nil
 }

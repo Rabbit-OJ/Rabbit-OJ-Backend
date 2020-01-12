@@ -99,14 +99,13 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 		}
 	}
 
-	// calc penalty
-	for i := range scoreBoard {
-		for j := range scoreBoard[i].Progress {
-			if scoreBoard[i].Progress[j].Status == StatusAC {
-				scoreBoard[i].Progress[j].TotalTime += scoreBoard[i].Progress[j].Bug * contest.Penalty
-			}
-		}
-	}
-
+	//// calc penalty
+	//for i := range scoreBoard {
+	//	for j := range scoreBoard[i].Progress {
+	//		if scoreBoard[i].Progress[j].Status == StatusAC {
+	//			scoreBoard[i].Progress[j].TotalTime += scoreBoard[i].Progress[j].Bug * contest.Penalty
+	//		}
+	//	}
+	//}
 	return scoreBoard,false,  nil
 }

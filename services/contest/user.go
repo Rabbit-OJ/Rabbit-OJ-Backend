@@ -46,19 +46,21 @@ func RegenerateUserScore(session *xorm.Session, cid, uid uint32, isAccepted bool
 		}
 	}
 
-	score, totalTime := uint32(0), uint32(0)
+	score, totalTime, totalBugs := uint32(0), uint32(0), uint32(0)
 	// calc penalty
 	for i, item := range progress {
 		if item.Status == StatusAC {
 			score += contestQuestion[i].Score
 
-			currentTime := item.TotalTime + contestInfo.Penalty*item.Bug
+			currentTime := item.TotalTime
+			totalBugs += item.Bug
 			if currentTime > totalTime {
 				totalTime = currentTime
 			}
 		}
 	}
 
+	totalTime += totalBugs * contestInfo.Penalty
 	if isAccepted {
 		if _, err := db.DB.Table("contest_user").
 			Where("cid = ? AND uid = ?", cid, uid).
