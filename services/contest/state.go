@@ -15,13 +15,8 @@ const (
 )
 
 var (
-	FinishLock sync.Mutex
+	DoingMap sync.Map
 )
-
-func ChangeContestState(cid uint32, status int) error {
-	_, err := db.DB.Exec("UPDATE contest SET status = ? WHERE cid = ?", status, cid)
-	return err
-}
 
 func CheckContestState(cid uint32) (int, error) {
 	contest, err := Info(cid)
@@ -40,14 +35,6 @@ func CheckContestState(cid uint32) (int, error) {
 	return -1, errors.New("contest arguments error")
 }
 
-func Start(cid uint32) error {
-	if err := ChangeContestState(cid, Running); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func HavePendingSubmission(cid uint32) (bool, error) {
 	count, err := db.DB.Table("contest_submission").
 		Select("1").
@@ -62,8 +49,14 @@ func HavePendingSubmission(cid uint32) (bool, error) {
 }
 
 func Finish(cid uint32) error {
-	FinishLock.Lock()
-	defer FinishLock.Unlock()
+	if _, ok := DoingMap.Load(cid); ok {
+		return nil
+	}
+
+	DoingMap.Store(cid, 1)
+	defer func() {
+		DoingMap.Delete(cid)
+	}()
 
 	contestHub.RemoveContestHubAllContest(cid)
 	for {
@@ -80,8 +73,10 @@ func Finish(cid uint32) error {
 		time.Sleep(15 * time.Second)
 	}
 
-	if err := ChangeContestState(cid, Finished); err != nil {
+	if err := UpdateContestStatus(cid, RoundEnd); err != nil {
 		return err
 	}
+
+	fmt.Printf("[Contest] #%d Ended \n", cid)
 	return nil
 }

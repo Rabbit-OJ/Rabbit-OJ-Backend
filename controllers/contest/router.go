@@ -16,7 +16,7 @@ func Router(baseRouter *gin.Engine) {
 	contestRouter.GET("/clarify/:cid", middlewares.TryAuthJWT(), middlewares.CheckContest, Clarify)
 	contestRouter.POST("/clarify/add", middlewares.AuthJWT(true), ClarifyAdd)
 	contestRouter.GET("/question/:cid", middlewares.TryAuthJWT(), middlewares.CheckContest, Question)
-	contestRouter.POST("/register/:cid/:operation", middlewares.AuthJWT(true), Register)
+	contestRouter.POST("/register/:cid/:operation", middlewares.AuthJWT(true), middlewares.CheckContest, Register)
 	contestRouter.GET("/my/info/:cid", middlewares.AuthJWT(true), middlewares.CheckContest, MyInfo)
 	contestRouter.GET("/scoreboard/:cid/:page", ScoreBoard)
 }
