@@ -35,6 +35,18 @@ func Info(cid uint32) (*models.Contest, error) {
 }
 
 func UpdateInfo(contest *models.Contest) error {
+	defer func() {
+		if contest.Status == RoundCalculating {
+			fmt.Printf("[Contest] #%d Calculating \n", contest.Cid)
+			go func() {
+				err := Finish(contest.Cid)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}()
+		}
+	}()
+
 	if contest.Status == RoundCalculating || contest.Status == RoundEnd {
 		return nil
 	}
@@ -52,16 +64,9 @@ func UpdateInfo(contest *models.Contest) error {
 
 		if contest.Status == RoundWaiting {
 			fmt.Printf("[Contest] #%d Starting \n", contest.Cid)
-		} else if contest.Status == RoundCalculating {
-			fmt.Printf("[Contest] #%d Calculating \n", contest.Cid)
-			go func() {
-				err := Finish(contest.Cid)
-				if err != nil {
-					fmt.Println(err)
-				}
-			}()
 		}
 	}
+
 	return nil
 }
 

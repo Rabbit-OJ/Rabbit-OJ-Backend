@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/db"
 	"errors"
+	"strconv"
 	"xorm.io/xorm"
 )
 
@@ -44,4 +45,43 @@ func SubmissionOne(sid uint32) (*models.ContestSubmission, error) {
 	defer session.Close()
 
 	return SubmissionInfo(session, sid)
+}
+
+func IsContestSubmission(sid uint32) (bool, error) {
+	var contestSubmission models.ContestSubmission
+
+	found, err := db.DB.
+		Table("contest_submission").
+		Where("sid = ?", sid).
+		Get(&contestSubmission)
+
+	if err != nil {
+		return false, err
+	}
+	if !found {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func BatchIsContestSubmission(sidList []uint32) ([]uint32, error) {
+	if resultMap, err := db.DB.Table("contest_submission").
+		Select("sid").
+		In("sid", sidList).
+		QueryString(); err != nil {
+		return nil, err
+	} else {
+		contestSidList := make([]uint32, len(resultMap))
+		for i, item := range resultMap {
+			sid, err := strconv.ParseUint(item["sid"], 10, 32)
+			if err != nil {
+				return nil, err
+			}
+
+			contestSidList[i] = uint32(sid)
+		}
+
+		return contestSidList, nil
+	}
 }

@@ -55,7 +55,6 @@ func Runner(
 			files.DockerHostConfigBinds(outputPath, "/output"),
 		},
 	}
-	// todo : limit memory usage
 
 	if !compileInfo.NoBuild {
 		containerHostConfig.Binds = append(containerHostConfig.Binds,

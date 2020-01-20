@@ -28,7 +28,7 @@ func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
 
 	if config.Global.Extensions.Expire.Enabled &&
 		judgeRequest.Time-time.Now().Unix() > config.Global.Extensions.CheckJudge.Interval*int64(time.Minute) {
-		fmt.Printf("[Bridge] Received expired judge %s , will ignore this\n", judgeRequest.Sid)
+		fmt.Printf("[Bridge] Received expired judge %d , will ignore this\n", judgeRequest.Sid)
 
 		if err := delivery.Ack(false); err != nil {
 			fmt.Println(err)
