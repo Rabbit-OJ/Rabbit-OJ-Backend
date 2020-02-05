@@ -27,7 +27,7 @@ func Edit(c *gin.Context) {
 	}
 
 	tid := c.Param("tid")
-	if err := QuestionService.Edit(tid, questionForm.Subject, questionForm.Content, questionForm.Difficulty, questionForm.TimeLimit, questionForm.SpaceLimit); err != nil {
+	if err := QuestionService.Edit(tid, questionForm); err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
 			"message": err.Error(),
