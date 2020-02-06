@@ -174,6 +174,7 @@ func batchRejectSubmission(sidList []*toBeRejectObject) {
 
 	if _, err := db.DB.Table("submission").
 		In("sid", sidList).
+		Cols("status", "judge").
 		Update(
 			&models.Submission{
 				Status: "NO",

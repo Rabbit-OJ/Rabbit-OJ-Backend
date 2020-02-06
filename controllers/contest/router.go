@@ -20,4 +20,5 @@ func Router(baseRouter *gin.Engine) {
 	contestRouter.GET("/my/info/:cid", middlewares.AuthJWT(true), middlewares.CheckContest, MyInfo)
 	contestRouter.GET("/scoreboard/:cid/:page", ScoreBoard)
 	contestRouter.PUT("/info/:cid", middlewares.AuthJWT(true), Edit)
+	contestRouter.PUT("/question/:cid", middlewares.AuthJWT(true), EditQuestion)
 }

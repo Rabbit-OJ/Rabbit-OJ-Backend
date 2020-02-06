@@ -5,6 +5,7 @@ import (
 )
 
 type ContestQuestion struct {
+	Cqid  uint32 `json:"cgid"`
 	Cid   uint32 `json:"cid"`
 	Tid   uint32 `json:"tid"`
 	Id    int    `json:"id"`

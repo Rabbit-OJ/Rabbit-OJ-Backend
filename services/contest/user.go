@@ -64,6 +64,7 @@ func RegenerateUserScore(session *xorm.Session, cid, uid uint32, isAccepted bool
 	if isAccepted {
 		if _, err := db.DB.Table("contest_user").
 			Where("cid = ? AND uid = ?", cid, uid).
+			Cols("score", "total_time").
 			Update(&models.ContestUser{
 				Score:     score,
 				TotalTime: totalTime,
