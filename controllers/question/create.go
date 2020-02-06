@@ -8,7 +8,7 @@ import (
 )
 
 func Create(c *gin.Context) {
-	questionForm := &forms.QuestionForm{}
+	questionForm := &forms.QuestionEditForm{}
 	authObject, err := auth.GetAuthObjRequireAdmin(c)
 	if err != nil {
 		c.JSON(403, gin.H{

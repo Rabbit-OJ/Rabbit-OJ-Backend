@@ -7,7 +7,7 @@ import (
 	"xorm.io/xorm"
 )
 
-func Edit(tid string, form *forms.QuestionForm) error {
+func Edit(tid string, form *forms.QuestionEditForm) error {
 	_, err := db.DB.Transaction(func(session *xorm.Session) (interface{}, error) {
 		questionOverview := models.Question{
 			Subject:    form.Subject,

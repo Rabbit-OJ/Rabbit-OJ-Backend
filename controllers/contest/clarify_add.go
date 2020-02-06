@@ -9,7 +9,7 @@ import (
 )
 
 func ClarifyAdd(c *gin.Context) {
-	clarifyAddForm := &forms.ContestClarifyAdd{}
+	clarifyAddForm := &forms.ContestClarifyAddForm{}
 
 	if _, err := auth.GetAuthObjRequireAdmin(c); err != nil {
 		c.JSON(403, gin.H{

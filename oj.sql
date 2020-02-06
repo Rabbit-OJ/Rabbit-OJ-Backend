@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Jan 05, 2020 at 08:23 AM
+-- Generation Time: Feb 06, 2020 at 02:38 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -61,6 +61,7 @@ CREATE TABLE `contest_clarify` (
 --
 
 CREATE TABLE `contest_question` (
+  `cqid` int(10) UNSIGNED NOT NULL,
   `cid` int(10) UNSIGNED NOT NULL,
   `tid` int(10) UNSIGNED NOT NULL,
   `id` int(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -201,9 +202,8 @@ ALTER TABLE `contest_clarify`
 -- Indexes for table `contest_question`
 --
 ALTER TABLE `contest_question`
-  ADD PRIMARY KEY (`tid`),
-  ADD UNIQUE KEY `cid_2` (`cid`,`tid`,`id`),
-  ADD KEY `cid` (`cid`);
+  ADD PRIMARY KEY (`cqid`),
+  ADD UNIQUE KEY `cid` (`cid`,`tid`,`id`) USING BTREE;
 
 --
 -- Indexes for table `contest_submission`
@@ -269,6 +269,12 @@ ALTER TABLE `contest`
 --
 ALTER TABLE `contest_clarify`
   MODIFY `ccid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `contest_question`
+--
+ALTER TABLE `contest_question`
+  MODIFY `cqid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contest_user`

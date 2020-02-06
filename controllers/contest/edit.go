@@ -1,14 +1,14 @@
-package question
+package contest
 
 import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/models/forms"
-	QuestionService "Rabbit-OJ-Backend/services/question"
+	ContestService "Rabbit-OJ-Backend/services/contest"
 	"github.com/gin-gonic/gin"
 )
 
 func Edit(c *gin.Context) {
-	questionForm := &forms.QuestionEditForm{}
+	contestForm := &forms.ContestEditForm{}
 	if _, err := auth.GetAuthObjRequireAdmin(c); err != nil {
 		c.JSON(403, gin.H{
 			"code":    403,
@@ -17,7 +17,7 @@ func Edit(c *gin.Context) {
 
 		return
 	}
-	if err := c.BindJSON(&questionForm); err != nil {
+	if err := c.BindJSON(&contestForm); err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
 			"message": err.Error(),
@@ -26,8 +26,8 @@ func Edit(c *gin.Context) {
 		return
 	}
 
-	tid := c.Param("tid")
-	if err := QuestionService.Edit(tid, questionForm); err != nil {
+	cid := c.Param("cid")
+	if err := ContestService.Edit(cid, contestForm); err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
 			"message": err.Error(),

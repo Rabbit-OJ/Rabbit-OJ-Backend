@@ -2,7 +2,7 @@ package forms
 
 import "Rabbit-OJ-Backend/models"
 
-type QuestionForm struct {
+type QuestionEditForm struct {
 	Subject    string          `json:"subject" binding:"required"`
 	Difficulty uint8           `json:"difficulty" binding:"required"`
 	TimeLimit  uint32          `json:"time_limit" binding:"required"`
