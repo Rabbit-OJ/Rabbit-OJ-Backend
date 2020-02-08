@@ -5,6 +5,6 @@ type ContestEditForm struct {
 	StartTime int64  `json:"start_time" binding:"required"`
 	BlockTime int64  `json:"block_time" binding:"required"`
 	EndTime   int64  `json:"end_time" binding:"required"`
-	Penalty   uint32 `json:"penalty" binding:"required"`
-	Status    int32  `json:"status" binding:"required"`
+	Penalty   uint32 `json:"penalty"`
+	Status    int32  `json:"status"`
 }

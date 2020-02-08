@@ -70,12 +70,36 @@ func EditQuestion(c *gin.Context) {
 		return
 	}
 
-	// id should in range [0, N - 1] without gaps
-	for i := range contestQuestionForm.Data {
-		contestQuestionForm.Data[i].Id = i
+	contestInfo, err := ContestService.Info(uint32(cid))
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": err.Error(),
+		})
+
+		return
+	}
+	if contestInfo.Status != 0 {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"message": "contest has already started",
+		})
+
+		return
 	}
 
-	if err := ContestService.EditQuestions(uint32(cid), contestQuestionForm.Data); err != nil {
+	// id should in range [0, N - 1] without gaps
+	contestQuestionFormAll := make([]forms.ContestQuestionEditItemFull, len(contestQuestionForm.Data))
+	for i, item := range contestQuestionForm.Data {
+		contestQuestionFormAll[i] = forms.ContestQuestionEditItemFull{
+			Cid:   uint32(cid),
+			Tid:   item.Tid,
+			Id:    i,
+			Score: item.Score,
+		}
+	}
+
+	if err := ContestService.EditQuestions(uint32(cid), contestQuestionFormAll); err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
 			"message": err.Error(),

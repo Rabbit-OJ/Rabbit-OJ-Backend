@@ -28,7 +28,7 @@ func Edit(cid string, form *forms.ContestEditForm) error {
 	return nil
 }
 
-func EditQuestions(cid uint32, newQuestionList []forms.ContestQuestionEditItem) error {
+func EditQuestions(cid uint32, newQuestionList []forms.ContestQuestionEditItemFull) error {
 	_, err := db.DB.Transaction(func(session *xorm.Session) (interface{}, error) {
 		current, err := Question(cid)
 		if err != nil {
@@ -40,13 +40,13 @@ func EditQuestions(cid uint32, newQuestionList []forms.ContestQuestionEditItem) 
 			if recyclePtr < currentLen {
 				if _, err := db.DB.Table("contest_question").
 					Where("cqid = ?", current[recyclePtr].Cqid).
-					Cols("tid", "id", "score").
+					Cols("cid", "tid", "id", "score").
 					Update(&newQuestionList[recyclePtr]); err != nil {
 					return nil, err
 				}
 			} else {
 				if _, err := db.DB.Table("contest_question").
-					Cols("tid", "id", "score").
+					Cols("cid", "tid", "id", "score").
 					Insert(&newQuestionList[recyclePtr]); err != nil {
 					return nil, err
 				}
