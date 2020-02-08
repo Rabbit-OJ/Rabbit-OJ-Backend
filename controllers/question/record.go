@@ -29,8 +29,8 @@ func Record(c *gin.Context) {
 		return
 	}
 
-	_tid, uid := c.Param("tid"), authObject.Uid
-	tid, err := strconv.ParseUint(_tid, 10, 32)
+	uid := authObject.Uid
+	tid, err := strconv.ParseUint(c.Param("tid"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

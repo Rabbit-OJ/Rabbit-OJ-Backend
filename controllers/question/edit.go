@@ -8,7 +8,7 @@ import (
 )
 
 func Edit(c *gin.Context) {
-	questionForm := &forms.QuestionEditForm{}
+	questionForm := forms.QuestionEditForm{}
 	if _, err := auth.GetAuthObjRequireAdmin(c); err != nil {
 		c.JSON(403, gin.H{
 			"code":    403,
@@ -27,7 +27,7 @@ func Edit(c *gin.Context) {
 	}
 
 	tid := c.Param("tid")
-	if err := QuestionService.Edit(tid, questionForm); err != nil {
+	if err := QuestionService.Edit(tid, &questionForm); err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
 			"message": err.Error(),

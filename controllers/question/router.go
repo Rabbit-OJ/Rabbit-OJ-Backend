@@ -28,4 +28,6 @@ func Router(baseRouter *gin.Engine) {
 	questionRouter.PUT("/item/:tid", middlewares.AuthJWT(true), Edit)
 	questionRouter.DELETE("/item/:tid", middlewares.AuthJWT(true), Delete)
 	questionRouter.POST("/submit/:tid", middlewares.AuthJWT(true), Submit)
+	questionRouter.GET("/judge/:tid", middlewares.AuthJWT(true), GetJudge)
+	questionRouter.POST("/judge/:tid", middlewares.AuthJWT(true), SetJudge)
 }

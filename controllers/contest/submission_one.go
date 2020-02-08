@@ -18,8 +18,7 @@ func SubmissionOne(c *gin.Context) {
 		return
 	}
 
-	_cid, _sid := c.Param("cid"), c.Param("sid")
-	cid, err := strconv.ParseUint(_cid, 10, 32)
+	cid, err := strconv.ParseUint(c.Param("cid"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
@@ -28,7 +27,7 @@ func SubmissionOne(c *gin.Context) {
 
 		return
 	}
-	sid, err := strconv.ParseUint(_sid, 10, 32)
+	sid, err := strconv.ParseUint(c.Param("sid"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

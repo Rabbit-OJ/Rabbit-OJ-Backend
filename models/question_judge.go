@@ -1,8 +1,8 @@
 package models
 
 type QuestionJudge struct {
-	Tid          uint32
-	Mode         string
-	DatasetCount uint32
-	Version      uint32
+	Tid          uint32 `json:"tid"`
+	Mode         string `json:"mode"`
+	DatasetCount uint32 `json:"dataset_count"`
+	Version      uint32 `json:"version"`
 }

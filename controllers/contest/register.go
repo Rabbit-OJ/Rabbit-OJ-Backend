@@ -8,8 +8,8 @@ import (
 )
 
 func Register(c *gin.Context) {
-	_cid, operation := c.Param("cid"), c.Param("operation")
-	cid, err := strconv.ParseUint(_cid, 10, 32)
+	operation := c.Param("operation")
+	cid, err := strconv.ParseUint(c.Param("cid"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

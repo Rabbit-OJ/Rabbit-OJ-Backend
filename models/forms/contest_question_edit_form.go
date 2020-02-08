@@ -5,7 +5,7 @@ type ContestQuestionEditForm struct {
 }
 
 type ContestQuestionEditItem struct {
-	Tid   uint32 `json:"tid"`
-	Id    int    `json:"id"`
-	Score uint32 `json:"score"`
+	Tid   uint32 `json:"tid" binding:"required"`
+	Id    int    `json:"id" binding:"required"`
+	Score uint32 `json:"score" binding:"required"`
 }

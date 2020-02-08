@@ -7,8 +7,7 @@ import (
 )
 
 func Question(c *gin.Context) {
-	_cid := c.Param("cid")
-	cid, err := strconv.ParseUint(_cid, 10, 32)
+	cid, err := strconv.ParseUint(c.Param("cid"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,

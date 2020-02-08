@@ -9,8 +9,7 @@ import (
 )
 
 func Avatar(c *gin.Context) {
-	_uid := c.Param("uid")
-	uid, err := strconv.ParseUint(_uid, 10, 32)
+	uid, err := strconv.ParseUint(c.Param("uid"), 10, 32)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code":    400,
