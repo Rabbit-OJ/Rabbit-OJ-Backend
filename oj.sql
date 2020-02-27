@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Feb 06, 2020 at 02:38 AM
+-- Generation Time: Feb 27, 2020 at 09:07 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.2.25
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `oj`
 --
+CREATE DATABASE IF NOT EXISTS `oj` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `oj`;
 
 -- --------------------------------------------------------
 

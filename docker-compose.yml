@@ -11,6 +11,8 @@ services:
     restart: always
   rabbitmq:
     image: rabbitmq:3
+    ports:
+      - 5672:5672
     environment:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=P@ssw0rd
@@ -23,6 +25,7 @@ services:
     build: ./
     ports:
       - 8888:8888
+      - 8090:8090
     env_file:
       - .env
     environment:
