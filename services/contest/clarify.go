@@ -7,7 +7,7 @@ import (
 )
 
 func ClarifyList(cid string) ([]models.ContestClarify, error) {
-	var list []models.ContestClarify
+	list := make([]models.ContestClarify, 0)
 
 	if err := db.DB.Table("contest_clarify").
 		Where("cid = ?", cid).
