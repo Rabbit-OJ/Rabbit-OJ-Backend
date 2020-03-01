@@ -24,7 +24,7 @@ func CodeSubmit(tid uint32, submitForm *forms.SubmitForm, authObject *auth.Claim
 		return 0, err
 	}
 
-	if questionDetail.Hide && !authObject.IsAdmin {
+	if !isContest && questionDetail.Hide && !authObject.IsAdmin {
 		return 0, errors.New("permission denied")
 	}
 
