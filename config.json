@@ -279,8 +279,8 @@
       }
     },
     {
-      "id": "go113",
-      "name": "Go/1.13",
+      "id": "go114",
+      "name": "Go/1.14",
       "enabled": true,
       "args": {
         "build_args": [
@@ -290,7 +290,7 @@
           "/home/code.o",
           "/home/code.go"
         ],
-        "build_image": "golang:1.13-alpine",
+        "build_image": "golang:1.14-alpine",
         "no_build": false,
         "source": "/home/code.go",
         "build_target": "/home/code.o",
