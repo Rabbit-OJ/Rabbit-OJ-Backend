@@ -173,7 +173,7 @@ func batchRejectSubmission(sidList []*toBeRejectObject) {
 	}
 
 	if _, err := db.DB.Table("submission").
-		In("sid", sidList).
+		In("sid", normalSidList).
 		Cols("status", "judge").
 		Update(
 			&models.Submission{
@@ -186,7 +186,7 @@ func batchRejectSubmission(sidList []*toBeRejectObject) {
 
 	if contestSidList != nil && len(contestSidList) > 0 {
 		if _, err := db.DB.Table("contest_submission").
-			In("sid", sidList).
+			In("sid", contestSidList).
 			Update(
 				&models.ContestSubmission{
 					Status: -1,
