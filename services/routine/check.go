@@ -155,9 +155,9 @@ func handleCheck() {
 }
 
 func batchRejectSubmission(sidList []*toBeRejectObject) {
-	normalSidList, contestSidList, potentialSidList := make([]uint32, len(sidList)), make([]uint32, 0), make([]uint32, 0)
+	allSidList, contestSidList, potentialSidList := make([]uint32, len(sidList)), make([]uint32, 0), make([]uint32, 0)
 	for i, item := range sidList {
-		normalSidList[i] = item.Sid
+		allSidList[i] = item.Sid
 		if item.IsContest {
 			contestSidList = append(contestSidList, item.Sid)
 		} else {
@@ -173,7 +173,7 @@ func batchRejectSubmission(sidList []*toBeRejectObject) {
 	}
 
 	if _, err := db.DB.Table("submission").
-		In("sid", normalSidList).
+		In("sid", allSidList).
 		Cols("status", "judge").
 		Update(
 			&models.Submission{
