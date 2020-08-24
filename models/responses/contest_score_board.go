@@ -6,7 +6,7 @@ type ScoreBoard struct {
 	Score     uint32               `json:"score"`
 	TotalTime uint32               `json:"total_time"`
 	Rank      uint32               `json:"rank"`
-	Progress  []ScoreBoardProgress `json:"progress" gorm:"-"`
+	Progress  []ScoreBoardProgress `json:"progress"`
 }
 
 type ScoreBoardProgress struct {
