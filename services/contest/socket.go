@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
 	"strconv"
 	"time"
 )
@@ -22,6 +23,11 @@ type Client struct {
 }
 
 func (c *Client) readPump() {
+	defer func() {
+		contestHub.unregister <- c
+		_ = c.conn.Close()
+	}()
+
 	c.conn.SetReadLimit(upgrader.MaxMessageSize)
 	if err := c.conn.SetReadDeadline(time.Now().Add(upgrader.PongWait)); err != nil {
 		fmt.Println(err)
@@ -30,12 +36,24 @@ func (c *Client) readPump() {
 		_ = c.conn.SetReadDeadline(time.Now().Add(upgrader.PongWait))
 		return nil
 	})
+
+	for {
+		_, _, err := c.conn.ReadMessage()
+
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("error: %v", err)
+			}
+			break
+		}
+	}
 }
 
 func (c *Client) writePump() {
 	ticker := time.NewTicker(upgrader.PingPeriod)
 	defer func() {
 		ticker.Stop()
+		_ = c.conn.Close()
 	}()
 
 	for {
