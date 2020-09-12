@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -158,7 +159,7 @@ type HubBroadcast struct {
 }
 
 type Hub struct {
-	clients    map[uint32]*Client
+	clients    sync.Map
 	EndContest chan uint32
 	Broadcast  chan *HubBroadcast
 	register   chan *Client
@@ -167,7 +168,7 @@ type Hub struct {
 
 func NewContestHub() *Hub {
 	contestHub = &Hub{
-		clients:    make(map[uint32]*Client),
+		clients:    sync.Map{},
 		Broadcast:  make(chan *HubBroadcast),
 		EndContest: make(chan uint32),
 		register:   make(chan *Client),
@@ -177,52 +178,86 @@ func NewContestHub() *Hub {
 	return contestHub
 }
 
-func (h *Hub) removeContestHubClient(uid uint32) {
-	if client, ok := h.clients[uid]; ok {
+func (h *Hub) handleRemoveContestHubClient(uid uint32) {
+	if _client, ok := h.clients.Load(uid); ok {
+		client := _client.(*Client)
+
 		close(client.send)
-		delete(h.clients, uid)
+		h.clients.Delete(uid)
 	}
 }
 
 func (h *Hub) RemoveContestHubAllContest(cid uint32) {
-	for _, client := range h.clients {
+	var willDelete []uint32
+	h.clients.Range(func(_, _client interface{}) bool {
+		client := _client.(*Client)
+
 		if client.cid == cid {
+			willDelete = append(willDelete, cid)
 			close(client.send)
-			delete(h.clients, client.uid)
 		}
+
+		return true
+	})
+
+	for _, item := range willDelete {
+		h.clients.Delete(item)
 	}
+}
+
+func (h *Hub) handleRegisterClient(client *Client) {
+	uid := client.uid
+	if _client, ok := h.clients.Load(uid); ok {
+		client := _client.(*Client)
+		close(client.send)
+
+		h.clients.Delete(client.uid)
+	}
+
+	h.clients.Store(client.uid, client)
+}
+
+func (h *Hub) handleBroadCast(broadcast *HubBroadcast) {
+	jsonByte, err := json.Marshal(broadcast)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	h.clients.Range(func(_, _client interface{}) bool {
+		client := _client.(*Client)
+
+		if client.cid == broadcast.Cid {
+			client.send <- jsonByte
+		}
+
+		return true
+	})
+}
+
+func (h *Hub) handleEndContest(cid uint32) {
+	h.clients.Range(func(_, _client interface{}) bool {
+		client := _client.(*Client)
+
+		if client.cid == cid {
+			h.handleRemoveContestHubClient(client.uid)
+		}
+
+		return true
+	})
 }
 
 func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			if _, ok := h.clients[client.uid]; ok {
-				close(h.clients[client.uid].send)
-				delete(h.clients, client.uid)
-			}
-
-			h.clients[client.uid] = client
+			go h.handleRegisterClient(client)
 		case client := <-h.unregister:
-			h.removeContestHubClient(client.uid)
+			go h.handleRemoveContestHubClient(client.uid)
 		case broadcast := <-h.Broadcast:
-			jsonByte, err := json.Marshal(broadcast)
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-
-			for _, item := range h.clients {
-				if item.cid == broadcast.Cid {
-					item.send <- jsonByte
-				}
-			}
+			go h.handleBroadCast(broadcast)
 		case cid := <-h.EndContest:
-			for _, item := range h.clients {
-				if item.cid == cid {
-					h.removeContestHubClient(item.uid	)
-				}
-			}
+			go h.handleEndContest(cid)
 		}
 	}
 }

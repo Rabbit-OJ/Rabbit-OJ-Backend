@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -132,7 +133,7 @@ func ServeJudgeWs(JudgeHub *Hub) func(ctx *gin.Context) {
 }
 
 type Hub struct {
-	clients    map[uint32]*Client
+	clients    sync.Map
 	Broadcast  chan uint32
 	Register   chan *Client
 	unregister chan *Client
@@ -140,7 +141,7 @@ type Hub struct {
 
 func NewJudgeHub() *Hub {
 	judgeHub = &Hub{
-		clients:    make(map[uint32]*Client),
+		clients:    sync.Map{},
 		Broadcast:  make(chan uint32),
 		Register:   make(chan *Client),
 		unregister: make(chan *Client),
@@ -149,10 +150,32 @@ func NewJudgeHub() *Hub {
 	return judgeHub
 }
 
-func (h *Hub) removeJudgeHubClient(sid uint32) {
-	if client, ok := h.clients[sid]; ok {
+func (h *Hub) handleRemoveJudgeHubClient(sid uint32) {
+	if _client, ok := h.clients.Load(sid); ok {
+		client := _client.(*Client)
 		close(client.send)
-		delete(h.clients, sid)
+		h.clients.Delete(sid)
+	}
+}
+
+func (h *Hub) handleRegister(client *Client) {
+	sid := client.sid
+	if _client, ok := h.clients.Load(sid); ok {
+		client := _client.(*Client)
+
+		close(client.send)
+		h.clients.Delete(sid)
+	}
+
+	h.clients.Store(sid, client)
+}
+
+func (h *Hub) handleBroadcast(sid uint32) {
+	if _client, ok := h.clients.Load(sid); ok {
+		client := _client.(*Client)
+
+		client.send <- []byte("{\"ok\":1}")
+		h.handleRemoveJudgeHubClient(client.sid)
 	}
 }
 
@@ -160,19 +183,11 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.Register:
-			if _, ok := h.clients[client.sid]; ok {
-				close(h.clients[client.sid].send)
-				delete(h.clients, client.sid)
-			}
-
-			h.clients[client.sid] = client
+			go h.handleRegister(client)
 		case client := <-h.unregister:
-			h.removeJudgeHubClient(client.sid)
+			go h.handleRemoveJudgeHubClient(client.sid)
 		case sid := <-h.Broadcast:
-			if client, ok := h.clients[sid]; ok {
-				client.send <- []byte("{\"ok\":1}")
-				h.removeJudgeHubClient(client.sid)
-			}
+			go h.handleBroadcast(sid)
 		}
 	}
 }
