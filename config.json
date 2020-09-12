@@ -50,7 +50,7 @@
           "-o",
           "/home/code.o"
         ],
-        "build_image": "gcc:9.2.0",
+        "build_image": "gcc:10.2.0",
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
@@ -83,7 +83,7 @@
           "-o",
           "/home/code.o"
         ],
-        "build_image": "gcc:9.2.0",
+        "build_image": "gcc:10.2.0",
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
@@ -116,7 +116,7 @@
           "-o",
           "/home/code.o"
         ],
-        "build_image": "gcc:9.2.0",
+        "build_image": "gcc:10.2.0",
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
@@ -134,7 +134,7 @@
     },
     {
       "id": "cpp20",
-      "name": "C++/2a",
+      "name": "C++/20",
       "enabled": true,
       "args": {
         "build_args": [
@@ -149,7 +149,7 @@
           "-o",
           "/home/code.o"
         ],
-        "build_image": "gcc:9.2.0",
+        "build_image": "gcc:10.2.0",
         "no_build": false,
         "source": "/home/code.cpp",
         "build_target": "/home/code.o",
@@ -228,7 +228,7 @@
           "-o",
           "/home/code.o"
         ],
-        "build_image": "gcc:9.2.0",
+        "build_image": "gcc:10.2.0",
         "no_build": false,
         "source": "/home/code.c",
         "build_target": "/home/code.o",
@@ -261,7 +261,7 @@
           "-o",
           "/home/code.o"
         ],
-        "build_image": "gcc:9.2.0",
+        "build_image": "gcc:10.2.0",
         "no_build": false,
         "source": "/home/code.c",
         "build_target": "/home/code.o",
@@ -278,8 +278,8 @@
       }
     },
     {
-      "id": "go114",
-      "name": "Go/1.14",
+      "id": "go",
+      "name": "Go/1.15",
       "enabled": true,
       "args": {
         "build_args": [
@@ -289,7 +289,7 @@
           "/home/code.o",
           "/home/code.go"
         ],
-        "build_image": "golang:1.14-alpine",
+        "build_image": "golang:1.15-alpine",
         "no_build": false,
         "source": "/home/code.go",
         "build_target": "/home/code.o",
@@ -334,7 +334,7 @@
       }
     },
     {
-      "id": "haskell88",
+      "id": "haskell",
       "name": "Haskell/8.8",
       "enabled": false,
       "args": {
@@ -361,8 +361,8 @@
       }
     },
     {
-      "id": "nodejs13",
-      "name": "Node.js/13.3.0",
+      "id": "nodejs",
+      "name": "Node.js/14.9.0",
       "enabled": false,
       "args": {
         "build_args": [],
@@ -384,8 +384,8 @@
       }
     },
     {
-      "id": "swift5",
-      "name": "Swift/5.1",
+      "id": "swift",
+      "name": "Swift/5.2",
       "enabled": false,
       "args": {
         "build_args": [],
