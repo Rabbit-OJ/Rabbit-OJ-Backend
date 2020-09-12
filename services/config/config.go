@@ -28,7 +28,7 @@ type extensions struct {
 	Debug      debug      `json:"debug"`
 }
 type debug struct {
-	Sql bool `json:"sql"`
+	//Sql bool `json:"sql"`
 	Gin bool `json:"gin"`
 }
 type expire struct {

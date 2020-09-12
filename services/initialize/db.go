@@ -5,7 +5,6 @@ import (
 	"Rabbit-OJ-Backend/services/db"
 	"context"
 	"fmt"
-	"os"
 	"xorm.io/xorm"
 )
 
@@ -17,11 +16,11 @@ func DB(globalContext context.Context) {
 	}
 
 	db.DB = conn
-	if config.Global.Extensions.Debug.Sql {
-		logger := xorm.NewSimpleLogger(os.Stdout)
-		logger.ShowSQL(true)
-		conn.SetLogger(logger)
-	}
+	//if config.Global.Extensions.Debug.Sql {
+	//	logger := xorm.NewSimpleLogger(os.Stdout)
+	//	logger.ShowSQL(true)
+	//	conn.SetLogger(logger)
+	//}
 
 	go func() {
 		<-globalContext.Done()

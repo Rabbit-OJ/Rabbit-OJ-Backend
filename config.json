@@ -18,7 +18,6 @@
       "interval": 10
     },
     "debug": {
-      "sql": false,
       "gin": false
     }
   },
