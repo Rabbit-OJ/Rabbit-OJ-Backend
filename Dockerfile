@@ -17,7 +17,6 @@ WORKDIR /app
 
 COPY --from=build /app/server /app/server
 COPY --from=build /app/files /app/files
-COPY --from=build /app/statics /app/statics
 
 EXPOSE 8090
 EXPOSE 8888

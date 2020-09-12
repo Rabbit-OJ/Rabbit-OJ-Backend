@@ -17,7 +17,6 @@ WORKDIR /app
 
 COPY --from=build /app/server /app/server
 COPY --from=build /app/files /app/files
-COPY --from=build /app/statics /app/statics
 
 RUN chmod +x ./server
 RUN mkdir -p /submit && mkdir -p /compile && mkdir -p /output && mkdir -p /case && mkdir -p /result

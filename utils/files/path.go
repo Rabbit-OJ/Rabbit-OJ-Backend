@@ -12,7 +12,7 @@ func AvatarPath(uid uint32) (string, error) {
 }
 
 func DefaultAvatarPath() (string, error) {
-	return filepath.Abs("./statics/avatar.png")
+	return filepath.Abs("./files/statics/avatar.png")
 }
 
 func CodeDir() string {
