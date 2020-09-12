@@ -2,13 +2,13 @@ package contest
 
 import (
 	"Rabbit-OJ-Backend/controllers/upgrader"
+	"Rabbit-OJ-Backend/models/data_structure"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -159,7 +159,7 @@ type HubBroadcast struct {
 }
 
 type Hub struct {
-	clients    sync.Map
+	clients    data_structure.ConcurrentMap
 	EndContest chan uint32
 	Broadcast  chan *HubBroadcast
 	register   chan *Client
@@ -168,7 +168,7 @@ type Hub struct {
 
 func NewContestHub() *Hub {
 	contestHub = &Hub{
-		clients:    sync.Map{},
+		clients:    data_structure.MakeConcurrentHashmap(),
 		Broadcast:  make(chan *HubBroadcast),
 		EndContest: make(chan uint32),
 		register:   make(chan *Client),

@@ -2,13 +2,13 @@ package judger
 
 import (
 	"Rabbit-OJ-Backend/controllers/upgrader"
+	"Rabbit-OJ-Backend/models/data_structure"
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -133,7 +133,7 @@ func ServeJudgeWs(JudgeHub *Hub) func(ctx *gin.Context) {
 }
 
 type Hub struct {
-	clients    sync.Map
+	clients    data_structure.ConcurrentMap
 	Broadcast  chan uint32
 	Register   chan *Client
 	unregister chan *Client
@@ -141,7 +141,7 @@ type Hub struct {
 
 func NewJudgeHub() *Hub {
 	judgeHub = &Hub{
-		clients:    sync.Map{},
+		clients:    data_structure.MakeConcurrentHashmap(),
 		Broadcast:  make(chan uint32),
 		Register:   make(chan *Client),
 		unregister: make(chan *Client),
