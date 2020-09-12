@@ -22,7 +22,6 @@ type GlobalConfigType struct {
 }
 
 type extensions struct {
-	Dind       bool       `json:"dind"`
 	AutoPull   bool       `json:"auto_pull"`
 	CheckJudge checkJudge `json:"check_judge"`
 	Expire     expire     `json:"expire"`

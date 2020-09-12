@@ -7,7 +7,6 @@
     "files": true
   },
   "extensions": {
-    "dind": false,
     "auto_pull": true,
     "check_judge": {
       "enabled": true,

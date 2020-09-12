@@ -56,7 +56,6 @@ func main() {
 		initialize.Config()
 
 		initialize.Cert("client")
-		initialize.DindScript()
 		initialize.Docker()
 		initialize.CheckTestCase()
 
