@@ -1,6 +1,7 @@
 package mq
 
 import (
+	"Rabbit-OJ-Backend/services/config"
 	"context"
 	"fmt"
 	"log"
@@ -9,13 +10,13 @@ import (
 )
 
 func CreateJudgeRequestConsumer(topics []string, group string) {
-	config := sarama.NewConfig()
-	config.Version = Version
+	saramaConfig := sarama.NewConfig()
+	saramaConfig.Version = Version
 	consumer := JudgeRequestConsumer{
 		ready: make(chan bool, 0),
 	}
 
-	client, err := sarama.NewConsumerGroup(Broker, group, config)
+	client, err := sarama.NewConsumerGroup(config.Global.Kafka.Brokers, group, saramaConfig)
 	if err != nil {
 		log.Panicf("Error when creating consumer group: %v", err)
 		return
@@ -40,14 +41,14 @@ func CreateJudgeRequestConsumer(topics []string, group string) {
 	}()
 }
 
-func CreateJudgeResponseConsumer(topics []string) {
-	config := sarama.NewConfig()
-	config.Version = Version
+func CreateJudgeResponseConsumer(topics []string, group string) {
+	saramaConfig := sarama.NewConfig()
+	saramaConfig.Version = Version
 	consumer := JudgeResponseConsumer{
 		ready: make(chan bool, 0),
 	}
 
-	client, err := sarama.NewConsumerGroup(Broker, "db", config)
+	client, err := sarama.NewConsumerGroup(config.Global.Kafka.Brokers, group, saramaConfig)
 	if err != nil {
 		log.Panicf("Error when creating consumer group: %v", err)
 		return

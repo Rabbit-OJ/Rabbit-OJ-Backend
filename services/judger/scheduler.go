@@ -67,13 +67,6 @@ func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 		return false, err
 	}
 
-	// TODO: ACK
-	// defer func() {
-	// 	if err := delivery.Ack(false); err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// }()
-
 	if !compileInfo.NoBuild {
 		// compile
 		fmt.Printf("(%d) [Scheduler] Start Compile \n", sid)

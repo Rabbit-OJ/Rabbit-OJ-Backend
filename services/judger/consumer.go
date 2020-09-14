@@ -10,10 +10,11 @@ var (
 	MachineContextCancelFunc context.CancelFunc
 
 	JudgeRequestDeliveryChan  chan []byte
+	JudgeRequeueDeliveryChan  chan []byte
 	JudgeResponseDeliveryChan chan []byte
 )
 
-func JudgeHandler() {
+func JudgeRequestHandler() {
 	queueChan := make(chan []byte)
 
 	MachineContext, MachineContextCancelFunc = context.WithCancel(context.Background())

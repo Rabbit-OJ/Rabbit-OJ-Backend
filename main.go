@@ -37,7 +37,7 @@ func main() {
 		routine.StartCheck()
 		initialize.Cert("server")
 		initialize.DB(globalContext)
-		initialize.MQ()
+		initialize.MQ(globalContext)
 
 		go rpc.Register()
 		server := gin.Default()
@@ -60,7 +60,7 @@ func main() {
 		initialize.Docker()
 		initialize.CheckTestCase()
 
-		initialize.MQ()
+		initialize.MQ(globalContext)
 		routine.RegisterSignal()
 
 		exitChan := make(chan bool)

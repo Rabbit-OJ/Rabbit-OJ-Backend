@@ -11,14 +11,18 @@ var (
 )
 
 type GlobalConfigType struct {
-	Rpc         string     `json:"rpc"`
-	RabbitMQ    string     `json:"rabbit_mq"`
-	MySQL       string     `json:"mysql"`
-	AutoRemove  autoRemove `json:"auto_remove"`
-	Concurrent  concurrent `json:"concurrent"`
-	LocalImages []string   `json:"local_images"`
-	Languages   []language `json:"languages"`
-	Extensions  extensions `json:"extensions"`
+	Rpc         string      `json:"rpc"`
+	Kafka       kafkaConfig `json:"kafka"`
+	MySQL       string      `json:"mysql"`
+	AutoRemove  autoRemove  `json:"auto_remove"`
+	Concurrent  concurrent  `json:"concurrent"`
+	LocalImages []string    `json:"local_images"`
+	Languages   []language  `json:"languages"`
+	Extensions  extensions  `json:"extensions"`
+}
+
+type kafkaConfig struct {
+	Brokers []string `json:"brokers"`
 }
 
 type extensions struct {

@@ -1,27 +1,51 @@
 package mq
 
 import (
+	"Rabbit-OJ-Backend/services/config"
 	"github.com/Shopify/sarama"
 )
 
 var (
-	SyncProducer sarama.SyncProducer
+	SyncProducer  sarama.SyncProducer
+	AsyncProducer sarama.AsyncProducer
 )
 
-func Producer() {
-	config := sarama.NewConfig()
-	config.Producer.Retry.Max = 5
-	config.Producer.Return.Errors = true
+func InitSyncProducer() {
+	saramaConfig := sarama.NewConfig()
+	saramaConfig.Producer.Retry.Max = 5
+	saramaConfig.Producer.Return.Errors = true
+	saramaConfig.Producer.RequiredAcks = sarama.NoResponse
 
-	producer, err := sarama.NewSyncProducer(Broker, config)
+	producer, err := sarama.NewSyncProducer(config.Global.Kafka.Brokers, saramaConfig)
 	if err != nil {
 		panic(err)
 	}
 
 	SyncProducer = producer
+	<-CancelCtx.Done()
+	_ = SyncProducer.Close()
 }
 
-// TODO: ACK logic
+func InitAsyncProducer() {
+	saramaConfig := sarama.NewConfig()
+	saramaConfig.Producer.Retry.Max = 5
+	saramaConfig.Producer.Return.Errors = false
+
+	producer, err := sarama.NewAsyncProducer(config.Global.Kafka.Brokers, saramaConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	AsyncProducer = producer
+	<-CancelCtx.Done()
+	_ = AsyncProducer.Close()
+}
+
+func InitProducer() {
+	InitSyncProducer()
+	InitAsyncProducer()
+}
+
 func PublishMessage(topic string, key, buf []byte) error {
 	msg := &sarama.ProducerMessage{
 		Topic: topic,

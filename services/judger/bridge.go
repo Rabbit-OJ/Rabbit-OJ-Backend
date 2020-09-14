@@ -10,42 +10,27 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-func JudgeRequestBridge(body []byte, okChan chan bool) {
-	defer func() {
-		okChan <- true
-	}()
-
+func JudgeRequestBridge(body []byte) {
 	judgeRequest := &protobuf.JudgeRequest{}
 	if err := proto.Unmarshal(body, judgeRequest); err != nil {
 		fmt.Println(err)
 
-		// TODO: ACK
-		// if err := delivery.Nack(false, true); err != nil {
-		// 	fmt.Println(err)
-		// }
+		Requeue(config.JudgeRequestTopicName, body)
 		return
 	}
 
 	if config.Global.Extensions.Expire.Enabled &&
 		judgeRequest.Time-time.Now().Unix() > config.Global.Extensions.CheckJudge.Interval*int64(time.Minute) {
 		fmt.Printf("[Bridge] Received expired judge %d , will ignore this\n", judgeRequest.Sid)
-
-		// TODO: ACK
-		// if err := delivery.Ack(false); err != nil {
-		// 	fmt.Println(err)
-		// }
 		return
 	}
 
 	if alreadyAcked, err := Scheduler(judgeRequest); err != nil {
-		// TODO: ACK
-		// if !alreadyAcked {
-		// 	if err := delivery.Nack(false, true); err != nil {
-		// 		fmt.Println(err)
-		// 	}
-		// }
+		if !alreadyAcked {
+			Requeue(config.JudgeRequestTopicName, body)
+		}
 
-		fmt.Println(alreadyAcked, err)
+		fmt.Println(err)
 		return
 	}
 }
@@ -67,9 +52,8 @@ func JudgeResponseBridge(body []byte) {
 		callbackContest(judgeResult.Sid, status == "AC")
 	}
 	go callbackWebSocket(judgeResult.Sid)
+}
 
-	// TODO: ACK
-	// if err := delivery.Ack(false); err != nil {
-	// 	fmt.Println(err)
-	// }
+func Requeue(topic string, body []byte) {
+
 }

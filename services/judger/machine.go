@@ -19,12 +19,7 @@ func StartMachine(ctx context.Context, index uint, queueChan chan []byte) {
 		select {
 		case delivery := <-queueChan:
 			fmt.Printf("[Machine] #%d machine START \n", index)
-			okChan := make(chan bool)
-			go JudgeRequestBridge(delivery, okChan)
-			select {
-			case <-okChan:
-				close(okChan)
-			}
+			JudgeRequestBridge(delivery)
 			fmt.Printf("[Machine] #%d machine FINISH \n", index)
 		case <-ctx.Done():
 			fmt.Printf("[Machine] #%d machine Exited \n", index)
