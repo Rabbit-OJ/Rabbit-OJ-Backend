@@ -1,4 +1,4 @@
-package judger
+package tester
 
 import (
 	"Rabbit-OJ-Backend/models"

@@ -14,6 +14,7 @@ func InitSyncProducer() {
 	saramaConfig := sarama.NewConfig()
 	saramaConfig.Producer.Retry.Max = 5
 	saramaConfig.Producer.Return.Errors = true
+	saramaConfig.Producer.Return.Successes = true
 	saramaConfig.Producer.RequiredAcks = sarama.NoResponse
 
 	producer, err := sarama.NewSyncProducer(config.Global.Kafka.Brokers, saramaConfig)
@@ -42,8 +43,8 @@ func InitAsyncProducer() {
 }
 
 func InitProducer() {
-	InitSyncProducer()
-	InitAsyncProducer()
+	go InitSyncProducer()
+	go InitAsyncProducer()
 }
 
 func PublishMessage(topic string, key, buf []byte) error {

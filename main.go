@@ -8,9 +8,9 @@ import (
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/middlewares"
 	"Rabbit-OJ-Backend/services/initialize"
-	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/routine"
 	"Rabbit-OJ-Backend/services/rpc"
+	"Rabbit-OJ-Backend/services/tester"
 	"context"
 	"fmt"
 	"os"
@@ -70,6 +70,6 @@ func main() {
 			os.Exit(0)
 		}
 	} else if Role == "Tester" {
-		judger.Tester()
+		tester.Tester()
 	}
 }

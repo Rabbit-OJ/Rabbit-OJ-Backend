@@ -9,6 +9,8 @@ import (
 )
 
 func MQ(ctx context.Context) {
+	mq.InitKafka(ctx)
+
 	if os.Getenv("Role") == "Judge" {
 		judger.JudgeRequestDeliveryChan = make(chan []byte)
 		judger.JudgeRequeueDeliveryChan = make(chan []byte)
@@ -16,26 +18,16 @@ func MQ(ctx context.Context) {
 		mq.JudgeRequestDeliveryChan = judger.JudgeRequestDeliveryChan
 		mq.JudgeRequeueDeliveryChan = judger.JudgeRequeueDeliveryChan
 
+		mq.CreateJudgeRequestConsumer([]string{config.JudgeRequestTopicName}, "req1")
 		go judger.JudgeRequestHandler()
 		go mq.RequeueHandler()
-		mq.CreateJudgeRequestConsumer([]string{config.JudgeRequestTopicName}, "req1")
 	}
 
 	if os.Getenv("Role") == "Server" {
 		judger.JudgeResponseDeliveryChan = make(chan []byte)
-		mq.JudgeRequestDeliveryChan = judger.JudgeResponseDeliveryChan
+		mq.JudgeResponseDeliveryChan = judger.JudgeResponseDeliveryChan
 
-		go judger.JudgeResultHandler()
 		mq.CreateJudgeResponseConsumer([]string{config.JudgeResponseTopicName}, "res1")
+		go judger.JudgeResultHandler()
 	}
-
-	mq.InitKafka(ctx)
 }
-// TODO: handle Reconnect
-//func handleReconnect(closeChan chan *amqp.Error) {
-//	select {
-//	case err := <-closeChan:
-//		fmt.Printf("Reconnecting rabbitmq, meet error: %+v \n", err)
-//		connect()
-//	}
-//}

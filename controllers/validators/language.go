@@ -2,15 +2,12 @@ package validators
 
 import (
 	"Rabbit-OJ-Backend/services/config"
-	"gopkg.in/go-playground/validator.v8"
-	"reflect"
+	"github.com/go-playground/validator/v10"
 )
 
-func Language(
-	_ *validator.Validate, _ reflect.Value, _ reflect.Value,
-	field reflect.Value,
-	_ reflect.Type, _ reflect.Kind, _ string,
-) bool {
+func Language(fieldLevel validator.FieldLevel) bool {
+	field := fieldLevel.Field()
+
 	if language, ok := field.Interface().(string); ok {
 		supportLanguage := false
 

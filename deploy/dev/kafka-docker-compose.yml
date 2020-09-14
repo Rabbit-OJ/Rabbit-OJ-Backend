@@ -11,28 +11,28 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: host.docker.internal
+      KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_CREATE_TOPICS: "judgeRequest:3:1,judgeResponse:3:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 #  kafka2:
-#    image: wurstmeister/kafka
-#    ports:
-#      - "9093:9092"
-#    environment:
-#      KAFKA_ADVERTISED_HOST_NAME: localhost
-#      KAFKA_CREATE_TOPICS: "judgeRequest:3:2,judgeResponse:3:2"
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
+#   image: wurstmeister/kafka
+#   ports:
+#     - "9093:9092"
+#   environment:
+#     KAFKA_ADVERTISED_HOST_NAME: localhost
+#     KAFKA_CREATE_TOPICS: "judgeRequest:3:1,judgeResponse:3:1"
+#     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#   volumes:
+#     - /var/run/docker.sock:/var/run/docker.sock
 #  kafka3:
 #    image: wurstmeister/kafka
 #    ports:
 #      - "9094:9092"
 #    environment:
 #      KAFKA_ADVERTISED_HOST_NAME: localhost
-#      KAFKA_CREATE_TOPICS: "judgeRequest:3:2,judgeResponse:3:2"
+#      KAFKA_CREATE_TOPICS: "judgeRequest:3:1,judgeResponse:3:1"
 #      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 #    volumes:
 #      - /var/run/docker.sock:/var/run/docker.sock

@@ -3,12 +3,13 @@ package judger
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/judger/compare"
+	"Rabbit-OJ-Backend/services/tester"
 )
 
 func JudgeOneCase(testResult *models.TestResult, stdout, rightStdout, compMode string) *models.JudgeResult {
 	result := &models.JudgeResult{}
 
-	if testResult.Status != StatusOK {
+	if testResult.Status != tester.StatusOK {
 		result.Status = testResult.Status
 	} else {
 		isAC := false
