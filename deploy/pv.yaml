@@ -1,0 +1,270 @@
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv1
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data1
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv2
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data2
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv3
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data3
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv4
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data4
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv5
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data5
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv6
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data6
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv7
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data7
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv8
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data8
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv9
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data9
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv10
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data10
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv11
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data11
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv12
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data12
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv13
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data13
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv14
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data14
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv15
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data15
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv16
+  labels:
+    type: local
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data16
