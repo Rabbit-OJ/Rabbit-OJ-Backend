@@ -1,0 +1,3 @@
+[submodule "services/tester"]
+	path = services/tester
+	url = git@github.com:Rabbit-OJ/Rabbit-OJ-Tester.git
