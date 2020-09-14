@@ -15,6 +15,7 @@ func RequeueHandler() {
 			Value: sarama.StringEncoder(buf),
 		}
 
+		fmt.Println("[MQ] Requeued")
 		AsyncProducer.Input() <- msg
 	}
 }

@@ -439,11 +439,11 @@ configJob:
 topics: 
   # - name: myExistingTopicConfig
   #   config: "cleanup.policy=compact,delete.retention.ms=604800000"
-  - name: judge_request
-    partitions: 6
+  - name: judgeRequest
+    partitions: 3
     replicationFactor: 2
-  - name: judge_response
-    partitions: 6
+  - name: judgeResponse
+    partitions: 3
     replicationFactor: 2
     # reassignPartitions: true
   # - name: myExistingTopicPartitions

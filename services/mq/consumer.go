@@ -25,7 +25,7 @@ func CreateJudgeRequestConsumer(topics []string, group string) {
 	ctx, _ := context.WithCancel(CancelCtx)
 	go func() {
 		for {
-			fmt.Println("consumer group running", group)
+			fmt.Println("[MQ] topic: request consumer group running", group)
 
 			if err := client.Consume(ctx, topics, &consumer); err != nil {
 				log.Panicf("Error from consumer: %v", err)
@@ -57,6 +57,8 @@ func CreateJudgeResponseConsumer(topics []string, group string) {
 	ctx, _ := context.WithCancel(CancelCtx)
 	go func() {
 		for {
+			fmt.Println("[MQ] topic: response consumer group running", group)
+
 			if err := client.Consume(ctx, topics, &consumer); err != nil {
 				log.Panicf("Error from consumer: %v", err)
 			}

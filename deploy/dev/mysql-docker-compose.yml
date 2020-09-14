@@ -1,0 +1,24 @@
+# this docker-compose runs a single node mysql for dev enviromnent
+
+version: "3.8"
+services:
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: P@ssw0rd
+      MYSQL_DATABASE: oj
+    volumes:
+      - type: volume
+        source: mysql
+        target: /var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+volumes:
+  mysql:

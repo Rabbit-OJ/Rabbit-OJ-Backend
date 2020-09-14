@@ -1,0 +1,259 @@
+{
+  "rpc": "localhost:8090",
+  "kafka": {
+    "brokers": [
+      "host.docker.internal:9092",
+      "host.docker.internal:9093"
+    ]
+  },
+  "mysql": "root:P@ssw0rd@tcp(localhost:3306)/oj?&parseTime=True&loc=Local",
+  "auto_remove": {
+    "containers": true,
+    "files": true
+  },
+  "extensions": {
+    "auto_pull": true,
+    "check_judge": {
+      "enabled": true,
+      "interval": 10,
+      "requeue": false
+    },
+    "expire": {
+      "enabled": false,
+      "interval": 10
+    },
+    "debug": {
+      "gin": false
+    }
+  },
+  "concurrent": {
+    "judge": 2
+  },
+  "local_images": [
+    "alpine_tester:latest",
+    "python_tester:latest"
+  ],
+  "languages": [
+    {
+      "id": "cpp11",
+      "name": "C++/11",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "g++",
+          "-std=c++11",
+          "/home/code.cpp",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:10.2.0",
+        "no_build": false,
+        "source": "/home/code.cpp",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "run_image": "alpine_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    },
+    {
+      "id": "cpp14",
+      "name": "C++/14",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "g++",
+          "-std=c++14",
+          "/home/code.cpp",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:10.2.0",
+        "no_build": false,
+        "source": "/home/code.cpp",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "run_image": "alpine_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    },
+    {
+      "id": "cpp17",
+      "name": "C++/17",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "g++",
+          "-std=c++17",
+          "/home/code.cpp",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:10.2.0",
+        "no_build": false,
+        "source": "/home/code.cpp",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "run_image": "alpine_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    },
+    {
+      "id": "cpp20",
+      "name": "C++/20",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "g++",
+          "-std=c++2a",
+          "/home/code.cpp",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:10.2.0",
+        "no_build": false,
+        "source": "/home/code.cpp",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "run_image": "alpine_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    },
+    {
+      "id": "python3",
+      "name": "Python/3",
+      "enabled": true,
+      "args": {
+        "build_args": [],
+        "build_image": "-",
+        "no_build": true,
+        "source": "/home/code.py",
+        "build_target": "-",
+        "run_args": [
+          "python",
+          "/home/code.py"
+        ],
+        "run_image": "python_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    },
+    {
+      "id": "c99",
+      "name": "C/99",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "gcc",
+          "-std=c99",
+          "/home/code.c",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:10.2.0",
+        "no_build": false,
+        "source": "/home/code.c",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "run_image": "alpine_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    },
+    {
+      "id": "c11",
+      "name": "C/11",
+      "enabled": true,
+      "args": {
+        "build_args": [
+          "gcc",
+          "-std=c11",
+          "/home/code.c",
+          "-Wall",
+          "-lm",
+          "-fno-asm",
+          "--static",
+          "-O2",
+          "-o",
+          "/home/code.o"
+        ],
+        "build_image": "gcc:10.2.0",
+        "no_build": false,
+        "source": "/home/code.c",
+        "build_target": "/home/code.o",
+        "run_args": [
+          "/home/code.o"
+        ],
+        "run_image": "alpine_tester:latest",
+        "constraints": {
+          "cpu": 1000000000,
+          "memory": 1073741824,
+          "build_timeout": 120,
+          "run_timeout": 120
+        }
+      }
+    }
+  ]
+}
