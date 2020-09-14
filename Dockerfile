@@ -9,7 +9,6 @@ ENV CGO_ENABLED=0
 ENV GOOS=linux
 
 COPY . .
-RUN git submodule init && git submodule update
 RUN go build -o ./server . && chmod +x ./server
 
 # prod stage
