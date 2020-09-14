@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"Rabbit-OJ-Backend/services/config"
-	"Rabbit-OJ-Backend/services/docker"
+	"Rabbit-OJ-Backend/services/judger/docker"
 	"fmt"
 	"github.com/docker/docker/api/types"
 )

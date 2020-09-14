@@ -2,7 +2,7 @@ package judger
 
 import (
 	"Rabbit-OJ-Backend/services/config"
-	"Rabbit-OJ-Backend/services/docker"
+	"Rabbit-OJ-Backend/services/judger/docker"
 	"Rabbit-OJ-Backend/utils/files"
 	"errors"
 	"fmt"
