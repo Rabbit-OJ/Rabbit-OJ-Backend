@@ -3,7 +3,6 @@ package judger
 import (
 	"context"
 	"fmt"
-	"github.com/streadway/amqp"
 	"sync"
 )
 
@@ -11,7 +10,7 @@ var (
 	MachineWaitGroup sync.WaitGroup
 )
 
-func StartMachine(ctx context.Context, index uint, queueChan chan *amqp.Delivery) {
+func StartMachine(ctx context.Context, index uint, queueChan chan []byte) {
 	fmt.Printf("[Machine] Concurrent #%d started \n", index)
 	MachineWaitGroup.Add(1)
 	defer MachineWaitGroup.Done()

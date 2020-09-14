@@ -5,24 +5,24 @@ import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/submission"
 	"fmt"
-	"github.com/golang/protobuf/proto"
-	"github.com/streadway/amqp"
 	"time"
+
+	"github.com/golang/protobuf/proto"
 )
 
-func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
+func JudgeRequestBridge(body []byte, okChan chan bool) {
 	defer func() {
 		okChan <- true
 	}()
 
-	body := delivery.Body
 	judgeRequest := &protobuf.JudgeRequest{}
 	if err := proto.Unmarshal(body, judgeRequest); err != nil {
 		fmt.Println(err)
 
-		if err := delivery.Nack(false, true); err != nil {
-			fmt.Println(err)
-		}
+		// TODO: ACK
+		// if err := delivery.Nack(false, true); err != nil {
+		// 	fmt.Println(err)
+		// }
 		return
 	}
 
@@ -30,27 +30,29 @@ func JudgeRequestBridge(delivery *amqp.Delivery, okChan chan bool) {
 		judgeRequest.Time-time.Now().Unix() > config.Global.Extensions.CheckJudge.Interval*int64(time.Minute) {
 		fmt.Printf("[Bridge] Received expired judge %d , will ignore this\n", judgeRequest.Sid)
 
-		if err := delivery.Ack(false); err != nil {
-			fmt.Println(err)
-		}
+		// TODO: ACK
+		// if err := delivery.Ack(false); err != nil {
+		// 	fmt.Println(err)
+		// }
 		return
 	}
 
-	if alreadyAcked, err := Scheduler(delivery, judgeRequest); err != nil {
-		if !alreadyAcked {
-			if err := delivery.Nack(false, true); err != nil {
-				fmt.Println(err)
-			}
-		}
+	if alreadyAcked, err := Scheduler(judgeRequest); err != nil {
+		// TODO: ACK
+		// if !alreadyAcked {
+		// 	if err := delivery.Nack(false, true); err != nil {
+		// 		fmt.Println(err)
+		// 	}
+		// }
 
-		fmt.Println(err)
+		fmt.Println(alreadyAcked, err)
 		return
 	}
 }
 
-func JudgeResponseBridge(delivery *amqp.Delivery) {
+func JudgeResponseBridge(body []byte) {
 	judgeResult := &protobuf.JudgeResponse{}
-	if err := proto.Unmarshal(delivery.Body, judgeResult); err != nil {
+	if err := proto.Unmarshal(body, judgeResult); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -66,7 +68,8 @@ func JudgeResponseBridge(delivery *amqp.Delivery) {
 	}
 	go callbackWebSocket(judgeResult.Sid)
 
-	if err := delivery.Ack(false); err != nil {
-		fmt.Println(err)
-	}
+	// TODO: ACK
+	// if err := delivery.Ack(false); err != nil {
+	// 	fmt.Println(err)
+	// }
 }

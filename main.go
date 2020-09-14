@@ -13,8 +13,9 @@ import (
 	"Rabbit-OJ-Backend/services/rpc"
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -36,7 +37,7 @@ func main() {
 		routine.StartCheck()
 		initialize.Cert("server")
 		initialize.DB(globalContext)
-		initialize.MQ(globalContext)
+		initialize.MQ()
 
 		go rpc.Register()
 		server := gin.Default()
@@ -59,7 +60,7 @@ func main() {
 		initialize.Docker()
 		initialize.CheckTestCase()
 
-		initialize.MQ(globalContext)
+		initialize.MQ()
 		routine.RegisterSignal()
 
 		exitChan := make(chan bool)

@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/streadway/amqp"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -20,7 +19,7 @@ type CollectedStdout struct {
 	RightStdout string
 }
 
-func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, error) {
+func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 	sid := request.Sid
 
 	fmt.Printf("========START JUDGE(%d)======== \n", sid)
@@ -68,11 +67,12 @@ func Scheduler(delivery *amqp.Delivery, request *protobuf.JudgeRequest) (bool, e
 		return false, err
 	}
 
-	defer func() {
-		if err := delivery.Ack(false); err != nil {
-			fmt.Println(err)
-		}
-	}()
+	// TODO: ACK
+	// defer func() {
+	// 	if err := delivery.Ack(false); err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// }()
 
 	if !compileInfo.NoBuild {
 		// compile

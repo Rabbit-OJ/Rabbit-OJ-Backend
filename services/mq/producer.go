@@ -1,36 +1,34 @@
 package mq
 
 import (
-	"github.com/streadway/amqp"
+	"github.com/Shopify/sarama"
 )
 
-func Publish(exchangeName, routingKey string, body []byte) error {
-	//if err := PublishChannel.Confirm(false); err != nil {
-	//	fmt.Println(err)
-	//
-	//	return err
-	//} else {
-	//	//confirms := PublishChannel.NotifyPublish(make(chan amqp.Confirmation, 1))
-	//
-	//	//defer func() {
-	//	//	if confirmed := <-confirms; confirmed.Ack {
-	//	//		fmt.Printf("[MQ] Confirmed Consumer with tag: %d \n", confirmed.DeliveryTag)
-	//	//	} else {
-	//	//		fmt.Printf("[MQ] Failed Confirmed Consumer with tag: %d \n", confirmed.DeliveryTag)
-	//	//	}
-	//	//}()
-	//}
+var (
+	SyncProducer sarama.SyncProducer
+)
 
-	if err := PublishChannel.Publish(
-		exchangeName,
-		routingKey,
-		false,
-		false,
-		amqp.Publishing{
-			Body: body,
-		}); err != nil {
-		return err
+func Producer() {
+	config := sarama.NewConfig()
+	config.Producer.Retry.Max = 5
+	config.Producer.Return.Errors = true
+
+	producer, err := sarama.NewSyncProducer(Broker, config)
+	if err != nil {
+		panic(err)
 	}
 
-	return nil
+	SyncProducer = producer
+}
+
+// TODO: ACK logic
+func PublishMessage(topic string, key, buf []byte) error {
+	msg := &sarama.ProducerMessage{
+		Topic: topic,
+		Key:   sarama.StringEncoder(key),
+		Value: sarama.StringEncoder(buf),
+	}
+
+	_, _, err := SyncProducer.SendMessage(msg)
+	return err
 }

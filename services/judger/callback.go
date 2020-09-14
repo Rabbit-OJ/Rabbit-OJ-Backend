@@ -42,9 +42,9 @@ func callbackAllError(status string, sid uint32, isContest bool, storage *Storag
 			return
 		}
 
-		if err := mq.Publish(
-			config.DefaultExchangeName,
-			config.JudgeResultRoutingKey,
+		if err := mq.PublishMessage(
+			config.JudgeResponseTopicName,
+			[]byte(fmt.Sprintf("%d", sid)),
 			pro); err != nil {
 
 			fmt.Println(err)
@@ -72,9 +72,9 @@ func callbackSuccess(sid uint32, isContest bool, resultList []*protobuf.JudgeCas
 			return
 		}
 
-		if err := mq.Publish(
-			config.DefaultExchangeName,
-			config.JudgeResultRoutingKey,
+		if err := mq.PublishMessage(
+			config.JudgeResponseTopicName,
+			[]byte(fmt.Sprintf("%d", sid)),
 			pro); err != nil {
 			fmt.Println(err)
 			return

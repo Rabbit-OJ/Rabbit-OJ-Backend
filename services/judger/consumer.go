@@ -3,16 +3,18 @@ package judger
 import (
 	"Rabbit-OJ-Backend/services/config"
 	"context"
-	"github.com/streadway/amqp"
 )
 
 var (
 	MachineContext           context.Context
 	MachineContextCancelFunc context.CancelFunc
+
+	JudgeRequestDeliveryChan  chan []byte
+	JudgeResponseDeliveryChan chan []byte
 )
 
-func JudgeHandler(deliveries <-chan amqp.Delivery) {
-	queueChan := make(chan *amqp.Delivery)
+func JudgeHandler() {
+	queueChan := make(chan []byte)
 
 	MachineContext, MachineContextCancelFunc = context.WithCancel(context.Background())
 	for i := uint(0); i < config.Global.Concurrent.Judge; i++ {
@@ -21,16 +23,16 @@ func JudgeHandler(deliveries <-chan amqp.Delivery) {
 
 	for {
 		select {
-		case delivery := <-deliveries:
-			queueChan <- &delivery
+		case delivery := <-JudgeRequestDeliveryChan:
+			queueChan <- delivery
 		case <-MachineContext.Done():
 			return
 		}
 	}
 }
 
-func JudgeResultHandler(deliveries <-chan amqp.Delivery) {
-	for delivery := range deliveries {
-		go JudgeResponseBridge(&delivery)
+func JudgeResultHandler() {
+	for delivery := range JudgeResponseDeliveryChan {
+		go JudgeResponseBridge(delivery)
 	}
 }

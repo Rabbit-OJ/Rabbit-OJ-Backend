@@ -12,4 +12,7 @@ const (
 	JudgeRoutingKey       = "judge"
 	JudgeResultQueueName  = "judge_result"
 	JudgeResultRoutingKey = "judge_result"
+
+	JudgeRequestTopicName  = "judge_request"
+	JudgeResponseTopicName = "judge_response"
 )

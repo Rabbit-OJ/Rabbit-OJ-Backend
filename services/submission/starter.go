@@ -5,6 +5,7 @@ import (
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/mq"
+	"fmt"
 	"github.com/golang/protobuf/proto"
 	"strconv"
 	"time"
@@ -35,8 +36,8 @@ func Starter(
 		return err
 	}
 
-	return mq.Publish(
-		config.DefaultExchangeName,
-		config.JudgeRoutingKey,
+	return mq.PublishMessage(
+		config.JudgeRequestTopicName,
+		[]byte(fmt.Sprintf("%d%d", submission.Sid, submission.Tid)),
 		pro)
 }
