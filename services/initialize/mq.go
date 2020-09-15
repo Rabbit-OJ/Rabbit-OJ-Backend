@@ -16,12 +16,10 @@ func MQ(ctx context.Context) {
 	channel.MQPublishMessageChannel = make(chan *channel.MQMessage)
 	if os.Getenv("Role") == "Judge" {
 		channel.JudgeRequestDeliveryChan = make(chan []byte)
-		channel.JudgeRequeueDeliveryChan = make(chan []byte)
 		channel.JudgeRequestBridgeChan = make(chan *channel.JudgeRequestBridgeMessage)
 
 		mq.CreateJudgeRequestConsumer([]string{config.JudgeRequestTopicName}, "req1")
 		go judger.JudgeRequestHandler()
-		go mq.RequeueHandler()
 		go submission.MachineJudgeRequestBridge()
 	}
 

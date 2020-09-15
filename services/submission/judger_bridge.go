@@ -62,9 +62,13 @@ func JudgeResponseBridge(body []byte) {
 }
 
 func Requeue(topic string, body []byte) {
-	// todo
+	channel.MQPublishMessageChannel <- &channel.MQMessage{
+		Async: true,
+		Topic: []string{topic},
+		Key:   []byte(fmt.Sprintf("%d", time.Now().UnixNano())),
+		Value: body,
+	}
 }
-
 
 func CallbackWebSocket(sid uint32) {
 	JudgeHub.Broadcast <- sid

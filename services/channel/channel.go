@@ -2,12 +2,16 @@ package channel
 
 var (
 	JudgeRequestDeliveryChan  chan []byte
-	JudgeRequeueDeliveryChan  chan []byte
 	JudgeResponseDeliveryChan chan []byte
 
 	JudgeRequestBridgeChan  chan *JudgeRequestBridgeMessage
 	MQPublishMessageChannel chan *MQMessage
 )
+
+type JudgeRequeueMessage struct {
+	Topic string
+	Data  []byte
+}
 
 type JudgeRequestBridgeMessage struct {
 	Data        []byte
