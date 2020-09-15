@@ -1,7 +1,7 @@
 package initialize
 
 import (
-	storage2 "Rabbit-OJ-Backend/services/storage"
+	storage2 "Rabbit-OJ-Backend/services/judger/storage"
 	"Rabbit-OJ-Backend/utils/files"
 	"strconv"
 )
