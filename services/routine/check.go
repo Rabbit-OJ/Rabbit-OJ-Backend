@@ -5,8 +5,8 @@ import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/contest"
 	"Rabbit-OJ-Backend/services/db"
+	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/question"
-	"Rabbit-OJ-Backend/services/submission"
 	"Rabbit-OJ-Backend/utils/files"
 	"context"
 	"fmt"
@@ -113,7 +113,7 @@ func handleCheck() {
 				continue
 			}
 
-			if err := submission.Starter(
+			if err := judger.Starter(
 				code,
 				&item,
 				questionMemo[item.Tid].judge,

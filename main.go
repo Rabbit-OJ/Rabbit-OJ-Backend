@@ -8,8 +8,8 @@ import (
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/middlewares"
 	"Rabbit-OJ-Backend/services/initialize"
-	"Rabbit-OJ-Backend/services/judger/rpc"
 	"Rabbit-OJ-Backend/services/routine"
+	"Rabbit-OJ-Backend/services/storage/rpc"
 	"Rabbit-OJ-Backend/services/tester"
 	"context"
 	"fmt"
@@ -36,8 +36,8 @@ func main() {
 
 		routine.StartCheck()
 		initialize.Cert("server")
+		initialize.Judger(globalContext)
 		initialize.DB(globalContext)
-		initialize.MQ(globalContext)
 
 		go rpc.Register()
 		server := gin.Default()
@@ -57,10 +57,9 @@ func main() {
 		initialize.Config()
 
 		initialize.Cert("client")
-		initialize.Judger()
+		initialize.Judger(globalContext)
 		initialize.CheckTestCase()
 
-		initialize.MQ(globalContext)
 		routine.RegisterSignal()
 
 		exitChan := make(chan bool)
