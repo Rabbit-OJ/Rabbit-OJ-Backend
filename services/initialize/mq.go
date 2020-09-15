@@ -1,9 +1,11 @@
 package initialize
 
 import (
+	"Rabbit-OJ-Backend/services/channel"
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/mq"
+	"Rabbit-OJ-Backend/services/submission"
 	"context"
 	"os"
 )
@@ -11,23 +13,23 @@ import (
 func MQ(ctx context.Context) {
 	mq.InitKafka(ctx)
 
+	channel.MQPublishMessageChannel = make(chan *channel.MQMessage)
 	if os.Getenv("Role") == "Judge" {
-		judger.JudgeRequestDeliveryChan = make(chan []byte)
-		judger.JudgeRequeueDeliveryChan = make(chan []byte)
-
-		mq.JudgeRequestDeliveryChan = judger.JudgeRequestDeliveryChan
-		mq.JudgeRequeueDeliveryChan = judger.JudgeRequeueDeliveryChan
+		channel.JudgeRequestDeliveryChan = make(chan []byte)
+		channel.JudgeRequeueDeliveryChan = make(chan []byte)
+		channel.JudgeRequestBridgeChan = make(chan *channel.JudgeRequestBridgeMessage)
 
 		mq.CreateJudgeRequestConsumer([]string{config.JudgeRequestTopicName}, "req1")
 		go judger.JudgeRequestHandler()
 		go mq.RequeueHandler()
+		go submission.MachineJudgeRequestBridge()
 	}
 
 	if os.Getenv("Role") == "Server" {
-		judger.JudgeResponseDeliveryChan = make(chan []byte)
-		mq.JudgeResponseDeliveryChan = judger.JudgeResponseDeliveryChan
+		channel.JudgeResponseDeliveryChan = make(chan []byte)
 
 		mq.CreateJudgeResponseConsumer([]string{config.JudgeResponseTopicName}, "res1")
-		go judger.JudgeResultHandler()
+		go submission.JudgeResultHandler()
 	}
+	go mq.PublishService()
 }

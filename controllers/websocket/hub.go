@@ -2,17 +2,17 @@ package websocket
 
 import (
 	"Rabbit-OJ-Backend/services/contest"
-	"Rabbit-OJ-Backend/services/judger"
+	"Rabbit-OJ-Backend/services/submission"
 )
 
 type Hub struct {
-	JudgeHub   *judger.Hub
+	JudgeHub   *submission.Hub
 	ContestHub *contest.Hub
 }
 
 func newHub() *Hub {
 	hub := Hub{
-		JudgeHub:   judger.NewJudgeHub(),
+		JudgeHub:   submission.NewJudgeHub(),
 		ContestHub: contest.NewContestHub(),
 	}
 	return &hub

@@ -57,7 +57,7 @@ func main() {
 		initialize.Config()
 
 		initialize.Cert("client")
-		initialize.Docker()
+		initialize.Judger()
 		initialize.CheckTestCase()
 
 		initialize.MQ(globalContext)

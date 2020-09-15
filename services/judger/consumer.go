@@ -1,6 +1,7 @@
 package judger
 
 import (
+	"Rabbit-OJ-Backend/services/channel"
 	"Rabbit-OJ-Backend/services/config"
 	"context"
 )
@@ -8,10 +9,6 @@ import (
 var (
 	MachineContext           context.Context
 	MachineContextCancelFunc context.CancelFunc
-
-	JudgeRequestDeliveryChan  chan []byte
-	JudgeRequeueDeliveryChan  chan []byte
-	JudgeResponseDeliveryChan chan []byte
 )
 
 func JudgeRequestHandler() {
@@ -24,7 +21,7 @@ func JudgeRequestHandler() {
 
 	for {
 		select {
-		case delivery := <-JudgeRequestDeliveryChan:
+		case delivery := <-channel.JudgeRequestDeliveryChan:
 			queueChan <- delivery
 		case <-MachineContext.Done():
 			return
@@ -32,8 +29,3 @@ func JudgeRequestHandler() {
 	}
 }
 
-func JudgeResultHandler() {
-	for delivery := range JudgeResponseDeliveryChan {
-		go JudgeResponseBridge(delivery)
-	}
-}

@@ -1,13 +1,28 @@
-package initialize
+package docker
 
 import (
 	"Rabbit-OJ-Backend/services/config"
-	"Rabbit-OJ-Backend/services/judger/docker"
+	"context"
 	"fmt"
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 )
 
-func DockerImages() {
+func InitDocker() {
+	ctx := context.Background()
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err != nil {
+		panic(err)
+	}
+
+	Context, Client = ctx, cli
+	if config.Global.Extensions.AutoPull {
+		InitDockerImages()
+	}
+}
+
+
+func InitDockerImages() {
 	needImages := make(map[string]bool)
 
 	for _, item := range config.CompileObject {
@@ -21,7 +36,7 @@ func DockerImages() {
 	}
 
 	fmt.Println("[Docker] fetching image list")
-	images, err := docker.Client.ImageList(docker.Context, types.ImageListOptions{})
+	images, err := Client.ImageList(Context, types.ImageListOptions{})
 	if err != nil {
 		panic(err)
 	}
@@ -41,9 +56,9 @@ func DockerImages() {
 		}
 
 		if v, ok := config.LocalImages[imageTag]; ok && v {
-			docker.BuildImage(imageTag)
+			BuildImage(imageTag)
 		} else {
-			docker.PullImage(imageTag)
+			PullImage(imageTag)
 		}
 	}
 }

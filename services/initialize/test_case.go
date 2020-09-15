@@ -1,14 +1,14 @@
 package initialize
 
 import (
-	"Rabbit-OJ-Backend/services/judger"
+	storage2 "Rabbit-OJ-Backend/services/storage"
 	"Rabbit-OJ-Backend/utils/files"
 	"strconv"
 )
 
 func CheckTestCase() {
-	storage := judger.ReadStorageFile()
-	newStorage := make([]judger.Storage, 0)
+	storage := storage2.ReadStorageFile()
+	newStorage := make([]storage2.Storage, 0)
 
 	for _, item := range storage {
 		valid := true
@@ -36,7 +36,7 @@ func CheckTestCase() {
 		}
 	}
 
-	if err := judger.SaveStorageFile(newStorage); err != nil {
+	if err := storage2.SaveStorageFile(newStorage); err != nil {
 		panic(err)
 	}
 }

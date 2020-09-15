@@ -2,21 +2,19 @@ package judger
 
 import (
 	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/channel"
 	"Rabbit-OJ-Backend/services/config"
-	"Rabbit-OJ-Backend/services/contest"
-	"Rabbit-OJ-Backend/services/db"
-	"Rabbit-OJ-Backend/services/mq"
+	"Rabbit-OJ-Backend/services/storage"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"sync"
-	"xorm.io/xorm"
 )
 
 var (
 	CallbackWaitGroup sync.WaitGroup
 )
 
-func callbackAllError(status string, sid uint32, isContest bool, storage *Storage) {
+func CallbackAllError(status string, sid uint32, isContest bool, storage *storage.Storage) {
 	go func() {
 		CallbackWaitGroup.Add(1)
 		defer CallbackWaitGroup.Done()
@@ -42,18 +40,16 @@ func callbackAllError(status string, sid uint32, isContest bool, storage *Storag
 			return
 		}
 
-		if err := mq.PublishMessage(
-			config.JudgeResponseTopicName,
-			[]byte(fmt.Sprintf("%d", sid)),
-			pro); err != nil {
-
-			fmt.Println(err)
-			return
+		channel.MQPublishMessageChannel <- &channel.MQMessage{
+			Async: true,
+			Topic: []string{config.JudgeResponseTopicName},
+			Key:   []byte(fmt.Sprintf("%d", sid)),
+			Value: pro,
 		}
 	}()
 }
 
-func callbackSuccess(sid uint32, isContest bool, resultList []*protobuf.JudgeCaseResult) {
+func CallbackSuccess(sid uint32, isContest bool, resultList []*protobuf.JudgeCaseResult) {
 	go func() {
 		CallbackWaitGroup.Add(1)
 		defer CallbackWaitGroup.Done()
@@ -72,48 +68,11 @@ func callbackSuccess(sid uint32, isContest bool, resultList []*protobuf.JudgeCas
 			return
 		}
 
-		if err := mq.PublishMessage(
-			config.JudgeResponseTopicName,
-			[]byte(fmt.Sprintf("%d", sid)),
-			pro); err != nil {
-			fmt.Println(err)
-			return
+		channel.MQPublishMessageChannel <- &channel.MQMessage{
+			Async: true,
+			Topic: []string{config.JudgeResponseTopicName},
+			Key:   []byte(fmt.Sprintf("%d", sid)),
+			Value: pro,
 		}
 	}()
-}
-
-func callbackWebSocket(sid uint32) {
-	judgeHub.Broadcast <- sid
-}
-
-func callbackContest(sid uint32, isAccepted bool) {
-	_, err := db.DB.Transaction(func(session *xorm.Session) (interface{}, error) {
-		status := contest.StatusPending
-		if isAccepted {
-			status = contest.StatusAC
-		} else {
-			status = contest.StatusERR
-		}
-
-		if err := contest.ChangeSubmitState(session, sid, status); err != nil {
-			return nil, err
-		}
-
-		submissionInfo, err := contest.SubmissionInfo(session, sid)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := contest.RegenerateUserScore(session,
-			submissionInfo.Cid, submissionInfo.Uid,
-			isAccepted); err != nil {
-			return nil, err
-		}
-
-		return nil, nil
-	})
-
-	if err != nil {
-		fmt.Println(err)
-	}
 }

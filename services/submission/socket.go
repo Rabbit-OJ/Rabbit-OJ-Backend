@@ -1,9 +1,8 @@
-package judger
+package submission
 
 import (
 	"Rabbit-OJ-Backend/controllers/upgrader"
 	"Rabbit-OJ-Backend/models/data_structure"
-	SubmissionService "Rabbit-OJ-Backend/services/submission"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -13,7 +12,7 @@ import (
 )
 
 var (
-	judgeHub *Hub
+	JudgeHub *Hub
 )
 
 type Client struct {
@@ -24,7 +23,7 @@ type Client struct {
 
 func (c *Client) readPump() {
 	defer func() {
-		judgeHub.unregister <- c
+		JudgeHub.unregister <- c
 		_ = c.conn.Close()
 	}()
 
@@ -113,7 +112,7 @@ func ServeJudgeWs(JudgeHub *Hub) func(ctx *gin.Context) {
 			return
 		}
 
-		submission, err := SubmissionService.Detail(uint32(sid))
+		submission, err := Detail(uint32(sid))
 		if err != nil || submission.Status != "ING" {
 			return
 		}
@@ -140,14 +139,14 @@ type Hub struct {
 }
 
 func NewJudgeHub() *Hub {
-	judgeHub = &Hub{
+	JudgeHub = &Hub{
 		clients:    data_structure.MakeConcurrentHashmap(),
 		Broadcast:  make(chan uint32),
 		Register:   make(chan *Client),
 		unregister: make(chan *Client),
 	}
 
-	return judgeHub
+	return JudgeHub
 }
 
 func (h *Hub) handleRemoveJudgeHubClient(sid uint32) {

@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/protobuf"
 	"Rabbit-OJ-Backend/services/config"
+	StorageService "Rabbit-OJ-Backend/services/storage"
 	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
 	"errors"
@@ -61,7 +62,7 @@ func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 
 	fmt.Printf("(%d) [Scheduler] Init test cases \n", sid)
 	// get case
-	storage, err := InitTestCase(request.Tid, request.Version)
+	storage, err := StorageService.InitTestCase(request.Tid, request.Version)
 	if err != nil {
 		fmt.Printf("(%d) [Scheduler] Case Error %+v \n", sid, err)
 		return false, err
@@ -72,7 +73,7 @@ func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 		fmt.Printf("(%d) [Scheduler] Start Compile \n", sid)
 		if err := Compiler(sid, codePath, request.Code, &compileInfo); err != nil {
 			fmt.Printf("(%d) [Scheduler] CE %+v \n", sid, err)
-			callbackAllError("CE", sid, request.IsContest, storage)
+			CallbackAllError("CE", sid, request.IsContest, storage)
 			return true, err
 		}
 		fmt.Printf("(%d) [Scheduler] Compile OK \n", sid)
@@ -92,7 +93,7 @@ func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 		request.Code); err != nil {
 
 		fmt.Printf("(%d) [Scheduler] RE %+v \n", sid, err)
-		callbackAllError("RE", sid, request.IsContest, storage)
+		CallbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
 	fmt.Printf("(%d) [Scheduler] Runner OK \n", sid)
@@ -100,13 +101,13 @@ func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 	fmt.Printf("(%d) [Scheduler] Reading result \n", sid)
 	jsonFileByte, err := ioutil.ReadFile(codePath + "result.json")
 	if err != nil {
-		callbackAllError("RE", sid, request.IsContest, storage)
+		CallbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
 
 	var testResultArr []models.TestResult
 	if err := json.Unmarshal(jsonFileByte, &testResultArr); err != nil || testResultArr == nil {
-		callbackAllError("RE", sid, request.IsContest, storage)
+		CallbackAllError("RE", sid, request.IsContest, storage)
 		return true, err
 	}
 
@@ -158,7 +159,7 @@ func Scheduler(request *protobuf.JudgeRequest) (bool, error) {
 	}
 	// mq return result
 	fmt.Printf("(%d) [Scheduler] Calling back results \n", sid)
-	callbackSuccess(sid, request.IsContest, resultList)
+	CallbackSuccess(sid, request.IsContest, resultList)
 
 	fmt.Printf("(%d) [Scheduler] Finish \n", sid)
 	return true, nil

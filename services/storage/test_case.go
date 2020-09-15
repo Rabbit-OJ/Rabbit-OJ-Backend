@@ -1,4 +1,4 @@
-package judger
+package storage
 
 import (
 	"Rabbit-OJ-Backend/protobuf"
