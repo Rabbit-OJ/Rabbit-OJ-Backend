@@ -1,7 +1,7 @@
 package question
 
 import (
-	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/models/protobuf"
 	"Rabbit-OJ-Backend/utils/files"
 	"errors"
 	"fmt"

@@ -2,7 +2,7 @@ package submission
 
 import (
 	"Rabbit-OJ-Backend/models"
-	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/services/judger/protobuf"
 	"Rabbit-OJ-Backend/services/question"
 	"Rabbit-OJ-Backend/services/user"
 )

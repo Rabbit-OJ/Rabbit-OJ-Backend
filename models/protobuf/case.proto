@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package protobuf;
+
+message Case {
+    bytes stdin = 1;
+    bytes stdout = 2;
+}
+
+message TestCaseRequest {
+    uint32 tid = 1;
+}
+
+message TestCaseResponse {
+    uint32 tid = 1;
+    string version = 3;
+    repeated Case case = 2;
+}
+
+service TestCase {
+    rpc GetTestCase (TestCaseRequest) returns (TestCaseResponse);
+}

@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"Rabbit-OJ-Backend/protobuf"
+	"Rabbit-OJ-Backend/models/protobuf"
 	"Rabbit-OJ-Backend/services/storage/rpc"
 	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
