@@ -4,6 +4,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/forms"
+	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/question"
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
 	"Rabbit-OJ-Backend/services/user"
@@ -48,7 +49,7 @@ func CodeSubmit(tid uint32, submitForm *forms.SubmitForm, authObject *auth.Claim
 	}
 
 	go func(submission *models.Submission) {
-		if err := SubmissionService.Starter(
+		if err := judger.Starter(
 			[]byte(submitForm.Code), submission, questionJudge,
 			questionDetail,
 			isContest); err != nil {
