@@ -2,13 +2,12 @@ package submission
 
 import (
 	"Rabbit-OJ-Backend/models"
-	"Rabbit-OJ-Backend/services/judger/protobuf"
 	"Rabbit-OJ-Backend/services/question"
 	"Rabbit-OJ-Backend/services/user"
 )
 
-func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
-	submissionDetail, err := Detail(judgeResult.Sid)
+func Result(sid uint32, judgeResult []*models.JudgeResult) (string, error) {
+	submissionDetail, err := Detail(sid)
 	if err != nil {
 		return "", err
 	}
@@ -18,7 +17,7 @@ func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 	}
 
 	status, spaceUsed, timeUsed := "AC", uint32(0), uint32(0)
-	for _, res := range judgeResult.Result {
+	for _, res := range judgeResult {
 		spaceUsed += res.SpaceUsed
 		timeUsed += res.TimeUsed
 
@@ -27,13 +26,13 @@ func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 		}
 	}
 
-	if caseLen := len(judgeResult.Result); caseLen >= 1 {
+	if caseLen := len(judgeResult); caseLen >= 1 {
 		timeUsed /= uint32(caseLen)
 		spaceUsed /= uint32(caseLen)
 	}
 
-	resultObj := make([]models.JudgeResult, len(judgeResult.Result))
-	for i, item := range judgeResult.Result {
+	resultObj := make([]models.JudgeResult, len(judgeResult))
+	for i, item := range judgeResult {
 		resultObj[i] = models.JudgeResult{
 			Status:    item.Status,
 			TimeUsed:  item.TimeUsed,
@@ -41,7 +40,7 @@ func Result(judgeResult *protobuf.JudgeResponse) (string, error) {
 		}
 	}
 
-	if err := Update(judgeResult.Sid, timeUsed, spaceUsed, status, resultObj); err != nil {
+	if err := Update(sid, timeUsed, spaceUsed, status, resultObj); err != nil {
 		return "", err
 	}
 
