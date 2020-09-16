@@ -167,6 +167,29 @@
         }
       },
       {
+        "id": "python2",
+        "name": "Python/2",
+        "enabled": true,
+        "args": {
+          "build_args": [],
+          "build_image": "-",
+          "no_build": true,
+          "source": "/home/code.py",
+          "build_target": "-",
+          "run_args": [
+            "python2",
+            "/home/code.py"
+          ],
+          "run_image": "python_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
+      },
+      {
         "id": "python3",
         "name": "Python/3",
         "enabled": true,
@@ -247,6 +270,135 @@
             "/home/code.o"
           ],
           "run_image": "alpine_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
+      },
+      {
+        "id": "go",
+        "name": "Go/1.15",
+        "enabled": true,
+        "args": {
+          "build_args": [
+            "go",
+            "build",
+            "-o",
+            "/home/code.o",
+            "/home/code.go"
+          ],
+          "build_image": "golang:1.15-alpine",
+          "no_build": false,
+          "source": "/home/code.go",
+          "build_target": "/home/code.o",
+          "run_args": [
+            "/home/code.o"
+          ],
+          "run_image": "alpine_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
+      },
+      {
+        "id": "java11",
+        "name": "Java/11",
+        "enabled": true,
+        "args": {
+          "build_args": [
+            "javac",
+            "/home/Main.java"
+          ],
+          "build_image": "openjdk:11",
+          "no_build": false,
+          "source": "/home/Main.java",
+          "build_target": "/home/Main.class",
+          "run_args": [
+            "java",
+            "-cp",
+            "/home",
+            "Main"
+          ],
+          "run_image": "java_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
+      },
+      {
+        "id": "haskell",
+        "name": "Haskell/8.8",
+        "enabled": false,
+        "args": {
+          "build_args": [
+            "ghc",
+            "-optl-static",
+            "-O",
+            "/home/code.hs"
+          ],
+          "build_image": "haskell:8.8",
+          "no_build": false,
+          "source": "/home/code.hs",
+          "build_target": "/home/code",
+          "run_args": [
+            "/home/code"
+          ],
+          "run_image": "alpine_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
+      },
+      {
+        "id": "nodejs",
+        "name": "Node.js/14",
+        "enabled": false,
+        "args": {
+          "build_args": [],
+          "build_image": "-",
+          "no_build": true,
+          "source": "/home/code.js",
+          "build_target": "-",
+          "run_args": [
+            "node",
+            "/home/code.js"
+          ],
+          "run_image": "node_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
+      },
+      {
+        "id": "swift",
+        "name": "Swift/5",
+        "enabled": false,
+        "args": {
+          "build_args": [],
+          "build_image": "-",
+          "no_build": true,
+          "source": "/home/code.swift",
+          "build_target": "-",
+          "run_args": [
+            "swift",
+            "/home/code.swift"
+          ],
+          "run_image": "swift_tester:latest",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,

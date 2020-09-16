@@ -7,10 +7,10 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/Microsoft/go-winio v0.4.14 h1:+hMXMk01us9KgxGb7ftKQt2Xpf5hH/yky+TDA+qxleU=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
-github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916041547-2910eb31c8dd h1:CLDIGUQ6ZLfIpA4ITcByG5lIUMtwvWUhPM8rmTgfK8g=
-github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916041547-2910eb31c8dd/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
-github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916042229-5e0ac427f20e h1:2bn9jPN9PezFcBd6QFO/SsBFAbp6LW16YDryw0TUjiY=
-github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916042229-5e0ac427f20e/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916071149-5017952f62d3 h1:wUY3Kzw7TfHsw43rlg1ybHfqMn7TqflbuubNjy3qqng=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916071149-5017952f62d3/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916072330-a072242ccf73 h1:5RShtWnDxqemuKjR8jZtaFq8dbjbU8vwl2rcX/wOA24=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916072330-a072242ccf73/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
 github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200916040907-0e94de165e93 h1:an6dal5yWW4X3e4J3EzP1PGfgDd4hBSP+tKudFsTLKE=
 github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200916040907-0e94de165e93/go.mod h1:Laooc6+S2hkst/o4p0vIAwbiZKdajLoz9W3Cth+AS1U=
 github.com/Shopify/sarama v1.27.0 h1:tqo2zmyzPf1+gwTTwhI6W+EXDw4PVSczynpHKFtVAmo=
