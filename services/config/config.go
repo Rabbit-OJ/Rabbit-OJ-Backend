@@ -1,6 +1,7 @@
 package config
 
 import (
+	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
 	"io/ioutil"
@@ -11,51 +12,19 @@ var (
 )
 
 type GlobalConfigType struct {
-	Rpc         string      `json:"rpc"`
-	Kafka       kafkaConfig `json:"kafka"`
-	MySQL       string      `json:"mysql"`
-	AutoRemove  autoRemove  `json:"auto_remove"`
-	Concurrent  concurrent  `json:"concurrent"`
-	LocalImages []string    `json:"local_images"`
-	Languages   []language  `json:"languages"`
-	Extensions  extensions  `json:"extensions"`
+	MySQL  string                        `json:"mysql"`
+	Kafka  kafkaConfig                   `json:"kafka"`
+	Debug  debug                         `json:"debug"`
+	Judger JudgerModels.JudgerConfigType `json:"judger"`
 }
 
 type kafkaConfig struct {
 	Brokers []string `json:"brokers"`
 }
 
-type extensions struct {
-	AutoPull   bool       `json:"auto_pull"`
-	CheckJudge checkJudge `json:"check_judge"`
-	Expire     expire     `json:"expire"`
-	Debug      debug      `json:"debug"`
-}
 type debug struct {
 	//Sql bool `json:"sql"`
 	Gin bool `json:"gin"`
-}
-type expire struct {
-	Enabled  bool  `json:"enabled"`
-	Interval int64 `json:"interval"` // interval: minutes
-}
-type checkJudge struct {
-	Enabled  bool  `json:"enabled"`
-	Interval int64 `json:"interval"` // interval: minutes
-	Requeue  bool  `json:"requeue"`
-}
-type language struct {
-	ID      string      `json:"id"`
-	Name    string      `json:"name"`
-	Enabled bool        `json:"enabled"`
-	Args    CompileInfo `json:"args"`
-}
-type concurrent struct {
-	Judge uint `json:"judge"`
-}
-type autoRemove struct {
-	Containers bool `json:"containers"`
-	Files      bool `json:"files"`
 }
 
 func ReadFile(config *GlobalConfigType) {

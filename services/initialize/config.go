@@ -3,6 +3,7 @@ package initialize
 import (
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/config"
+	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"encoding/json"
 	"os"
 )
@@ -16,20 +17,20 @@ func Config() {
 
 func Language() {
 	languageCount := 0
-	for _, item := range config.Global.Languages {
+	for _, item := range config.Global.Judger.Languages {
 		if item.Enabled {
 			languageCount++
 		}
 	}
 
 	config.LocalImages = map[string]bool{}
-	config.CompileObject = map[string]config.CompileInfo{}
+	config.CompileObject = map[string]JudgerModels.CompileInfo{}
 	config.SupportLanguage = make([]models.SupportLanguage, languageCount)
 
-	for _, item := range config.Global.LocalImages {
+	for _, item := range config.Global.Judger.LocalImages {
 		config.LocalImages[item] = true
 	}
-	for index, item := range config.Global.Languages {
+	for index, item := range config.Global.Judger.Languages {
 		if !item.Enabled {
 			continue
 		}

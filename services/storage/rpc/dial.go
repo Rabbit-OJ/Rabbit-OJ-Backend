@@ -10,7 +10,7 @@ import (
 type AnyType interface{}
 
 func DialInit() (*rpc.Client, error) {
-	tlsClient, err := tls.Dial("tcp", config.Global.Rpc, &tls.Config{
+	tlsClient, err := tls.Dial("tcp", config.Global.Judger.Rpc, &tls.Config{
 		RootCAs:            config.ClientCertPool,
 		Certificates:       []tls.Certificate{config.X509KeyPair},
 		InsecureSkipVerify: true,

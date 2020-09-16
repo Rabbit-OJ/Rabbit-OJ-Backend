@@ -25,9 +25,9 @@ type toBeRejectObject struct {
 }
 
 func StartCheck() {
-	if config.Global.Extensions.CheckJudge.Enabled {
+	if config.Global.Judger.Extensions.CheckJudge.Enabled {
 		Context, CancelContext = context.WithCancel(context.Background())
-		go checkRoutine(config.Global.Extensions.CheckJudge.Interval, Context)
+		go checkRoutine(config.Global.Judger.Extensions.CheckJudge.Interval, Context)
 	}
 }
 
@@ -56,7 +56,7 @@ func handleCheck() {
 
 	someMinutesBefore := time.
 		Now().
-		Add(-1 * time.Duration(config.Global.Extensions.CheckJudge.Interval) * time.Minute)
+		Add(-1 * time.Duration(config.Global.Judger.Extensions.CheckJudge.Interval) * time.Minute)
 
 	var timeoutSubmissions []models.Submission
 	if err := db.DB.Table("submission").
@@ -66,7 +66,7 @@ func handleCheck() {
 		return
 	}
 
-	if config.Global.Extensions.CheckJudge.Requeue {
+	if config.Global.Judger.Extensions.CheckJudge.Requeue {
 		toBeRejected, questionMemo := make([]*toBeRejectObject, 0), make(map[uint32]questionJudgeMemoType)
 		for _, item := range timeoutSubmissions {
 			path, err := files.CodePath(item.FileName)
