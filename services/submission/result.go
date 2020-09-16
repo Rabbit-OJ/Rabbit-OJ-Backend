@@ -2,11 +2,12 @@ package submission
 
 import (
 	"Rabbit-OJ-Backend/models"
+	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"Rabbit-OJ-Backend/services/question"
 	"Rabbit-OJ-Backend/services/user"
 )
 
-func Result(sid uint32, judgeResult []*models.JudgeResult) (string, error) {
+func Result(sid uint32, judgeResult []*JudgerModels.JudgeResult) (string, error) {
 	submissionDetail, err := Detail(sid)
 	if err != nil {
 		return "", err

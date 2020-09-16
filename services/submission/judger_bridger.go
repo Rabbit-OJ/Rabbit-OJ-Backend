@@ -1,14 +1,14 @@
 package submission
 
 import (
-	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/services/contest"
 	"Rabbit-OJ-Backend/services/db"
+	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"fmt"
 	"xorm.io/xorm"
 )
 
-func JudgeResponseCallback(sid uint32, isContest bool, judgeResult []*models.JudgeResult) {
+func JudgeResponseCallback(sid uint32, isContest bool, judgeResult []*JudgerModels.JudgeResult) {
 	status, err := Result(sid, judgeResult)
 	if err != nil {
 		fmt.Println(err)

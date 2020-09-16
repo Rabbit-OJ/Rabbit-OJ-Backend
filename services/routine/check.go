@@ -68,60 +68,66 @@ func handleCheck() {
 
 	if config.Global.Judger.Extensions.CheckJudge.Requeue {
 		toBeRejected, questionMemo := make([]*toBeRejectObject, 0), make(map[uint32]questionJudgeMemoType)
-		for _, item := range timeoutSubmissions {
-			path, err := files.CodePath(item.FileName)
+		for _, submissionItem := range timeoutSubmissions {
+			path, err := files.CodePath(submissionItem.FileName)
 			if err != nil {
 				fmt.Println(err)
-				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid})
+				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid})
 				continue
 			}
 			exist := files.Exists(path)
 			if !exist {
-				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid})
+				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid})
 				continue
 			}
 			code, err := ioutil.ReadFile(path)
 			if err != nil {
 				fmt.Println(err)
-				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid})
+				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid})
 				continue
 			}
 
-			if _, ok := questionMemo[item.Tid]; !ok {
-				questionDetail, err := question.Detail(item.Tid)
+			if _, ok := questionMemo[submissionItem.Tid]; !ok {
+				questionDetail, err := question.Detail(submissionItem.Tid)
 				if err != nil {
-					toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid})
+					toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid})
 					fmt.Println(err)
 					continue
 				}
-				questionJudge, err := question.JudgeInfo(item.Tid)
+				questionJudge, err := question.JudgeInfo(submissionItem.Tid)
 				if err != nil {
-					toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid})
+					toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid})
 					fmt.Println(err)
 					continue
 				}
 
-				questionMemo[item.Tid] = questionJudgeMemoType{
+				questionMemo[submissionItem.Tid] = questionJudgeMemoType{
 					judge:  questionJudge,
 					detail: questionDetail,
 				}
 			}
-			isContest, err := contest.IsContestSubmission(item.Sid)
+			isContest, err := contest.IsContestSubmission(submissionItem.Sid)
 			if err != nil {
 				fmt.Println(err)
-				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid})
+				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid})
 				continue
 			}
 
-			if err := judger.Starter(
-				code,
-				&item,
-				questionMemo[item.Tid].judge,
-				questionMemo[item.Tid].detail,
-				isContest,
-			); err != nil {
+			starterParameter := &judger.StarterType{
+				Code:       code,
+				IsContest:  isContest,
+				Sid:        submissionItem.Sid,
+				Tid:        submissionItem.Tid,
+				Version:    questionMemo[submissionItem.Tid].judge.Version,
+				Language:   submissionItem.Language,
+				TimeLimit:  questionMemo[submissionItem.Tid].detail.TimeLimit,
+				SpaceLimit: questionMemo[submissionItem.Tid].detail.SpaceLimit,
+				CompMode:   questionMemo[submissionItem.Tid].judge.Mode,
+			}
+
+			if err := judger.Starter(starterParameter); err != nil {
 				fmt.Println(err)
-				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: item.Sid, IsContest: isContest})
+				toBeRejected = append(toBeRejected, &toBeRejectObject{Sid: submissionItem.Sid, IsContest: isContest})
 				continue
 			}
 		}

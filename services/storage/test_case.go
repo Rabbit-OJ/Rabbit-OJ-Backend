@@ -144,3 +144,12 @@ func InitTestCase(tid uint32, version string) (*Storage, error) {
 		return storage, nil
 	}
 }
+
+func GetTestCase(tid uint32, version string) (uint32, uint32, string, error) {
+	storage, err := InitTestCase(tid, version)
+	if err != nil {
+		return 0, 0, "", err
+	}
+
+	return storage.DatasetCount, storage.Tid, storage.Version, nil
+}

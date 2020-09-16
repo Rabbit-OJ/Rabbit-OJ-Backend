@@ -49,10 +49,19 @@ func CodeSubmit(tid uint32, submitForm *forms.SubmitForm, authObject *auth.Claim
 	}
 
 	go func(submission *models.Submission) {
-		if err := judger.Starter(
-			[]byte(submitForm.Code), submission, questionJudge,
-			questionDetail,
-			isContest); err != nil {
+		starterParameter := &judger.StarterType{
+			Code:       []byte(submitForm.Code),
+			IsContest:  isContest,
+			Sid:        submission.Sid,
+			Tid:        submission.Tid,
+			Version:    questionJudge.Version,
+			Language:   submission.Language,
+			TimeLimit:  questionDetail.TimeLimit,
+			SpaceLimit: questionDetail.SpaceLimit,
+			CompMode:	questionJudge.Mode,
+		}
+
+		if err := judger.Starter(starterParameter); err != nil {
 			fmt.Print(err)
 		}
 		question.UpdateAttemptCount(tid)
