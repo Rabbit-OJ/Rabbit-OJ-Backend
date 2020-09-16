@@ -9,6 +9,8 @@ github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jB
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916041547-2910eb31c8dd h1:CLDIGUQ6ZLfIpA4ITcByG5lIUMtwvWUhPM8rmTgfK8g=
 github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916041547-2910eb31c8dd/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916042229-5e0ac427f20e h1:2bn9jPN9PezFcBd6QFO/SsBFAbp6LW16YDryw0TUjiY=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200916042229-5e0ac427f20e/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
 github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200916040907-0e94de165e93 h1:an6dal5yWW4X3e4J3EzP1PGfgDd4hBSP+tKudFsTLKE=
 github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200916040907-0e94de165e93/go.mod h1:Laooc6+S2hkst/o4p0vIAwbiZKdajLoz9W3Cth+AS1U=
 github.com/Shopify/sarama v1.27.0 h1:tqo2zmyzPf1+gwTTwhI6W+EXDw4PVSczynpHKFtVAmo=
@@ -33,6 +35,7 @@ github.com/docker/distribution v2.7.1+incompatible h1:a5mlkVzth6W5A4fOsS3D2EO5BU
 github.com/docker/distribution v2.7.1+incompatible/go.mod h1:J2gT2udsDAN96Uj4KfcMRqY0/ypR+oyYUYmja8H+y+w=
 github.com/docker/docker v1.4.2-0.20191108192604-36ffe9edc2b3 h1:N5iityNYkdrEvzp1JcUvZoEQchJXzbLxnqucMbRs1ms=
 github.com/docker/docker v1.4.2-0.20191108192604-36ffe9edc2b3/go.mod h1:eEKB0N0r5NX/I1kEveEz05bcu8tLC/8azJZsviup8Sk=
+github.com/docker/docker v1.13.1 h1:IkZjBSIc8hBjLpqeAbeE5mca5mNgeatLHBy3GO78BWo=
 github.com/docker/go-connections v0.4.0 h1:El9xVISelRB7BuFusrZozjnkIM5YnzCViNKohAFqRJQ=
 github.com/docker/go-connections v0.4.0/go.mod h1:Gbd7IOopHjR8Iph03tsViu4nIes5XhDvyHbTtUxmeec=
 github.com/docker/go-units v0.4.0 h1:3uh0PgVws3nIA0Q+MwDC8yjEPf9zjRfZZWXZYDct3Tw=
