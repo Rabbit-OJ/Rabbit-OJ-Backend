@@ -10,9 +10,9 @@ import (
 	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/routine"
 	"Rabbit-OJ-Backend/services/storage/rpc"
-	"Rabbit-OJ-Backend/services/tester"
 	"context"
 	"fmt"
+	"github.com/Rabbit-OJ/Rabbit-OJ-Tester"
 	"os"
 
 	"github.com/gin-gonic/gin"

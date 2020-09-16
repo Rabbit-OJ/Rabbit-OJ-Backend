@@ -78,7 +78,7 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 		Where("cid = ?", cid).
 		In("uid", uidList).
 		Find(&contestSubmissionList); err != nil {
-		return nil,false,  err
+		return nil, false, err
 	}
 
 	// calc Number
@@ -107,5 +107,5 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 	//		}
 	//	}
 	//}
-	return scoreBoard,false,  nil
+	return scoreBoard, false, nil
 }

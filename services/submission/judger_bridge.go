@@ -3,8 +3,8 @@ package submission
 import (
 	"Rabbit-OJ-Backend/services/contest"
 	"Rabbit-OJ-Backend/services/db"
-	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"fmt"
+	JudgerModels "github.com/Rabbit-OJ/Rabbit-OJ-Judger/models"
 	"xorm.io/xorm"
 )
 

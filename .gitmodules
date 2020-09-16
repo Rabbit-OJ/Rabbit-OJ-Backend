@@ -1,6 +1,0 @@
-[submodule "services/tester"]
-	path = services/tester
-	url = https://github.com/Rabbit-OJ/Rabbit-OJ-Tester.git
-[submodule "services/judger"]
-	path = services/judger
-	url = https://github.com/Rabbit-OJ/Rabbit-OJ-Judger.git

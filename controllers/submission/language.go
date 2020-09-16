@@ -1,7 +1,7 @@
 package submission
 
 import (
-	config2 "Rabbit-OJ-Backend/services/judger/config"
+	config2 "github.com/Rabbit-OJ/Rabbit-OJ-Judger/config"
 	"github.com/gin-gonic/gin"
 )
 

@@ -17,17 +17,17 @@ imagePullPolicy: "IfNotPresent"
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-resources: {}
+resources: { }
   # limits:
   #   cpu: 200m
   #   memory: 1536Mi
   # requests:
   #   cpu: 100m
-  #   memory: 1024Mi
+#   memory: 1024Mi
 kafkaHeapOptions: "-Xmx1G -Xms1G"
 
 ## Optional Container Security context
-securityContext: {}
+securityContext: { }
 
 ## The StatefulSet Update Strategy which Kafka will use when changes are applied.
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
@@ -72,7 +72,7 @@ logSubPath: "logs"
 ## Pod scheduling preferences (by default keep pods within a release on separate nodes).
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ## By default we don't set affinity
-affinity: {}
+affinity: { }
 ## Alternatively, this typical example defines:
 ## antiAffinity (to keep Kafka pods on separate pods)
 ## and affinity (to encourage Kafka pods to be collocated with Zookeeper pods)
@@ -100,7 +100,7 @@ affinity: {}
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-nodeSelector: {}
+nodeSelector: { }
 
 ## Readiness probe config.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -120,7 +120,7 @@ terminationGracePeriodSeconds: 60
 # Tolerations for nodes that have taints on them.
 # Useful if you want to dedicate nodes to just run kafka
 # https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-tolerations: []
+tolerations: [ ]
 # tolerations:
 # - key: "key"
 #   operator: "Equal"
@@ -155,23 +155,23 @@ external:
   servicePort: 19092
   firstListenerPort: 31090
   domain: cluster.local
-  loadBalancerIP: []
-  loadBalancerSourceRanges: []
+  loadBalancerIP: [ ]
+  loadBalancerSourceRanges: [ ]
   init:
     image: "lwolf/kubectl_deployer"
     imageTag: "0.4"
     imagePullPolicy: "IfNotPresent"
 
 # Annotation to be added to Kafka pods
-podAnnotations: {}
+podAnnotations: { }
 
 # Labels to be added to Kafka pods
-podLabels: {}
+podLabels: { }
   # service: broker
-  # team: developers
+# team: developers
 
-podDisruptionBudget: {}
-  # maxUnavailable: 1  # Limits how many Kafka pods may be unavailable due to voluntary disruptions.
+podDisruptionBudget: { }
+# maxUnavailable: 1  # Limits how many Kafka pods may be unavailable due to voluntary disruptions.
 
 ## Configuration Overrides. Specify any Kafka settings you would like set on the StatefulSet
 ## here in map format, as defined in the official docs.
@@ -205,12 +205,12 @@ configurationOverrides:
 
 ## set extra ENVs
 #   key: "value"
-envOverrides: {}
+envOverrides: { }
 
 
 ## A collection of additional ports to expose on brokers (formatted as normal containerPort yaml)
 # Useful when the image exposes metrics (like prometheus, etc.) through a javaagent instead of a sidecar
-additionalPorts: {}
+additionalPorts: { }
 
 ## Persistence configuration. Specify if and how to persist data to a persistent volume.
 ##
@@ -249,13 +249,13 @@ jmx:
     ## Allows setting values to generate confimap
     ## To allow all metrics through (warning its crazy excessive) comment out below `overrideConfig` and set
     ## `whitelistObjectNames: []`
-    overrideConfig: {}
+    overrideConfig: { }
       # jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
       # lowercaseOutputName: true
       # lowercaseOutputLabelNames: true
       # ssl: false
       # rules:
-      # - pattern: ".*"
+    # - pattern: ".*"
 
     ## If you would like to supply your own ConfigMap for JMX metrics, supply the name of that
     ## ConfigMap as an `overrideName` here.
@@ -268,12 +268,12 @@ jmx:
   ## values will be exposed via JMX Exporter.  They must also be exposed via Rules.  To expose all metrics
   ## (warning its crazy excessive and they aren't formatted in a prometheus style) (1) `whitelistObjectNames: []`
   ## (2) commented out above `overrideConfig`.
-  whitelistObjectNames:  # []
-  - kafka.controller:*
-  - kafka.server:*
-  - java.lang:*
-  - kafka.network:*
-  - kafka.log:*
+  whitelistObjectNames: # []
+    - kafka.controller:*
+    - kafka.server:*
+    - java.lang:*
+    - kafka.network:*
+    - kafka.log:*
 
 ## Prometheus Exporters / Metrics
 ##
@@ -297,13 +297,13 @@ prometheus:
     ## Port jmx-exporter exposes Prometheus format metrics to scrape
     port: 5556
 
-    resources: {}
+    resources: { }
       # limits:
       #   cpu: 200m
       #   memory: 1Gi
       # requests:
       #   cpu: 100m
-      #   memory: 100Mi
+    #   memory: 100Mi
 
   ## Prometheus Kafka Exporter: exposes complimentary metrics to JMX Exporter
   kafka:
@@ -325,18 +325,18 @@ prometheus:
     port: 9308
 
     ## Resource limits
-    resources: {}
-#      limits:
-#        cpu: 200m
-#        memory: 1Gi
-#      requests:
-#        cpu: 100m
-#        memory: 100Mi
+    resources: { }
+    #      limits:
+    #        cpu: 200m
+    #        memory: 1Gi
+    #      requests:
+    #        cpu: 100m
+    #        memory: 100Mi
 
     # Tolerations for nodes that have taints on them.
     # Useful if you want to dedicate nodes to just run kafka-exporter
     # https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-    tolerations: []
+    tolerations: [ ]
     # tolerations:
     # - key: "key"
     #   operator: "Equal"
@@ -346,7 +346,7 @@ prometheus:
     ## Pod scheduling preferences (by default keep pods within a release on separate nodes).
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
     ## By default we don't set affinity
-    affinity: {}
+    affinity: { }
     ## Alternatively, this typical example defines:
     ## affinity (to encourage Kafka Exporter pods to be collocated with Kafka pods)
     # affinity:
@@ -364,7 +364,7 @@ prometheus:
 
     ## Node labels for pod assignment
     ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-    nodeSelector: {}
+    nodeSelector: { }
 
   operator:
     ## Are you using Prometheus Operator?
@@ -400,20 +400,20 @@ prometheus:
       ## Some example rules.
       ## e.g. max(kafka_controller_kafkacontroller_activecontrollercount_value{service="my-kafka-release"}) by (service) < 1
       rules:
-      - alert: KafkaNoActiveControllers
-        annotations:
-          message: The number of active controllers in {{ "{{" }} $labels.namespace {{ "}}" }} is less than 1. This usually means that some of the Kafka nodes aren't communicating properly. If it doesn't resolve itself you can try killing the pods (one by one whilst monitoring the under-replicated partitions graph).
-        expr: max(kafka_controller_kafkacontroller_activecontrollercount_value) by (namespace) < 1
-        for: 5m
-        labels:
-          severity: critical
-      - alert: KafkaMultipleActiveControllers
-        annotations:
-          message: The number of active controllers in {{ "{{" }} $labels.namespace {{ "}}" }} is greater than 1. This usually means that some of the Kafka nodes aren't communicating properly. If it doesn't resolve itself you can try killing the pods (one by one whilst monitoring the under-replicated partitions graph).
-        expr: max(kafka_controller_kafkacontroller_activecontrollercount_value) by (namespace) > 1
-        for: 5m
-        labels:
-          severity: critical
+        - alert: KafkaNoActiveControllers
+          annotations:
+            message: The number of active controllers in {{ "{{" }} $labels.namespace {{ "}}" }} is less than 1. This usually means that some of the Kafka nodes aren't communicating properly. If it doesn't resolve itself you can try killing the pods (one by one whilst monitoring the under-replicated partitions graph).
+          expr: max(kafka_controller_kafkacontroller_activecontrollercount_value) by (namespace) < 1
+          for: 5m
+          labels:
+            severity: critical
+        - alert: KafkaMultipleActiveControllers
+          annotations:
+            message: The number of active controllers in {{ "{{" }} $labels.namespace {{ "}}" }} is greater than 1. This usually means that some of the Kafka nodes aren't communicating properly. If it doesn't resolve itself you can try killing the pods (one by one whilst monitoring the under-replicated partitions graph).
+          expr: max(kafka_controller_kafkacontroller_activecontrollercount_value) by (namespace) > 1
+          for: 5m
+          labels:
+            severity: critical
 
 ## Kafka Config job configuration
 ##
@@ -436,7 +436,7 @@ configJob:
 ##
 ## Note: To increase the 'replicationFactor' of a topic, 'reassignPartitions' must be set to true (see above).
 ##
-topics: 
+topics:
   # - name: myExistingTopicConfig
   #   config: "cleanup.policy=compact,delete.retention.ms=604800000"
   - name: judgeRequest
@@ -505,7 +505,7 @@ zookeeper:
   ## Pod scheduling preferences (by default keep pods within a release on separate nodes).
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ## By default we don't set affinity:
-  affinity: {}  # Criteria by which pod label-values influence scheduling for zookeeper pods.
+  affinity: { }  # Criteria by which pod label-values influence scheduling for zookeeper pods.
   # podAntiAffinity:
   #   requiredDuringSchedulingIgnoredDuringExecution:
   #     - topologyKey: "kubernetes.io/hostname"

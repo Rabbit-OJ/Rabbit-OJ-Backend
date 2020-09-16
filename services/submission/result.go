@@ -2,9 +2,9 @@ package submission
 
 import (
 	"Rabbit-OJ-Backend/models"
-	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"Rabbit-OJ-Backend/services/question"
 	"Rabbit-OJ-Backend/services/user"
+	JudgerModels "github.com/Rabbit-OJ/Rabbit-OJ-Judger/models"
 )
 
 func Result(sid uint32, judgeResult []*JudgerModels.JudgeResult) (string, error) {

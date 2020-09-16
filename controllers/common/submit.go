@@ -4,13 +4,13 @@ import (
 	"Rabbit-OJ-Backend/controllers/auth"
 	"Rabbit-OJ-Backend/models"
 	"Rabbit-OJ-Backend/models/forms"
-	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/question"
 	SubmissionService "Rabbit-OJ-Backend/services/submission"
 	"Rabbit-OJ-Backend/services/user"
 	"Rabbit-OJ-Backend/utils/files"
 	"errors"
 	"fmt"
+	"github.com/Rabbit-OJ/Rabbit-OJ-Judger"
 	"io/ioutil"
 )
 
@@ -58,7 +58,7 @@ func CodeSubmit(tid uint32, submitForm *forms.SubmitForm, authObject *auth.Claim
 			Language:   submission.Language,
 			TimeLimit:  questionDetail.TimeLimit,
 			SpaceLimit: questionDetail.SpaceLimit,
-			CompMode:	questionJudge.Mode,
+			CompMode:   questionJudge.Mode,
 		}
 
 		if err := judger.Starter(starterParameter); err != nil {

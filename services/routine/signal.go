@@ -1,8 +1,8 @@
 package routine
 
 import (
-	"Rabbit-OJ-Backend/services/judger"
 	"fmt"
+	"github.com/Rabbit-OJ/Rabbit-OJ-Judger"
 	"os"
 	"os/signal"
 	"syscall"

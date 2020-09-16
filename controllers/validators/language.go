@@ -1,7 +1,7 @@
 package validators
 
 import (
-	config2 "Rabbit-OJ-Backend/services/judger/config"
+	config2 "github.com/Rabbit-OJ/Rabbit-OJ-Judger/config"
 	"github.com/go-playground/validator/v10"
 )
 

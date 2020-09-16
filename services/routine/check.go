@@ -5,11 +5,11 @@ import (
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/contest"
 	"Rabbit-OJ-Backend/services/db"
-	"Rabbit-OJ-Backend/services/judger"
 	"Rabbit-OJ-Backend/services/question"
 	"Rabbit-OJ-Backend/utils/files"
 	"context"
 	"fmt"
+	"github.com/Rabbit-OJ/Rabbit-OJ-Judger"
 	"io/ioutil"
 	"time"
 )

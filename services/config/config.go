@@ -1,9 +1,9 @@
 package config
 
 import (
-	JudgerModels "Rabbit-OJ-Backend/services/judger/models"
 	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
+	JudgerModels "github.com/Rabbit-OJ/Rabbit-OJ-Judger/models"
 	"io/ioutil"
 )
 
