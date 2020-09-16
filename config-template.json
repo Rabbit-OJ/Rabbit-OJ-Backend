@@ -1,14 +1,14 @@
 {
   "mysql": "root:P@ssw0rd@tcp(localhost:3306)/oj?&parseTime=True&loc=Local",
-  "kafka": {
-    "brokers": [
-      "kafka:9092"
-    ]
-  },
   "debug": {
     "gin": false
   },
   "judger": {
+    "kafka": {
+      "brokers": [
+        "kafka:9092"
+      ]
+    },
     "rpc": "localhost:8090",
     "auto_remove": {
       "containers": true,

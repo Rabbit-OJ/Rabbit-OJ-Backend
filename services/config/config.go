@@ -13,13 +13,8 @@ var (
 
 type GlobalConfigType struct {
 	MySQL  string                        `json:"mysql"`
-	Kafka  kafkaConfig                   `json:"kafka"`
 	Debug  debug                         `json:"debug"`
 	Judger JudgerModels.JudgerConfigType `json:"judger"`
-}
-
-type kafkaConfig struct {
-	Brokers []string `json:"brokers"`
 }
 
 type debug struct {

@@ -5,8 +5,5 @@ var (
 )
 
 const (
-	PageSize            = 20
-
-	JudgeRequestTopicName  = "judgeRequest"
-	JudgeResponseTopicName = "judgeResponse"
+	PageSize = 20
 )
