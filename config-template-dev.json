@@ -15,6 +15,7 @@
       "files": true
     },
     "extensions": {
+      "host_bind": false,
       "auto_pull": true,
       "check_judge": {
         "enabled": true,
@@ -172,10 +173,10 @@
         "enabled": true,
         "args": {
           "build_args": [],
-          "build_image": "-",
+          "build_image": "",
           "no_build": true,
           "source": "/home/code.py",
-          "build_target": "-",
+          "build_target": "",
           "run_args": [
             "python",
             "/home/code.py"
