@@ -173,7 +173,7 @@
         "enabled": true,
         "args": {
           "build_args": [],
-          "build_image": "",
+          "build_image": "-",
           "no_build": true,
           "source": "/home/code.py",
           "build_target": "",
@@ -196,7 +196,7 @@
         "enabled": true,
         "args": {
           "build_args": [],
-          "build_image": "",
+          "build_image": "-",
           "no_build": true,
           "source": "/home/code.py",
           "build_target": "",
@@ -368,7 +368,7 @@
         "enabled": false,
         "args": {
           "build_args": [],
-          "build_image": "",
+          "build_image": "-",
           "no_build": true,
           "source": "/home/code.js",
           "build_target": "",
@@ -391,7 +391,7 @@
         "enabled": false,
         "args": {
           "build_args": [],
-          "build_image": "",
+          "build_image": "-",
           "no_build": true,
           "source": "/home/code.swift",
           "build_target": "",

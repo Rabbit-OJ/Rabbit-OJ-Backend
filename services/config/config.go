@@ -2,6 +2,7 @@ package config
 
 import (
 	"Rabbit-OJ-Backend/utils/files"
+	"context"
 	"encoding/json"
 	JudgerModels "github.com/Rabbit-OJ/Rabbit-OJ-Judger/models"
 	"io/ioutil"
@@ -9,6 +10,9 @@ import (
 
 var (
 	Global *GlobalConfigType
+
+	GlobalContext context.Context
+	CancelGlobalContext context.CancelFunc
 )
 
 type GlobalConfigType struct {

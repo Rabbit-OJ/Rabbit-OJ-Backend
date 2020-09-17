@@ -7,6 +7,7 @@ import (
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/controllers/websocket"
 	"Rabbit-OJ-Backend/middlewares"
+	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/routine"
 	"Rabbit-OJ-Backend/services/storage/rpc"
@@ -23,9 +24,9 @@ var (
 )
 
 func main() {
-	globalContext, cancelGlobalContext := context.WithCancel(context.Background())
+	config.GlobalContext, config.CancelGlobalContext = context.WithCancel(context.Background())
 	defer func() {
-		cancelGlobalContext()
+		config.CancelGlobalContext()
 	}()
 
 	Role = os.Getenv("Role")
@@ -36,8 +37,8 @@ func main() {
 
 		routine.StartCheck()
 		initialize.Cert("server")
-		initialize.Judger(globalContext)
-		initialize.DB(globalContext)
+		initialize.Judger(config.GlobalContext)
+		initialize.DB(config.GlobalContext)
 
 		go rpc.Register()
 		server := gin.Default()
@@ -57,7 +58,7 @@ func main() {
 		initialize.Config()
 
 		initialize.Cert("client")
-		initialize.Judger(globalContext)
+		initialize.Judger(config.GlobalContext)
 		initialize.CheckTestCase()
 
 		routine.RegisterSignal()
