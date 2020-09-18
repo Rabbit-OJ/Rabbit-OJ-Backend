@@ -9,8 +9,8 @@ github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jB
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918130735-4b249af7d15b h1:6Qa9gO/Bp7XKPhOlVdD84tFphh+FNCexuGyhEyZKYP4=
 github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918130735-4b249af7d15b/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
-github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918131218-807d31d5d259 h1:elUvTC6Y36/oRt5QLqKJgEaqNPJts7tfB5JAJWb8qkM=
-github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918131218-807d31d5d259/go.mod h1:Laooc6+S2hkst/o4p0vIAwbiZKdajLoz9W3Cth+AS1U=
+github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918132440-81faf7d119d6 h1:i6KsrLh7Bw+sPbTNUHGCtD1uflFVfyTabCqz4WLpLyI=
+github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918132440-81faf7d119d6/go.mod h1:Laooc6+S2hkst/o4p0vIAwbiZKdajLoz9W3Cth+AS1U=
 github.com/Shopify/sarama v1.27.0 h1:tqo2zmyzPf1+gwTTwhI6W+EXDw4PVSczynpHKFtVAmo=
 github.com/Shopify/sarama v1.27.0/go.mod h1:aCdj6ymI8uyPEux1JJ9gcaDT6cinjGhNCAhs54taSUo=
 github.com/Shopify/toxiproxy v2.1.4+incompatible h1:TKdv8HiTLgE5wdJuEML90aBgNWsokNbMijUGhmcoBJc=

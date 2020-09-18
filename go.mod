@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918130735-4b249af7d15b
-	github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918131218-807d31d5d259
+	github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918132440-81faf7d119d6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0
