@@ -17,6 +17,8 @@ WORKDIR /app
 
 COPY --from=build /app/server /app/server
 COPY --from=build /app/files /app/files
+COPY ./config.json /app/config.json
+COPY ./certs /app/certs
 
 EXPOSE 8090
 EXPOSE 8888

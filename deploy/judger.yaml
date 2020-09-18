@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: judger
-          image: rabbitoj:latest
-          imagePullPolicy: Always
+          image: rabbitoj:latest # should give a public image url
+          imagePullPolicy: IfNotPresent # if latest is specified, should set to `Always`
           env:
             - name: Role
               value: "Judge"

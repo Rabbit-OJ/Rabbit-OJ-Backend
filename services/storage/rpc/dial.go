@@ -26,14 +26,14 @@ func DialInit() (*rpc.Client, error) {
 
 func DialCall(serviceName, functionName string, request AnyType, response AnyType) error {
 	client, err := DialInit()
+	if err != nil {
+		return err
+	}
+
 	defer func() {
 		if err := client.Close(); err != nil {
 			fmt.Println(err)
 		}
 	}()
-
-	if err != nil {
-		return err
-	}
 	return client.Call(serviceName+"."+functionName, request, response)
 }
