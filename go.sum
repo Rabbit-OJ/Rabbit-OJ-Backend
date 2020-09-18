@@ -7,8 +7,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/Microsoft/go-winio v0.4.14 h1:+hMXMk01us9KgxGb7ftKQt2Xpf5hH/yky+TDA+qxleU=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
-github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918023005-af66958e3834 h1:lY4532Luxj8QXKO1oxgK8G5Z+jSzVsT2Jo5zq6VOl8E=
-github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918023005-af66958e3834/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918024915-c32080966b9f h1:JfT4qBw7HnOSdnG9p7nghv8kLUsM8CnbNalm/pLo6ug=
+github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918024915-c32080966b9f/go.mod h1:P5NOayB6I7yzIiTx5EP1reGgS6pDocN9JJLSxmMpd0c=
 github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200916040907-0e94de165e93 h1:an6dal5yWW4X3e4J3EzP1PGfgDd4hBSP+tKudFsTLKE=
 github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200916040907-0e94de165e93/go.mod h1:Laooc6+S2hkst/o4p0vIAwbiZKdajLoz9W3Cth+AS1U=
 github.com/Shopify/sarama v1.27.0 h1:tqo2zmyzPf1+gwTTwhI6W+EXDw4PVSczynpHKFtVAmo=

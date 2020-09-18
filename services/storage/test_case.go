@@ -156,25 +156,40 @@ func GetTestCase(tid uint32, version string) ([]*JudgerModels.TestCaseType, erro
 	datasetCount := int(storage.DatasetCount)
 	resp := make([]*JudgerModels.TestCaseType, datasetCount)
 	for i := 1; i <= datasetCount; i++ {
-		path, err := utils.JudgeFilePath(
+		stdoutPath, err := utils.JudgeFilePath(
 			tid,
 			version,
 			strconv.FormatUint(uint64(i), 10),
 			"out")
-
 		if err != nil {
 			return nil, err
 		}
 
-		stdoutByte, err := ioutil.ReadFile(path)
+		stdoutByte, err := ioutil.ReadFile(stdoutPath)
+		if err != nil {
+			return nil, err
+		}
+
+		stdinPath, err := utils.JudgeFilePath(
+			tid,
+			version,
+			strconv.FormatUint(uint64(i), 10),
+			"in")
+		if err != nil {
+			return nil, err
+		}
+
+		stdinByte, err := ioutil.ReadFile(stdinPath)
 		if err != nil {
 			return nil, err
 		}
 
 		resp[i-1] = &JudgerModels.TestCaseType{
-			Id:     i,
-			Path:   path,
-			Stdout: stdoutByte,
+			Id:         i,
+			StdinPath:  stdinPath,
+			StdoutPath: stdoutPath,
+			Stdin:      stdinByte,
+			Stdout:     stdoutByte,
 		}
 	}
 	return resp, nil
