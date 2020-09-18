@@ -6,6 +6,8 @@ import (
 	"Rabbit-OJ-Backend/utils/files"
 	"encoding/json"
 	"fmt"
+	JudgerModels "github.com/Rabbit-OJ/Rabbit-OJ-Judger/models"
+	"github.com/Rabbit-OJ/Rabbit-OJ-Judger/utils"
 	"io/ioutil"
 	"strconv"
 	"sync"
@@ -145,11 +147,35 @@ func InitTestCase(tid uint32, version string) (*Storage, error) {
 	}
 }
 
-func GetTestCase(tid uint32, version string) (uint32, uint32, string, error) {
+func GetTestCase(tid uint32, version string) ([]*JudgerModels.TestCaseType, error) {
 	storage, err := InitTestCase(tid, version)
 	if err != nil {
-		return 0, 0, "", err
+		return nil, err
 	}
 
-	return storage.DatasetCount, storage.Tid, storage.Version, nil
+	datasetCount := int(storage.DatasetCount)
+	resp := make([]*JudgerModels.TestCaseType, datasetCount)
+	for i := 1; i <= datasetCount; i++ {
+		path, err := utils.JudgeFilePath(
+			tid,
+			version,
+			strconv.FormatUint(uint64(i), 10),
+			"out")
+
+		if err != nil {
+			return nil, err
+		}
+
+		stdoutByte, err := ioutil.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+
+		resp[i-1] = &JudgerModels.TestCaseType{
+			Id:     i,
+			Path:   path,
+			Stdout: stdoutByte,
+		}
+	}
+	return resp, nil
 }
