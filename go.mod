@@ -18,8 +18,8 @@ require (
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
-	golang.org/x/sys v0.0.0-20200917073148-efd3b9a0ff20 // indirect
-	google.golang.org/genproto v0.0.0-20200917134801-bb4cff56e0d0 // indirect
+	golang.org/x/sys v0.0.0-20200918174421-af09f7315aff // indirect
+	google.golang.org/genproto v0.0.0-20200918140846-d0d605568037 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	xorm.io/xorm v1.0.5

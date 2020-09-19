@@ -32,7 +32,10 @@
     },
     "local_images": [
       "alpine_tester:latest",
-      "python_tester:latest"
+      "python_tester:latest",
+      "java_tester:latest",
+      "node_tester:latest",
+      "swift_tester:latest"
     ],
     "languages": [
       {
