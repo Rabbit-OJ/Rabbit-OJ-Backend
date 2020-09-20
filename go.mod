@@ -3,7 +3,7 @@ module Rabbit-OJ-Backend
 go 1.15
 
 require (
-	github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200918130735-4b249af7d15b
+	github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200919051405-c5350d843714
 	github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918132440-81faf7d119d6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
