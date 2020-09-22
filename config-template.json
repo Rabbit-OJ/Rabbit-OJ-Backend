@@ -410,6 +410,36 @@
             "run_timeout": 120
           }
         }
+      },
+      {
+        "id": "rust",
+        "name": "Rust/1.46",
+        "enabled": true,
+        "args": {
+          "build_args": [
+            "rustc",
+            "-O",
+            "/home/code.rs",
+            "-o",
+            "/home/code.o",
+            "--target",
+            "x86_64-unknown-linux-musl"
+          ],
+          "build_image": "rust:alpine",
+          "no_build": false,
+          "source": "/home/code.rs",
+          "build_target": "/home/code.o",
+          "run_args": [
+            "/home/code.o"
+          ],
+          "run_image": "alpine_tester:latest",
+          "constraints": {
+            "cpu": 1000000000,
+            "memory": 1073741824,
+            "build_timeout": 120,
+            "run_timeout": 120
+          }
+        }
       }
     ]
   }
