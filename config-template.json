@@ -30,7 +30,7 @@
     "concurrent": {
       "judge": 2
     },
-    "local_images": [
+    "build_images": [
       "alpine_tester:latest",
       "python_tester:latest",
       "java_tester:latest",
