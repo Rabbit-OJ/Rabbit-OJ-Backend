@@ -3,7 +3,7 @@ module Rabbit-OJ-Backend
 go 1.15
 
 require (
-	github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200922031741-1f3a85232f81
+	github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200923002700-9d38dd4d4e3a
 	github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918132440-81faf7d119d6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
@@ -18,9 +18,9 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
-	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
-	golang.org/x/sys v0.0.0-20200918174421-af09f7315aff // indirect
-	google.golang.org/genproto v0.0.0-20200921165018-b9da36f5f452 // indirect
+	golang.org/x/net v0.0.0-20200925080053-05aa5d4ee321 // indirect
+	golang.org/x/sys v0.0.0-20200926100807-9d91bd62050c // indirect
+	google.golang.org/genproto v0.0.0-20200925023002-c2d885f95484 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	xorm.io/xorm v1.0.5
