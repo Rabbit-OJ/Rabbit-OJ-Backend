@@ -30,13 +30,7 @@
     "concurrent": {
       "judge": 2
     },
-    "build_images": [
-      "alpine_tester:latest",
-      "python_tester:latest",
-      "java_tester:latest",
-      "node_tester:latest",
-      "swift_tester:latest"
-    ],
+    "build_images": [],
     "languages": [
       {
         "id": "cpp11",
@@ -62,7 +56,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -95,7 +89,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -128,7 +122,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -161,7 +155,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -184,7 +178,7 @@
             "python2",
             "/home/code.py"
           ],
-          "run_image": "python_tester:latest",
+          "run_image": "rabbitoj/python_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -207,7 +201,7 @@
             "python",
             "/home/code.py"
           ],
-          "run_image": "python_tester:latest",
+          "run_image": "rabbitoj/python_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -240,7 +234,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -273,7 +267,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -301,7 +295,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -329,7 +323,7 @@
             "/home",
             "Main"
           ],
-          "run_image": "java_tester:latest",
+          "run_image": "rabbitoj/java_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -356,7 +350,7 @@
           "run_args": [
             "/home/code"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -379,7 +373,7 @@
             "node",
             "/home/code.js"
           ],
-          "run_image": "node_tester:latest",
+          "run_image": "rabbitoj/node_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -402,7 +396,7 @@
             "swift",
             "/home/code.swift"
           ],
-          "run_image": "swift_tester:latest",
+          "run_image": "rabbitoj/swift_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
@@ -432,7 +426,7 @@
           "run_args": [
             "/home/code.o"
           ],
-          "run_image": "alpine_tester:latest",
+          "run_image": "rabbitoj/alpine_tester:0.19",
           "constraints": {
             "cpu": 1000000000,
             "memory": 1073741824,
