@@ -1,7 +1,7 @@
 package contest
 
 import (
-	"Rabbit-OJ-Backend/middlewares"
+	"Rabbit-OJ-Backend/controllers/middlewares"
 	"github.com/gin-gonic/gin"
 )
 

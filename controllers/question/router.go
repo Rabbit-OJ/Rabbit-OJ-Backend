@@ -1,8 +1,8 @@
 package question
 
 import (
+	"Rabbit-OJ-Backend/controllers/middlewares"
 	"Rabbit-OJ-Backend/controllers/validators"
-	"Rabbit-OJ-Backend/middlewares"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"

@@ -2,11 +2,11 @@ package main
 
 import (
 	"Rabbit-OJ-Backend/controllers/contest"
+	"Rabbit-OJ-Backend/controllers/middlewares"
 	"Rabbit-OJ-Backend/controllers/question"
 	"Rabbit-OJ-Backend/controllers/submission"
 	"Rabbit-OJ-Backend/controllers/user"
 	"Rabbit-OJ-Backend/controllers/websocket"
-	"Rabbit-OJ-Backend/middlewares"
 	"Rabbit-OJ-Backend/services/config"
 	"Rabbit-OJ-Backend/services/initialize"
 	"Rabbit-OJ-Backend/services/routine"
