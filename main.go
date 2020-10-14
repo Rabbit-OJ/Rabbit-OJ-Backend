@@ -70,6 +70,7 @@ func main() {
 			os.Exit(0)
 		}
 	} else if Role == "Tester" {
+		fmt.Println("[WARN] use v1.0 Tester is deprecated, and will be removed soon, please use v2 Tester instead.")
 		tester.Tester()
 	}
 }
