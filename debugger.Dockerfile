@@ -5,7 +5,7 @@ COPY ./tester /app/server
 
 COPY ./files /app/files
 COPY ./config.json /app/config.json
-COPY ./certs /app/certs
+COPY ./files/certs /app/files/certs
 
 EXPOSE 8090
 EXPOSE 8888

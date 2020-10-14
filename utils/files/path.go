@@ -63,5 +63,5 @@ func JudgeFilePath(tid uint32, version, caseId, caseType string) (string, error)
 }
 
 func CertFilePath(fileName string) (string, error) {
-	return filepath.Abs(fmt.Sprintf("./certs/%s", fileName))
+	return filepath.Abs(fmt.Sprintf("./files/certs/%s", fileName))
 }

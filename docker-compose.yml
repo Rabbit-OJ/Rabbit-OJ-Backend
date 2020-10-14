@@ -43,8 +43,8 @@ services:
         source: ./config.json
         target: /app/config.json
       - type: bind
-        source: ./certs
-        target: /app/certs
+        source: ./files/certs
+        target: /app/files/certs
 volumes:
   mysql:
   rabbitmq:
