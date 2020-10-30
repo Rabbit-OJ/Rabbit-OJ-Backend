@@ -84,7 +84,7 @@ func MyInfo(uid, cid uint32, contest *models.Contest) (*responses.ContestMyInfo,
 		return nil, err
 	}
 
-	var contestSubmissionList []models.ContestSubmission
+	contestSubmissionList := make([]models.ContestSubmission, 0)
 	if err := db.DB.Table("contest_submission").
 		Where("cid = ? AND uid = ?", cid, uid).
 		Find(&contestSubmissionList); err != nil {

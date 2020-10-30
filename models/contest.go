@@ -21,6 +21,6 @@ type Contest struct {
 }
 
 func (j *JSONTime) MarshalJSON() ([]byte, error) {
-	var stamp = fmt.Sprintf("\"%s\"", time.Time(*j).Format("2006/01/02 15:04:05 -0700"))
+	stamp := fmt.Sprintf("\"%s\"", time.Time(*j).Format("2006/01/02 15:04:05 -0700"))
 	return []byte(stamp), nil
 }

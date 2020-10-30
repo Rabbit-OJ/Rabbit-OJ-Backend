@@ -7,7 +7,7 @@ import (
 )
 
 func List(page int) ([]models.Contest, error) {
-	var list []models.Contest
+	list := make([]models.Contest, 0)
 
 	if err := db.DB.Table("contest").
 		Asc("cid").

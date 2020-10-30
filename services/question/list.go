@@ -7,9 +7,9 @@ import (
 )
 
 func List(page int, showHide bool) ([]models.Question, error) {
-	var list []models.Question
-	var err error
+	list := make([]models.Question, 0)
 
+	var err error
 	if showHide {
 		err = db.DB.Table("question").
 			Asc("tid").Limit(config.PageSize, (page-1)*config.PageSize).

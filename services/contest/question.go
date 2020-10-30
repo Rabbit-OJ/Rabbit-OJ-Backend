@@ -7,7 +7,7 @@ import (
 )
 
 func Question(cid uint32) ([]models.ContestQuestion, error) {
-	var contestQuestion []models.ContestQuestion
+	contestQuestion := make([]models.ContestQuestion, 0)
 
 	if err := db.DB.
 		Table("contest_question").
@@ -39,7 +39,7 @@ func QuestionOne(cid, tid uint32) (*models.ContestQuestion, error) {
 }
 
 func QuestionExtended(cid uint32) ([]models.ContestQuestionExtended, error) {
-	var contestQuestionExtended []models.ContestQuestionExtended
+	contestQuestionExtended := make([]models.ContestQuestionExtended, 0)
 
 	if err := db.DB.
 		Table("contest_question").
@@ -55,7 +55,7 @@ func QuestionExtended(cid uint32) ([]models.ContestQuestionExtended, error) {
 }
 
 func QuestionMapTidToId(cid uint32) (map[uint32]int, []models.ContestQuestion, error) {
-	var contestQuestion []models.ContestQuestion
+	contestQuestion := make([]models.ContestQuestion, 0)
 
 	if err := db.DB.
 		Table("contest_question").

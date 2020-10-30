@@ -58,7 +58,7 @@ func handleCheck() {
 		Now().
 		Add(-1 * time.Duration(config.Global.Judger.Extensions.CheckJudge.Interval) * time.Minute)
 
-	var timeoutSubmissions []models.Submission
+	timeoutSubmissions := make([]models.Submission, 0)
 	if err := db.DB.Table("submission").
 		Where("status = ? AND created_at <= ?", "ING", someMinutesBefore).
 		Find(&timeoutSubmissions); err != nil {

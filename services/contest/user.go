@@ -20,7 +20,7 @@ func RegenerateUserScore(session *xorm.Session, cid, uid uint32, isAccepted bool
 	}
 
 	progress := make([]responses.ScoreBoardProgress, len(questionMapTidToId))
-	var contestSubmissionList []models.ContestSubmission
+	contestSubmissionList := make([]models.ContestSubmission, 0)
 
 	if err := session.Table("contest_submission").
 		Where("cid = ? AND uid = ?", cid, uid).

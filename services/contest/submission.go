@@ -9,7 +9,7 @@ import (
 )
 
 func SubmissionList(uid, cid uint32) ([]models.ContestSubmission, error) {
-	var contestSubmissionList []models.ContestSubmission
+	contestSubmissionList := make([]models.ContestSubmission, 0)
 	if err := db.DB.
 		Where("`contest_submission`.cid = ? AND `contest_submission`.uid = ?", cid, uid).
 		Table("contest_submission").

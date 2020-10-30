@@ -7,7 +7,7 @@ import (
 )
 
 func List(uid string, page int) ([]models.SubmissionLite, error) {
-	var list []models.SubmissionLite
+	list := make([]models.SubmissionLite, 0)
 
 	err := db.DB.
 		Select("`submission`.*, `question`.`subject` AS question_title").

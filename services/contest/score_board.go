@@ -73,7 +73,7 @@ func ScoreBoard(contest *models.Contest, page uint32) ([]*responses.ScoreBoard, 
 		mapUidToIndex[item.Uid] = i
 	}
 
-	var contestSubmissionList []models.ContestSubmission
+	contestSubmissionList := make([]models.ContestSubmission, 0)
 	if err := db.DB.Table("contest_submission").
 		Where("cid = ?", cid).
 		In("uid", uidList).
