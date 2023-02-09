@@ -6,8 +6,8 @@ require (
 	github.com/Rabbit-OJ/Rabbit-OJ-Judger v0.0.0-20200923002700-9d38dd4d4e3a
 	github.com/Rabbit-OJ/Rabbit-OJ-Tester v0.0.0-20200918132440-81faf7d119d6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/validator/v10 v10.3.0
+	github.com/gin-gonic/gin v1.7.7
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.2
 	github.com/golang/snappy v0.0.2 // indirect
